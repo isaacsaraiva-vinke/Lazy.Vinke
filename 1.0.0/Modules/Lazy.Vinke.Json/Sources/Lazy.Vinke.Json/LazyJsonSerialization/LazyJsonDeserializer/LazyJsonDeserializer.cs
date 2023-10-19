@@ -11,6 +11,7 @@ using System.IO;
 using System.Data;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Lazy.Vinke.Json
 {
@@ -326,6 +327,7 @@ namespace Lazy.Vinke.Json
 
                 if (dataType.IsGenericType == true && dataType.GetGenericTypeDefinition() == typeof(List<>)) return typeof(LazyJsonDeserializerList);
                 if (dataType.IsGenericType == true && dataType.GetGenericTypeDefinition() == typeof(Dictionary<,>)) return typeof(LazyJsonDeserializerDictionary);
+                if (dataType.IsGenericType == true && dataType.IsAssignableTo(typeof(ITuple)) == true) return typeof(LazyJsonDeserializerTuple);
 
                 if (dataType == typeof(Object)) return typeof(LazyJsonDeserializerObject);
                 if (dataType == typeof(Type)) return typeof(LazyJsonDeserializerType);

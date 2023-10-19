@@ -11,6 +11,7 @@ using System.IO;
 using System.Data;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Lazy.Vinke.Json
 {
@@ -239,6 +240,7 @@ namespace Lazy.Vinke.Json
 
                 if (dataType.IsGenericType == true && dataType.GetGenericTypeDefinition() == typeof(List<>)) return typeof(LazyJsonSerializerList);
                 if (dataType.IsGenericType == true && dataType.GetGenericTypeDefinition() == typeof(Dictionary<,>)) return typeof(LazyJsonSerializerDictionary);
+                if (dataType.IsGenericType == true && dataType.IsAssignableTo(typeof(ITuple)) == true) return typeof(LazyJsonSerializerTuple);
 
                 /* Serializers retrieves the object type by calling the GetType() method */
                 /* When the object is a "Type", this produces the same as "typeof(Object).GetType()", which always returns a "System.RuntimeType" */
