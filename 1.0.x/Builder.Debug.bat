@@ -6,8 +6,8 @@ echo Builder Debug
 echo:
 
 echo Copying Defaults...
-xcopy /d /e /y .\Defaults ..\..\..\Debug\1.0.0\ >> nul
-del /s /q ..\..\..\Debug\1.0.0\.gitkeep >> nul
+xcopy /d /e /y .\Defaults ..\..\..\Debug\1.0.x\ >> nul
+del /s /q ..\..\..\Debug\1.0.x\.gitkeep >> nul
 echo:
 
 cd .\Modules\Lazy.Vinke.Json\Sources\
