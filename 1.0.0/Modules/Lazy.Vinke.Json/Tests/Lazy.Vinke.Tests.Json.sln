@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lazy.Vinke.Tests.Json", "Lazy.Vinke.Tests.Json\Lazy.Vinke.Tests.Json.csproj", "{87625D04-80CA-420B-9E27-FFE36742E7FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{87625D04-80CA-420B-9E27-FFE36742E7FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87625D04-80CA-420B-9E27-FFE36742E7FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87625D04-80CA-420B-9E27-FFE36742E7FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87625D04-80CA-420B-9E27-FFE36742E7FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {581C4415-80F7-4261-996C-DFD935729D29}
+	EndGlobalSection
+EndGlobal

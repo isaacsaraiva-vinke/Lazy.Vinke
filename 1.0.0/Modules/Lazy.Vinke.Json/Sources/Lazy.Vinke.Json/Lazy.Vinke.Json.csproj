@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Product>Lazy</Product>
+		<Description>Lazy Vinke Json</Description>
+		<Authors>Vinke</Authors>
+		<Version>1.0.0</Version>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageOutputPath>$(SolutionDir)..\..\..\Packages\</PackageOutputPath>
+		<RepositoryUrl>https://github.com/isaacsaraiva-vinke/Lazy.Vinke</RepositoryUrl>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\..\..\..\README.md" Pack="true" PackagePath="">
+			<Link>Properties\Miscellaneous\README.md</Link>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\..\..\..\LICENSE" Pack="true" PackagePath="">
+			<Link>Properties\Miscellaneous\LICENSE</Link>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\LazyResourcesJson.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>LazyResourcesJson.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\LazyResourcesJson.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>LazyResourcesJson.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug' and '$(TargetFramework)' == 'net6.0'">
+		<PostBuildEvent>
+			xcopy /y $(SolutionDir)Lazy.Vinke.Json\bin\Debug\net6.0\Lazy.Vinke.Json.dll %SystemDrive%%HomePath%\.nuget\Packages\lazy.vinke.json\1.0.0\lib\net6.0\
+			xcopy /y $(SolutionDir)Lazy.Vinke.Json\bin\Debug\net6.0\Lazy.Vinke.Json.dll $(SolutionDir)..\..\..\..\..\..\Debug\1.0.0\Unix\All\Bin\lazy.vinke.json\1.0.0\lib\net6.0\
+			xcopy /y $(SolutionDir)Lazy.Vinke.Json\bin\Debug\net6.0\Lazy.Vinke.Json.dll $(SolutionDir)..\..\..\..\..\..\Debug\1.0.0\Windows\All\Bin\lazy.vinke.json\1.0.0\lib\net6.0\
+		</PostBuildEvent>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)' == 'Release' and '$(TargetFramework)' == 'net6.0'">
+		<PostBuildEvent>
+			xcopy /y $(SolutionDir)Lazy.Vinke.Json\bin\Release\net6.0\Lazy.Vinke.Json.dll $(SolutionDir)..\..\..\..\..\..\Release\1.0.0\Unix\All\Bin\lazy.vinke.json\1.0.0\lib\net6.0\
+			xcopy /y $(SolutionDir)Lazy.Vinke.Json\bin\Release\net6.0\Lazy.Vinke.Json.dll $(SolutionDir)..\..\..\..\..\..\Release\1.0.0\Windows\All\Bin\lazy.vinke.json\1.0.0\lib\net6.0\
+		</PostBuildEvent>
+	</PropertyGroup>
+
+</Project>
