@@ -1,6 +1,6 @@
 
 # Lazy.Vinke.Json
-.Net Json Serializer
+.Net Json Serializer & Deserializer
 
 ### Supported features
 - #### Built-in Serializers\Deserializers
@@ -9,9 +9,8 @@
   - DataTable (Typed columns preserving row state and values)
   - DateTime (Customizable format [default: yyyy-MM-ddTHH:mm:ss:fffZ])
   - Generic Dictionary\<T\>
+  - Generic Tuple\<T\>
   - Generic List\<T\>
-
-<br />
 
 - #### Facilities
   - ##### Globally define Serializer\Deserializer for types just once
@@ -27,8 +26,6 @@
     -> [LazyJsonAttributeTypeSerializer(typeof(YourTypeSerializer))]  \
     -> [LazyJsonAttributeTypeDeserializer(typeof(YourTypeDeserializer))]  \
     &nbsp; &nbsp; &nbsp;public YourType YourProperty { get; set; }
-
-<br />
 
 - #### Usage
   - ##### Reader
