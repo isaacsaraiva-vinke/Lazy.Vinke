@@ -44,20 +44,23 @@ namespace Lazy.Vinke.Json
                     Int32 count = (Int32)dataType.GetProperties().First(x => x.Name == "Count").GetValue(data);
                     PropertyInfo propertyInfoIndexer = dataType.GetProperties().First(x => x.GetIndexParameters().Length == 1 && x.GetIndexParameters()[0].ParameterType == typeof(Int32));
 
+                    LazyJsonSerializerBase jsonSerializer = null;
+                    LazyJsonSerializeTokenEventHandler jsonSerializeTokenEventHandler = null;
+
                     Type jsonSerializerType = LazyJsonSerializer.SelectSerializerType(dataType.GenericTypeArguments[0], jsonSerializerOptions);
 
                     if (jsonSerializerType != null)
                     {
-                        LazyJsonSerializerBase jsonSerializer = (LazyJsonSerializerBase)Activator.CreateInstance(jsonSerializerType);
-
-                        for (int index = 0; index < count; index++)
-                            jsonArray.Add(jsonSerializer.Serialize(propertyInfoIndexer.GetValue(data, new Object[] { index }), jsonSerializerOptions));
+                        jsonSerializer = (LazyJsonSerializerBase)Activator.CreateInstance(jsonSerializerType);
+                        jsonSerializeTokenEventHandler = new LazyJsonSerializeTokenEventHandler(jsonSerializer.Serialize);
                     }
                     else
                     {
-                        for (int index = 0; index < count; index++)
-                            jsonArray.Add(LazyJsonSerializer.SerializeToken(propertyInfoIndexer.GetValue(data, new Object[] { index }), jsonSerializerOptions));
+                        jsonSerializeTokenEventHandler = new LazyJsonSerializeTokenEventHandler(LazyJsonSerializer.SerializeToken);
                     }
+
+                    for (int index = 0; index < count; index++)
+                        jsonArray.Add(jsonSerializeTokenEventHandler(propertyInfoIndexer.GetValue(data, new Object[] { index }), jsonSerializerOptions));
 
                     return jsonArray;
                 }
