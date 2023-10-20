@@ -4,7 +4,7 @@
 // Licensed under "Gnu General Public License Version 3"
 //
 // Created by Isaac Bezerra Saraiva
-// Created on 2023, October 11
+// Created on 2023, October 20
 
 using System;
 using System.IO;
@@ -23,141 +23,110 @@ namespace Lazy.Vinke.Tests.Json
     public class TestsLazyJsonDeserializerObject
     {
         [TestMethod]
-        public void Deserialize_Null_Single_Success()
+        public void Deserialize_Object_Int16_Success()
         {
             // Arrange
-            LazyJsonToken jsonToken = null;
-            LazyJsonInteger jsonInteger = new LazyJsonInteger(0);
+            LazyJsonObject jsonWrappedInt16Type = new LazyJsonObject();
+            jsonWrappedInt16Type.Add(new LazyJsonProperty("Assembly", new LazyJsonString("System.Private.CoreLib")));
+            jsonWrappedInt16Type.Add(new LazyJsonProperty("Namespace", new LazyJsonString("System")));
+            jsonWrappedInt16Type.Add(new LazyJsonProperty("Class", new LazyJsonString("Int16")));
+            LazyJsonInteger jsonWrappedInt16Value = new LazyJsonInteger(101);
+            LazyJsonObject jsonWrappedInt16 = new LazyJsonObject();
+            jsonWrappedInt16.Add(new LazyJsonProperty("Type", jsonWrappedInt16Type));
+            jsonWrappedInt16.Add(new LazyJsonProperty("Value", jsonWrappedInt16Value));
 
             // Act
-            Object data1 = new LazyJsonDeserializerObject().Deserialize(jsonToken, typeof(Object));
-            Object data2 = new LazyJsonDeserializerObject().Deserialize(jsonInteger, null);
+            Object data = new LazyJsonDeserializerObject().Deserialize(jsonWrappedInt16, typeof(Object));
 
             // Assert
-            Assert.IsNull(data1);
-            Assert.IsNull(data2);
+            Assert.AreEqual(data.GetType(), typeof(Int16));
+            Assert.AreEqual(data, (Int16)101);
         }
 
         [TestMethod]
-        public void Deserialize_Type_NotObject_Success()
+        public void Deserialize_Object_String_Success()
         {
             // Arrange
-            LazyJsonInteger jsonInteger = new LazyJsonInteger(0);
+            LazyJsonObject jsonWrappedStringType = new LazyJsonObject();
+            jsonWrappedStringType.Add(new LazyJsonProperty("Assembly", new LazyJsonString("System.Private.CoreLib")));
+            jsonWrappedStringType.Add(new LazyJsonProperty("Namespace", new LazyJsonString("System")));
+            jsonWrappedStringType.Add(new LazyJsonProperty("Class", new LazyJsonString("String")));
+            LazyJsonString jsonWrappedStringValue = new LazyJsonString("Lazy.Vinke.Tests.Json");
+            LazyJsonObject jsonWrappedString = new LazyJsonObject();
+            jsonWrappedString.Add(new LazyJsonProperty("Type", jsonWrappedStringType));
+            jsonWrappedString.Add(new LazyJsonProperty("Value", jsonWrappedStringValue));
 
             // Act
-            Object data = new LazyJsonDeserializerObject().Deserialize(jsonInteger, typeof(Int32));
-
-            // Assert
-            Assert.IsNull(data);
-        }
-
-        [TestMethod]
-        public void Deserialize_TokenType_JsonNull_Success()
-        {
-            // Arrange
-            LazyJsonNull jsonNull = new LazyJsonNull();
-
-            // Act
-            Object data = new LazyJsonDeserializerObject().Deserialize(jsonNull, typeof(Object));
-
-            // Assert
-            Assert.IsNull(data);
-        }
-
-        [TestMethod]
-        public void Deserialize_TokenType_JsonInteger_Success()
-        {
-            // Arrange
-            LazyJsonInteger jsonInteger = new LazyJsonInteger(-1);
-
-            // Act
-            Object data = new LazyJsonDeserializerObject().Deserialize(jsonInteger, typeof(Object));
-
-            // Assert
-            Assert.AreEqual(data, (Int64)(-1));
-        }
-
-        [TestMethod]
-        public void Deserialize_TokenType_JsonDecimal_Success()
-        {
-            // Arrange
-            LazyJsonDecimal jsonDecimal = new LazyJsonDecimal(-1.1m);
-
-            // Act
-            Object data = new LazyJsonDeserializerObject().Deserialize(jsonDecimal, typeof(Object));
-
-            // Assert
-            Assert.AreEqual(data, -1.1m);
-        }
-
-        [TestMethod]
-        public void Deserialize_TokenType_JsonBoolean_Success()
-        {
-            // Arrange
-            LazyJsonBoolean jsonBoolean = new LazyJsonBoolean(false);
-
-            // Act
-            Object data = new LazyJsonDeserializerObject().Deserialize(jsonBoolean, typeof(Object));
-
-            // Assert
-            Assert.AreEqual(data, false);
-        }
-
-        [TestMethod]
-        public void Deserialize_TokenType_JsonArray_Success()
-        {
-            // Arrange
-            LazyJsonArray jsonArray = new LazyJsonArray();
-            jsonArray.Add(new LazyJsonInteger(-101));
-
-            // Act
-            Object data = new LazyJsonDeserializerObject().Deserialize(jsonArray, typeof(Object));
-
-            // Assert
-            Assert.AreEqual(data.GetType(), typeof(Object[]));
-            Assert.AreEqual(((Object[])data)[0], (Int64)(-101));
-        }
-
-        [TestMethod]
-        public void Deserialize_TokenType_JsonObject_Success()
-        {
-            // Arrange
-            LazyJsonObject jsonObject = new LazyJsonObject();
-            jsonObject.Add(new LazyJsonProperty("Amount", new LazyJsonDecimal(-1.1m)));
-
-            // Act
-            Object data = new LazyJsonDeserializerObject().Deserialize(jsonObject, typeof(Object));
-
-            // Assert
-            Assert.IsNull(data);
-        }
-
-        [TestMethod]
-        public void Deserialize_TokenType_JsonStringAsDateTime_Success()
-        {
-            // Arrange
-            LazyJsonString jsonString = new LazyJsonString("2023-10-11T13:04:30:000Z");
-
-            // Act
-            Object data = new LazyJsonDeserializerObject().Deserialize(jsonString, typeof(Object));
-
-            // Assert
-            Assert.AreEqual(data.GetType(), typeof(DateTime));
-            Assert.AreEqual(data, new DateTime(2023, 10, 11, 13, 04, 30));
-        }
-
-        [TestMethod]
-        public void Deserialize_TokenType_JsonStringAsString_Success()
-        {
-            // Arrange
-            LazyJsonString jsonString = new LazyJsonString("Lazy.Vinke.Tests.Json");
-
-            // Act
-            Object data = new LazyJsonDeserializerObject().Deserialize(jsonString, typeof(Object));
+            Object data = new LazyJsonDeserializerObject().Deserialize(jsonWrappedString, typeof(Object));
 
             // Assert
             Assert.AreEqual(data.GetType(), typeof(String));
             Assert.AreEqual(data, "Lazy.Vinke.Tests.Json");
+        }
+
+        [TestMethod]
+        public void Deserialize_Object_DateTime_Success()
+        {
+            // Arrange
+            LazyJsonObject jsonWrappedStringType = new LazyJsonObject();
+            jsonWrappedStringType.Add(new LazyJsonProperty("Assembly", new LazyJsonString("System.Private.CoreLib")));
+            jsonWrappedStringType.Add(new LazyJsonProperty("Namespace", new LazyJsonString("System")));
+            jsonWrappedStringType.Add(new LazyJsonProperty("Class", new LazyJsonString("DateTime")));
+            LazyJsonString jsonWrappedStringValue = new LazyJsonString("2023-10-20T15:52:30:000Z");
+            LazyJsonObject jsonWrappedString = new LazyJsonObject();
+            jsonWrappedString.Add(new LazyJsonProperty("Type", jsonWrappedStringType));
+            jsonWrappedString.Add(new LazyJsonProperty("Value", jsonWrappedStringValue));
+
+            // Act
+            Object data = new LazyJsonDeserializerObject().Deserialize(jsonWrappedString, typeof(Object));
+
+            // Assert
+            Assert.AreEqual(data.GetType(), typeof(DateTime));
+            Assert.AreEqual(data, new DateTime(2023, 10, 20, 15, 52, 30));
+        }
+
+        [TestMethod]
+        public void Deserialize_Object_Array_Success()
+        {
+            // Arrange
+            LazyJsonObject jsonWrappedInt64Type = new LazyJsonObject();
+            jsonWrappedInt64Type.Add(new LazyJsonProperty("Assembly", new LazyJsonString("System.Private.CoreLib")));
+            jsonWrappedInt64Type.Add(new LazyJsonProperty("Namespace", new LazyJsonString("System")));
+            jsonWrappedInt64Type.Add(new LazyJsonProperty("Class", new LazyJsonString("Int64")));
+            LazyJsonInteger jsonWrappedInt64Value = new LazyJsonInteger(2048);
+            LazyJsonObject jsonWrappedInt64 = new LazyJsonObject();
+            jsonWrappedInt64.Add(new LazyJsonProperty("Type", jsonWrappedInt64Type));
+            jsonWrappedInt64.Add(new LazyJsonProperty("Value", jsonWrappedInt64Value));
+
+            LazyJsonObject jsonWrappedSByteType = new LazyJsonObject();
+            jsonWrappedSByteType.Add(new LazyJsonProperty("Assembly", new LazyJsonString("System.Private.CoreLib")));
+            jsonWrappedSByteType.Add(new LazyJsonProperty("Namespace", new LazyJsonString("System")));
+            jsonWrappedSByteType.Add(new LazyJsonProperty("Class", new LazyJsonString("SByte")));
+            LazyJsonInteger jsonWrappedSByteValue = new LazyJsonInteger(-32);
+            LazyJsonObject jsonWrappedSByte = new LazyJsonObject();
+            jsonWrappedSByte.Add(new LazyJsonProperty("Type", jsonWrappedSByteType));
+            jsonWrappedSByte.Add(new LazyJsonProperty("Value", jsonWrappedSByteValue));
+
+            LazyJsonObject jsonWrappedArrayType = new LazyJsonObject();
+            jsonWrappedArrayType.Add(new LazyJsonProperty("Assembly", new LazyJsonString("System.Private.CoreLib")));
+            jsonWrappedArrayType.Add(new LazyJsonProperty("Namespace", new LazyJsonString("System")));
+            jsonWrappedArrayType.Add(new LazyJsonProperty("Class", new LazyJsonString("Object[]")));
+            LazyJsonArray jsonWrappedArrayValue = new LazyJsonArray();
+            jsonWrappedArrayValue.Add(jsonWrappedInt64);
+            jsonWrappedArrayValue.Add(jsonWrappedSByte);
+            LazyJsonObject jsonWrappedArray = new LazyJsonObject();
+            jsonWrappedArray.Add(new LazyJsonProperty("Type", jsonWrappedArrayType));
+            jsonWrappedArray.Add(new LazyJsonProperty("Value", jsonWrappedArrayValue));
+
+            // Act
+            Object data = new LazyJsonDeserializerObject().Deserialize(jsonWrappedArray, typeof(Object));
+
+            // Assert
+            Assert.AreEqual(data.GetType(), typeof(Object[]));
+            Assert.AreEqual(((Object[])data)[0].GetType(), typeof(Int64));
+            Assert.AreEqual(((Object[])data)[1].GetType(), typeof(SByte));
+            Assert.AreEqual((Int64)((Object[])data)[0], (Int64)2048);
+            Assert.AreEqual((SByte)((Object[])data)[1], (SByte)(-32));
         }
     }
 }

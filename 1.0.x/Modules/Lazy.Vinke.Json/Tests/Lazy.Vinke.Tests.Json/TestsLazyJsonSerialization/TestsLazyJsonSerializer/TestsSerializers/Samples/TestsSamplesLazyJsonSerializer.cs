@@ -51,6 +51,16 @@ namespace Lazy.Vinke.Tests.Json
         public Boolean Tested { get; set; }
     }
 
+    public class SerializeObject_PropertyAsObject_Simple
+    {
+        public Object SomeObject { get; set; }
+    }
+
+    public class SerializeObject_PropertyAsObject_Nested
+    {
+        public SerializeObject_PropertyAsObject_Simple NestedObject { get; set; }
+    }
+
     [LazyJsonAttributeTypeSerializer(typeof(LazyJsonSerializerDateTime))]
     public class SelectSerializerType_SerializerClass_WithoutOptions
     {

@@ -189,15 +189,27 @@ namespace Lazy.Vinke.Json
                         }
                     }
 
-                    if (jsonObject[propertyName] != null)
+                    LazyJsonProperty jsonProperty = jsonObject[propertyName];
+
+                    if (jsonProperty != null)
                     {
                         if (jsonDeserializerType != null)
                         {
-                            propertyInfo.SetValue(data, ((LazyJsonDeserializerBase)Activator.CreateInstance(jsonDeserializerType)).Deserialize(jsonObject[propertyName], propertyInfo.PropertyType, jsonDeserializerOptions));
+                            propertyInfo.SetValue(data, ((LazyJsonDeserializerBase)Activator.CreateInstance(jsonDeserializerType)).Deserialize(jsonProperty, propertyInfo.PropertyType, jsonDeserializerOptions));
                         }
                         else
                         {
-                            propertyInfo.SetValue(data, DeserializeProperty(jsonObject[propertyName], propertyInfo.PropertyType, jsonDeserializerOptions));
+                            if (propertyInfo.PropertyType != typeof(Object))
+                            {
+                                propertyInfo.SetValue(data, DeserializeProperty(jsonProperty, propertyInfo.PropertyType, jsonDeserializerOptions));
+                            }
+                            else
+                            {
+                                /* Unwrap object importing its type that was previously exported by serializer */
+                                /* Only if the property was declared as "Object" Type */
+
+                                propertyInfo.SetValue(data, new LazyJsonDeserializerObject().Deserialize(jsonProperty, propertyInfo.PropertyType, jsonDeserializerOptions));
+                            }
                         }
                     }
                 }
@@ -329,8 +341,8 @@ namespace Lazy.Vinke.Json
                 if (dataType.IsGenericType == true && dataType.GetGenericTypeDefinition() == typeof(Dictionary<,>)) return typeof(LazyJsonDeserializerDictionary);
                 if (dataType.IsGenericType == true && dataType.IsAssignableTo(typeof(ITuple)) == true) return typeof(LazyJsonDeserializerTuple);
 
-                if (dataType == typeof(Object)) return typeof(LazyJsonDeserializerObject);
                 if (dataType == typeof(Type)) return typeof(LazyJsonDeserializerType);
+                if (dataType == typeof(Object)) return typeof(LazyJsonDeserializerObject);
             }
 
             return null;

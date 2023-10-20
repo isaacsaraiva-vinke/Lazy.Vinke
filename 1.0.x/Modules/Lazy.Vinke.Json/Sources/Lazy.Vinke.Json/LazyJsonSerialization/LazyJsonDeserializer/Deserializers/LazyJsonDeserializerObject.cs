@@ -4,7 +4,7 @@
 // Licensed under "Gnu General Public License Version 3"
 //
 // Created by Isaac Bezerra Saraiva
-// Created on 2023, October 11
+// Created on 2023, October 20
 
 using System;
 using System.IO;
@@ -32,27 +32,17 @@ namespace Lazy.Vinke.Json
         /// <returns>The deserialized object</returns>
         public override Object Deserialize(LazyJsonToken jsonToken, Type dataType, LazyJsonDeserializerOptions jsonDeserializerOptions = null)
         {
-            if (jsonToken != null && dataType != null && dataType == typeof(Object))
+            if (jsonToken != null && jsonToken.Type == LazyJsonType.Object && dataType != null && dataType == typeof(Object))
             {
-                /* dataType is useless here because its an "Object" type */
+                LazyJsonProperty jsonPropertyType = ((LazyJsonObject)jsonToken)["Type"];
+                LazyJsonProperty jsonPropertyValue = ((LazyJsonObject)jsonToken)["Value"];
 
-                if (jsonToken.Type == LazyJsonType.Null) return null;
-                if (jsonToken.Type == LazyJsonType.Integer) return new LazyJsonDeserializerInteger().Deserialize(jsonToken, typeof(Int64), jsonDeserializerOptions);
-                if (jsonToken.Type == LazyJsonType.Decimal) return new LazyJsonDeserializerDecimal().Deserialize(jsonToken, typeof(Decimal), jsonDeserializerOptions);
-                if (jsonToken.Type == LazyJsonType.Boolean) return new LazyJsonDeserializerBoolean().Deserialize(jsonToken, typeof(Boolean), jsonDeserializerOptions);
-                if (jsonToken.Type == LazyJsonType.Array) return new LazyJsonDeserializerArray().Deserialize(jsonToken, typeof(Object[]), jsonDeserializerOptions);
-
-                /* Unable to deserialize token of type "JsonObject" and dataType "Object" */
-                if (jsonToken.Type == LazyJsonType.Object) return null;
-
-                if (jsonToken.Type == LazyJsonType.String)
+                if (jsonPropertyType != null && jsonPropertyValue != null)
                 {
-                    Object deserializedValue = new LazyJsonDeserializerDateTime().Deserialize(jsonToken, typeof(DateTime), jsonDeserializerOptions);
+                    Type unwrappedType = (Type)new LazyJsonDeserializerType().Deserialize(jsonPropertyType, typeof(Type), jsonDeserializerOptions);
 
-                    if (deserializedValue == null)
-                        deserializedValue = new LazyJsonDeserializerString().Deserialize(jsonToken, typeof(String), jsonDeserializerOptions);
-
-                    return deserializedValue;
+                    if (unwrappedType != null)
+                        return LazyJsonDeserializer.DeserializeProperty(jsonPropertyValue, unwrappedType, jsonDeserializerOptions);
                 }
             }
 
