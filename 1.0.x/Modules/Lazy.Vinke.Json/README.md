@@ -8,6 +8,7 @@
   - DataSet (Typed data table collection)
   - DataTable (Typed columns preserving row state and values)
   - DateTime (Customizable format [default: yyyy-MM-ddTHH:mm:ss:fffZ])
+  - Object (Wrap\Unwrap properties declared as "Object" type by exporting its instance type)
   - Generic Dictionary\<T\>
   - Generic Tuple\<T\>
   - Generic List\<T\>
