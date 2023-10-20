@@ -111,7 +111,17 @@ namespace Lazy.Vinke.Json
                     }
                     else
                     {
-                        jsonObject.Add(new LazyJsonProperty(propertyName, SerializeToken(propertyInfo.GetValue(data), jsonSerializerOptions)));
+                        if (propertyInfo.PropertyType != typeof(Object))
+                        {
+                            jsonObject.Add(new LazyJsonProperty(propertyName, SerializeToken(propertyInfo.GetValue(data), jsonSerializerOptions)));
+                        }
+                        else
+                        {
+                            /* Wrap object exporting its type to be able to deserialize it */
+                            /* Only if the property was declared as "Object" Type */
+
+                            jsonObject.Add(new LazyJsonProperty(propertyName, new LazyJsonSerializerObject().Serialize(propertyInfo.GetValue(data), jsonSerializerOptions)));
+                        }
                     }
                 }
 
@@ -242,10 +252,12 @@ namespace Lazy.Vinke.Json
                 if (dataType.IsGenericType == true && dataType.GetGenericTypeDefinition() == typeof(Dictionary<,>)) return typeof(LazyJsonSerializerDictionary);
                 if (dataType.IsGenericType == true && dataType.IsAssignableTo(typeof(ITuple)) == true) return typeof(LazyJsonSerializerTuple);
 
+                if (dataType.IsAssignableTo(typeof(Type)) == true) return typeof(LazyJsonSerializerType);
+                if (dataType == typeof(Object)) return typeof(LazyJsonSerializerObject);
+
                 /* Serializers retrieves the object type by calling the GetType() method */
                 /* When the object is a "Type", this produces the same as "typeof(Object).GetType()", which always returns a "System.RuntimeType" */
                 /* "System.RuntimeType" derives from "System.Type" */
-                if (dataType.IsAssignableTo(typeof(Type)) == true) return typeof(LazyJsonSerializerType);
             }
 
             return null;
