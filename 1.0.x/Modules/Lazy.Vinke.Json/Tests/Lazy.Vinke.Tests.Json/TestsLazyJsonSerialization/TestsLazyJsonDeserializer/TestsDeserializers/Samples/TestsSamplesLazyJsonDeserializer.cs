@@ -69,6 +69,16 @@ namespace Lazy.Vinke.Tests.Json
         public Boolean Tested { get; set; }
     }
 
+    public class DeserializeObject_PropertyAsObject_Simple
+    {
+        public Object SomeObject { get; set; }
+    }
+
+    public class DeserializeObject_PropertyAsObject_Nested
+    {
+        public DeserializeObject_PropertyAsObject_Simple NestedObject { get; set; }
+    }
+
     [LazyJsonAttributeTypeDeserializer(typeof(LazyJsonDeserializerDateTime))]
     public class SelectDeserializerType_DeserializerClass_WithoutOptions
     {

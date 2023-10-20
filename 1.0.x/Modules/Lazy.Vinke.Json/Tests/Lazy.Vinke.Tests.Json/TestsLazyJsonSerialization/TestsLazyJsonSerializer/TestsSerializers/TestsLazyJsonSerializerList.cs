@@ -100,18 +100,37 @@ namespace Lazy.Vinke.Tests.Json
             List<Object> objectList = new List<Object>() { 1, "Vinke", -101.101m, true, null, new List<Int32>() { 101 }, new DateTime(2023, 10, 11, 08, 40, 00) };
 
             // Act
-            LazyJsonToken jsonToken = new LazyJsonSerializerList().Serialize(objectList);
+            LazyJsonArray jsonArray = (LazyJsonArray)new LazyJsonSerializerList().Serialize(objectList);
 
             // Assert
-            Assert.AreEqual(((LazyJsonArray)jsonToken).Length, 7);
-            Assert.AreEqual(((LazyJsonInteger)((LazyJsonArray)jsonToken)[0]).Value, 1);
-            Assert.AreEqual(((LazyJsonString)((LazyJsonArray)jsonToken)[1]).Value, "Vinke");
-            Assert.AreEqual(((LazyJsonDecimal)((LazyJsonArray)jsonToken)[2]).Value, -101.101m);
-            Assert.AreEqual(((LazyJsonBoolean)((LazyJsonArray)jsonToken)[3]).Value, true);
-            Assert.AreEqual(((LazyJsonArray)jsonToken)[4].Type, LazyJsonType.Null);
-            Assert.AreEqual(((LazyJsonArray)((LazyJsonArray)jsonToken)[5]).Length, 1);
-            Assert.AreEqual(((LazyJsonInteger)((LazyJsonArray)((LazyJsonArray)jsonToken)[5])[0]).Value, 101);
-            Assert.AreEqual(((LazyJsonString)((LazyJsonArray)jsonToken)[6]).Value, "2023-10-11T08:40:00:000Z");
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[0])["Type"].Token)["Assembly"].Token).Value, "System.Private.CoreLib");
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[0])["Type"].Token)["Namespace"].Token).Value, "System");
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[0])["Type"].Token)["Class"].Token).Value, "Int32");
+            Assert.AreEqual(((LazyJsonInteger)(((LazyJsonObject)jsonArray[0])["Value"].Token)).Value, 1);
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[1])["Type"].Token)["Assembly"].Token).Value, "System.Private.CoreLib");
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[1])["Type"].Token)["Namespace"].Token).Value, "System");
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[1])["Type"].Token)["Class"].Token).Value, "String");
+            Assert.AreEqual(((LazyJsonString)(((LazyJsonObject)jsonArray[1])["Value"].Token)).Value, "Vinke");
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[2])["Type"].Token)["Assembly"].Token).Value, "System.Private.CoreLib");
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[2])["Type"].Token)["Namespace"].Token).Value, "System");
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[2])["Type"].Token)["Class"].Token).Value, "Decimal");
+            Assert.AreEqual(((LazyJsonDecimal)(((LazyJsonObject)jsonArray[2])["Value"].Token)).Value, -101.101m);
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[3])["Type"].Token)["Assembly"].Token).Value, "System.Private.CoreLib");
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[3])["Type"].Token)["Namespace"].Token).Value, "System");
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[3])["Type"].Token)["Class"].Token).Value, "Boolean");
+            Assert.AreEqual(((LazyJsonBoolean)(((LazyJsonObject)jsonArray[3])["Value"].Token)).Value, true);
+            Assert.AreEqual(jsonArray[4].Type, LazyJsonType.Null);
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[5])["Type"].Token)["Assembly"].Token).Value, "System.Private.CoreLib");
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[5])["Type"].Token)["Namespace"].Token).Value, "System.Collections.Generic");
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[5])["Type"].Token)["Class"].Token).Value, "List`1");
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonArray)((LazyJsonObject)((LazyJsonObject)jsonArray[5])["Type"].Token)["Arguments"].Token)[0])["Assembly"].Token).Value, "System.Private.CoreLib");
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonArray)((LazyJsonObject)((LazyJsonObject)jsonArray[5])["Type"].Token)["Arguments"].Token)[0])["Namespace"].Token).Value, "System");
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonArray)((LazyJsonObject)((LazyJsonObject)jsonArray[5])["Type"].Token)["Arguments"].Token)[0])["Class"].Token).Value, "Int32");
+            Assert.AreEqual(((LazyJsonInteger)((LazyJsonArray)((LazyJsonObject)jsonArray[5])["Value"].Token)[0]).Value, 101);
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[6])["Type"].Token)["Assembly"].Token).Value, "System.Private.CoreLib");
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[6])["Type"].Token)["Namespace"].Token).Value, "System");
+            Assert.AreEqual(((LazyJsonString)((LazyJsonObject)((LazyJsonObject)jsonArray[6])["Type"].Token)["Class"].Token).Value, "DateTime");
+            Assert.AreEqual(((LazyJsonString)(((LazyJsonObject)jsonArray[6])["Value"].Token)).Value, "2023-10-11T08:40:00:000Z");
         }
     }
 }

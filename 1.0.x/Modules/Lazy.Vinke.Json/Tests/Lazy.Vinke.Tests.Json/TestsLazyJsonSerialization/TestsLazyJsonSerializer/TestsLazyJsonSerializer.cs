@@ -124,6 +124,47 @@ namespace Lazy.Vinke.Tests.Json
         }
 
         [TestMethod]
+        public void SerializeObject_PropertyAsObject_Simple_Success()
+        {
+            // Arrange
+            SerializeObject_PropertyAsObject_Simple propertyAsObject_Decimal = new SerializeObject_PropertyAsObject_Simple();
+            propertyAsObject_Decimal.SomeObject = 101.101m;
+
+            // Act
+            LazyJsonObject jsonObject = (LazyJsonObject)LazyJsonSerializer.SerializeObject(propertyAsObject_Decimal);
+
+            // Assert
+            LazyJsonObject jsonObjectType = (LazyJsonObject)((LazyJsonObject)jsonObject["SomeObject"].Token)["Type"].Token;
+            LazyJsonToken jsonTokenValue = ((LazyJsonObject)jsonObject["SomeObject"].Token)["Value"].Token;
+
+            Assert.AreEqual(((LazyJsonString)jsonObjectType["Assembly"].Token).Value, "System.Private.CoreLib");
+            Assert.AreEqual(((LazyJsonString)jsonObjectType["Namespace"].Token).Value, "System");
+            Assert.AreEqual(((LazyJsonString)jsonObjectType["Class"].Token).Value, "Decimal");
+            Assert.AreEqual(((LazyJsonDecimal)jsonTokenValue).Value, 101.101m);
+        }
+
+        [TestMethod]
+        public void SerializeObject_PropertyAsObject_Nested_Success()
+        {
+            // Arrange
+            SerializeObject_PropertyAsObject_Nested netedPropertyAsObject_Decimal = new SerializeObject_PropertyAsObject_Nested();
+            netedPropertyAsObject_Decimal.NestedObject = new SerializeObject_PropertyAsObject_Simple();
+            netedPropertyAsObject_Decimal.NestedObject.SomeObject = 101.101m;
+
+            // Act
+            LazyJsonObject jsonObject = (LazyJsonObject)LazyJsonSerializer.SerializeObject(netedPropertyAsObject_Decimal);
+            String jSon = LazyJsonWriter.Write(new LazyJson(jsonObject));
+            // Assert
+            LazyJsonObject jsonObjectType = (LazyJsonObject)((LazyJsonObject)((LazyJsonObject)jsonObject["NestedObject"].Token)["SomeObject"].Token)["Type"].Token;
+            LazyJsonToken jsonTokenValue = ((LazyJsonObject)((LazyJsonObject)jsonObject["NestedObject"].Token)["SomeObject"].Token)["Value"].Token;
+
+            Assert.AreEqual(((LazyJsonString)jsonObjectType["Assembly"].Token).Value, "System.Private.CoreLib");
+            Assert.AreEqual(((LazyJsonString)jsonObjectType["Namespace"].Token).Value, "System");
+            Assert.AreEqual(((LazyJsonString)jsonObjectType["Class"].Token).Value, "Decimal");
+            Assert.AreEqual(((LazyJsonDecimal)jsonTokenValue).Value, 101.101m);
+        }
+
+        [TestMethod]
         public void SelectSerializerType_Null_Single_Success()
         {
             // Arrange
