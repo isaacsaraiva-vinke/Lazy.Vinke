@@ -181,6 +181,59 @@ namespace Lazy.Vinke.Tests.Json
         }
 
         [TestMethod]
+        public void DeserializeObject_PropertyAsObject_Simple_Success()
+        {
+            // Arrange
+            LazyJsonObject jsonObjectType = new LazyJsonObject();
+            jsonObjectType.Add(new LazyJsonProperty("Assembly", new LazyJsonString("System.Private.CoreLib")));
+            jsonObjectType.Add(new LazyJsonProperty("Namespace", new LazyJsonString("System")));
+            jsonObjectType.Add(new LazyJsonProperty("Class", new LazyJsonString("String")));
+
+            LazyJsonString jsonStringValue = new LazyJsonString("Lazy.Vinke.Tests.Json");
+
+            LazyJsonObject jsonObjectWrapped = new LazyJsonObject();
+            jsonObjectWrapped.Add(new LazyJsonProperty("Type", jsonObjectType));
+            jsonObjectWrapped.Add(new LazyJsonProperty("Value", jsonStringValue));
+
+            LazyJsonObject jsonObject = new LazyJsonObject();
+            jsonObject.Add(new LazyJsonProperty("SomeObject", jsonObjectWrapped));
+
+            // Act
+            DeserializeObject_PropertyAsObject_Simple deserializeObject_PropertyAsObject_Simple = LazyJsonDeserializer.DeserializeObject<DeserializeObject_PropertyAsObject_Simple>(jsonObject);
+
+            // Assert
+            Assert.AreEqual(deserializeObject_PropertyAsObject_Simple.SomeObject, "Lazy.Vinke.Tests.Json");
+        }
+
+        [TestMethod]
+        public void DeserializeObject_PropertyAsObject_Nested_Success()
+        {
+            // Arrange
+            LazyJsonObject jsonObjectType = new LazyJsonObject();
+            jsonObjectType.Add(new LazyJsonProperty("Assembly", new LazyJsonString("System.Private.CoreLib")));
+            jsonObjectType.Add(new LazyJsonProperty("Namespace", new LazyJsonString("System")));
+            jsonObjectType.Add(new LazyJsonProperty("Class", new LazyJsonString("String")));
+
+            LazyJsonString jsonStringValue = new LazyJsonString("Lazy.Vinke.Tests.Json");
+
+            LazyJsonObject jsonObjectWrapped = new LazyJsonObject();
+            jsonObjectWrapped.Add(new LazyJsonProperty("Type", jsonObjectType));
+            jsonObjectWrapped.Add(new LazyJsonProperty("Value", jsonStringValue));
+
+            LazyJsonObject jsonObjectNested = new LazyJsonObject();
+            jsonObjectNested.Add(new LazyJsonProperty("SomeObject", jsonObjectWrapped));
+
+            LazyJsonObject jsonObject = new LazyJsonObject();
+            jsonObject.Add(new LazyJsonProperty("NestedObject", jsonObjectNested));
+
+            // Act
+            DeserializeObject_PropertyAsObject_Nested deserializeObject_PropertyAsObject_Nested = LazyJsonDeserializer.DeserializeObject<DeserializeObject_PropertyAsObject_Nested>(jsonObject);
+
+            // Assert
+            Assert.AreEqual(deserializeObject_PropertyAsObject_Nested.NestedObject.SomeObject, "Lazy.Vinke.Tests.Json");
+        }
+
+        [TestMethod]
         public void SelectDeserializerType_Null_Single_Success()
         {
             // Arrange
@@ -476,7 +529,6 @@ namespace Lazy.Vinke.Tests.Json
             Assert.AreEqual(jsonDeserializerTypeDataTable, typeof(LazyJsonDeserializerDataTable));
             Assert.AreEqual(jsonDeserializerTypeList, typeof(LazyJsonDeserializerList));
             Assert.AreEqual(jsonDeserializerTypeDictionary, typeof(LazyJsonDeserializerDictionary));
-            Assert.AreEqual(jsonDeserializerTypeObject, typeof(LazyJsonDeserializerObject));
             Assert.AreEqual(jsonDeserializerTypeOfType, typeof(LazyJsonDeserializerType));
         }
     }
