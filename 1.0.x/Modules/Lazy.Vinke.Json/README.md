@@ -22,7 +22,7 @@
     <br>
   - ### Support easily property ignore by adding attribute to property
     [LazyJsonAttributePropertyIgnore()]<br>
-    public Int32 Internalid { get; set; }<br>
+    public Int32 Id { get; set; }<br>
     <br>
   - ### Support easily property renaming by adding attribute to property
     [LazyJsonAttributePropertyRename("NewName")]<br>
