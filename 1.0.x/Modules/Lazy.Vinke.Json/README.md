@@ -11,7 +11,7 @@
   - Generic Dictionary\<T\>
   - Generic Tuple\<T\>
   - Generic List\<T\>
-  <br><br>
+  <br>
 - ### Supported features
   - ### Globally define Serializer\Deserializer for types just once
     LazyJsonSerializerOptions serializerOptions = new LazyJsonSerializerOptions();<br>
