@@ -339,6 +339,7 @@ namespace Lazy.Vinke.Json
 
                 if (dataType.IsGenericType == true && dataType.GetGenericTypeDefinition() == typeof(List<>)) return typeof(LazyJsonDeserializerList);
                 if (dataType.IsGenericType == true && dataType.GetGenericTypeDefinition() == typeof(Dictionary<,>)) return typeof(LazyJsonDeserializerDictionary);
+                if (dataType.IsGenericType == true && dataType.GetGenericTypeDefinition() == typeof(Stack<>)) return typeof(LazyJsonDeserializerStack);
                 if (dataType.IsGenericType == true && dataType.IsAssignableTo(typeof(ITuple)) == true) return typeof(LazyJsonDeserializerTuple);
 
                 if (dataType == typeof(Type)) return typeof(LazyJsonDeserializerType);
