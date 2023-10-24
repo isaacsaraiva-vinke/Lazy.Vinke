@@ -35,12 +35,10 @@ namespace Lazy.Vinke.Json
             {
                 if (data.GetType() == typeof(DateTime))
                 {
-                    if (jsonSerializerOptions == null)
-                        jsonSerializerOptions = new LazyJsonSerializerOptions();
+                    LazyJsonSerializerOptions options = jsonSerializerOptions != null ? jsonSerializerOptions : new LazyJsonSerializerOptions();
+                    LazyJsonSerializerOptionsDateTime optionsDateTime = options.Contains<LazyJsonSerializerOptionsDateTime>() == true ? options.Item<LazyJsonSerializerOptionsDateTime>() : new LazyJsonSerializerOptionsDateTime();
 
-                    LazyJsonSerializerOptionsDateTime jsonSerializerOptionsDateTime = jsonSerializerOptions.Item<LazyJsonSerializerOptionsDateTime>();
-
-                    return new LazyJsonString(((DateTime)data).ToString(jsonSerializerOptionsDateTime.Format));
+                    return new LazyJsonString(((DateTime)data).ToString(optionsDateTime.Format));
                 }
             }
 

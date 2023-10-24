@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using System.Data;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace Lazy.Vinke.Json
 {
@@ -40,14 +41,12 @@ namespace Lazy.Vinke.Json
 
                     if (jsonString.Value != null)
                     {
-                        if (jsonDeserializerOptions == null)
-                            jsonDeserializerOptions = new LazyJsonDeserializerOptions();
-
-                        LazyJsonDeserializerOptionsDateTime jsonDeserializerOptionsDateTime = jsonDeserializerOptions.Item<LazyJsonDeserializerOptionsDateTime>();
+                        LazyJsonDeserializerOptions options = jsonDeserializerOptions != null ? jsonDeserializerOptions : new LazyJsonDeserializerOptions();
+                        LazyJsonDeserializerOptionsDateTime optionsDateTime = options.Contains<LazyJsonDeserializerOptionsDateTime>() == true ? options.Item<LazyJsonDeserializerOptionsDateTime>() : new LazyJsonDeserializerOptionsDateTime();
 
                         DateTime dateTime = DateTime.MinValue;
 
-                        if (DateTime.TryParseExact(jsonString.Value, jsonDeserializerOptionsDateTime.Format, jsonDeserializerOptionsDateTime.CultureInfo, jsonDeserializerOptionsDateTime.DateTimeStyles, out dateTime) == true)
+                        if (DateTime.TryParseExact(jsonString.Value, optionsDateTime.Format, optionsDateTime.CultureInfo, optionsDateTime.DateTimeStyles, out dateTime) == true)
                             return dateTime;
                     }
                 }
