@@ -347,6 +347,7 @@ namespace Lazy.Vinke.Json
                 if (dataType == typeof(Nullable<UInt16>)) return typeof(LazyJsonDeserializerInteger);
 
                 if (dataType == typeof(DataTable)) return typeof(LazyJsonDeserializerDataTable);
+                if (dataType == typeof(DataSet)) return typeof(LazyJsonDeserializerDataSet);
 
                 if (dataType.IsGenericType == true)
                 {
