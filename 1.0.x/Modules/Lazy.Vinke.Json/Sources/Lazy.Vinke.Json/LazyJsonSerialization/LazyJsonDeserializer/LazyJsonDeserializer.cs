@@ -380,9 +380,11 @@ namespace Lazy.Vinke.Json
                 jsonDeserializer = (LazyJsonDeserializerBase)Activator.CreateInstance(jsonDeserializerType);
                 jsonDeserializePropertyEventHandler = new LazyJsonDeserializePropertyEventHandler(jsonDeserializer.Deserialize);
             }
-
-            jsonDeserializer = null;
-            jsonDeserializePropertyEventHandler = new LazyJsonDeserializePropertyEventHandler(DeserializeObject);
+            else
+            {
+                jsonDeserializer = null;
+                jsonDeserializePropertyEventHandler = new LazyJsonDeserializePropertyEventHandler(DeserializeObject);
+            }
         }
 
         /// <summary>
@@ -401,9 +403,11 @@ namespace Lazy.Vinke.Json
                 jsonDeserializer = (LazyJsonDeserializerBase)Activator.CreateInstance(jsonDeserializerType);
                 jsonDeserializeTokenEventHandler = new LazyJsonDeserializeTokenEventHandler(jsonDeserializer.Deserialize);
             }
-
-            jsonDeserializer = null;
-            jsonDeserializeTokenEventHandler = new LazyJsonDeserializeTokenEventHandler(DeserializeObject);
+            else
+            {
+                jsonDeserializer = null;
+                jsonDeserializeTokenEventHandler = new LazyJsonDeserializeTokenEventHandler(DeserializeObject);
+            }
         }
 
         #endregion Methods

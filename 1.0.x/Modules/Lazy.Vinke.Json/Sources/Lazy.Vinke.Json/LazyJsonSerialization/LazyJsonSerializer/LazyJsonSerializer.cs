@@ -284,9 +284,11 @@ namespace Lazy.Vinke.Json
                 jsonSerializer = (LazyJsonSerializerBase)Activator.CreateInstance(jsonSerializerType);
                 jsonSerializeTokenEventHandler = new LazyJsonSerializeTokenEventHandler(jsonSerializer.Serialize);
             }
-
-            jsonSerializer = null;
-            jsonSerializeTokenEventHandler = new LazyJsonSerializeTokenEventHandler(SerializeObject);
+            else
+            {
+                jsonSerializer = null;
+                jsonSerializeTokenEventHandler = new LazyJsonSerializeTokenEventHandler(SerializeObject);
+            }
         }
 
         #endregion Methods
