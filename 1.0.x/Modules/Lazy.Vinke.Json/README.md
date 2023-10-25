@@ -9,9 +9,10 @@
   - DateTime (Customizable format [default: yyyy-MM-ddTHH:mm:ss:fffZ])
   - Object (Wrap\Unwrap properties declared as "Object" by exporting its instance type)
   - Generic Stack\<T\> (With write\read reverse options)
+  - Generic Tuple\<T\>
+  - Generic ValueTuple\<T\>
   - Generic Dictionary\<T\>
   - Generic Queue\<T\>
-  - Generic Tuple\<T\>
   - Generic List\<T\>
   <br>
 - ### Supported features
