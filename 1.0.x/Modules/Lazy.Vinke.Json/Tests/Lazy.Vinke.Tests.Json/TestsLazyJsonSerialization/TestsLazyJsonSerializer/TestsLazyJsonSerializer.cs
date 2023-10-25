@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using Lazy.Vinke.Json;
 using Lazy.Vinke.Json.Properties;
 using Lazy.Vinke.Tests.Json.Properties;
+using System.Data.Common;
 
 namespace Lazy.Vinke.Tests.Json
 {
@@ -460,6 +461,38 @@ namespace Lazy.Vinke.Tests.Json
             Assert.AreEqual(jsonSerializerTypeList, typeof(LazyJsonSerializerList));
             Assert.AreEqual(jsonSerializerTypeDictionary, typeof(LazyJsonSerializerDictionary));
             Assert.AreEqual(jsonSerializerTypeOfType, typeof(LazyJsonSerializerType));
+        }
+
+        [TestMethod]
+        public void SelectSerializeTokenEventHandler_KnownType_Single_Success()
+        {
+            // Arrange
+            LazyJsonSerializerBase jsonSerializer = null;
+            LazyJsonSerializeTokenEventHandler jsonSerializeTokenEventHandler;
+
+            // Act
+            LazyJsonSerializer.SelectSerializeTokenEventHandler(typeof(DateTime), out jsonSerializer, out jsonSerializeTokenEventHandler);
+
+            // Assert
+            Assert.IsNotNull(jsonSerializer);
+            Assert.IsNotNull(jsonSerializeTokenEventHandler);
+            Assert.AreEqual(jsonSerializeTokenEventHandler, jsonSerializer.Serialize);
+        }
+
+        [TestMethod]
+        public void SelectSerializeTokenEventHandler_UnknownType_Single_Success()
+        {
+            // Arrange
+            LazyJsonSerializerBase jsonSerializer = null;
+            LazyJsonSerializeTokenEventHandler jsonSerializeTokenEventHandler;
+
+            // Act
+            LazyJsonSerializer.SelectSerializeTokenEventHandler(typeof(DataAdapter), out jsonSerializer, out jsonSerializeTokenEventHandler);
+
+            // Assert
+            Assert.IsNull(jsonSerializer);
+            Assert.IsNotNull(jsonSerializeTokenEventHandler);
+            Assert.AreEqual(jsonSerializeTokenEventHandler, LazyJsonSerializer.SerializeObject);
         }
     }
 }

@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using Lazy.Vinke.Json;
 using Lazy.Vinke.Json.Properties;
 using Lazy.Vinke.Tests.Json.Properties;
+using System.Data.Common;
 
 namespace Lazy.Vinke.Tests.Json
 {
@@ -530,6 +531,70 @@ namespace Lazy.Vinke.Tests.Json
             Assert.AreEqual(jsonDeserializerTypeList, typeof(LazyJsonDeserializerList));
             Assert.AreEqual(jsonDeserializerTypeDictionary, typeof(LazyJsonDeserializerDictionary));
             Assert.AreEqual(jsonDeserializerTypeOfType, typeof(LazyJsonDeserializerType));
+        }
+
+        [TestMethod]
+        public void SelectDeserializePropertyEventHandler_KnownType_Single_Success()
+        {
+            // Arrange
+            LazyJsonDeserializerBase jsonDeserializerBase = null;
+            LazyJsonDeserializePropertyEventHandler jsonDeserializePropertyEventHandler = null;
+
+            // Act
+            LazyJsonDeserializer.SelectDeserializePropertyEventHandler(typeof(DataSet), out jsonDeserializerBase, out jsonDeserializePropertyEventHandler);
+
+            // Assert
+            Assert.IsNotNull(jsonDeserializerBase);
+            Assert.IsNotNull(jsonDeserializePropertyEventHandler);
+            Assert.AreEqual(jsonDeserializePropertyEventHandler, jsonDeserializerBase.Deserialize);
+        }
+
+        [TestMethod]
+        public void SelectDeserializePropertyEventHandler_UnknownType_Single_Success()
+        {
+            // Arrange
+            LazyJsonDeserializerBase jsonDeserializerBase = null;
+            LazyJsonDeserializePropertyEventHandler jsonDeserializePropertyEventHandler = null;
+
+            // Act
+            LazyJsonDeserializer.SelectDeserializePropertyEventHandler(typeof(DbDataAdapter), out jsonDeserializerBase, out jsonDeserializePropertyEventHandler);
+
+            // Assert
+            Assert.IsNull(jsonDeserializerBase);
+            Assert.IsNotNull(jsonDeserializePropertyEventHandler);
+            Assert.AreEqual(jsonDeserializePropertyEventHandler, LazyJsonDeserializer.DeserializeObject);
+        }
+
+        [TestMethod]
+        public void SelectDeserializeTokenEventHandler_KnownType_Single_Success()
+        {
+            // Arrange
+            LazyJsonDeserializerBase jsonDeserializerBase = null;
+            LazyJsonDeserializeTokenEventHandler jsonDeserializeTokenEventHandler = null;
+
+            // Act
+            LazyJsonDeserializer.SelectDeserializeTokenEventHandler(typeof(DataSet), out jsonDeserializerBase, out jsonDeserializeTokenEventHandler);
+
+            // Assert
+            Assert.IsNotNull(jsonDeserializerBase);
+            Assert.IsNotNull(jsonDeserializeTokenEventHandler);
+            Assert.AreEqual(jsonDeserializeTokenEventHandler, jsonDeserializerBase.Deserialize);
+        }
+
+        [TestMethod]
+        public void SelectDeserializeTokenEventHandler_UnknownType_Single_Success()
+        {
+            // Arrange
+            LazyJsonDeserializerBase jsonDeserializerBase = null;
+            LazyJsonDeserializeTokenEventHandler jsonDeserializeTokenEventHandler = null;
+
+            // Act
+            LazyJsonDeserializer.SelectDeserializeTokenEventHandler(typeof(ManifestResourceInfo), out jsonDeserializerBase, out jsonDeserializeTokenEventHandler);
+
+            // Assert
+            Assert.IsNull(jsonDeserializerBase);
+            Assert.IsNotNull(jsonDeserializeTokenEventHandler);
+            Assert.AreEqual(jsonDeserializeTokenEventHandler, LazyJsonDeserializer.DeserializeObject);
         }
     }
 }
