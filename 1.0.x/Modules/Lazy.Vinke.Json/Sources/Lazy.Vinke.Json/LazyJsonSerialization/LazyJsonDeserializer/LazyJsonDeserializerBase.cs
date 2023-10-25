@@ -56,7 +56,10 @@ namespace Lazy.Vinke.Json
         /// <returns>The deserialized object</returns>
         public virtual Object Deserialize(LazyJsonProperty jsonProperty, Type dataType, LazyJsonDeserializerOptions jsonDeserializerOptions = null)
         {
-            return jsonProperty == null ? null : Deserialize(jsonProperty.Token, dataType, jsonDeserializerOptions);
+            if (jsonProperty != null)
+                return Deserialize(jsonProperty.Token, dataType, jsonDeserializerOptions);
+
+            return null;
         }
 
         /// <summary>

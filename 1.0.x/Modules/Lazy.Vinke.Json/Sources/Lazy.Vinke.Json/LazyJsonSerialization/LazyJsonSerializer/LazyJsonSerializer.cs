@@ -268,6 +268,27 @@ namespace Lazy.Vinke.Json
             return null;
         }
 
+        /// <summary>
+        /// Select the json serialize token event handler for data type
+        /// </summary>
+        /// <param name="dataType">The data type</param>
+        /// <param name="jsonSerializer">The json serializer</param>
+        /// <param name="jsonSerializeTokenEventHandler">The json serialize token event handler</param>
+        /// <param name="jsonSerializerOptions">The json serializer options</param>
+        public static void SelectSerializeTokenEventHandler(Type dataType, out LazyJsonSerializerBase jsonSerializer, out LazyJsonSerializeTokenEventHandler jsonSerializeTokenEventHandler, LazyJsonSerializerOptions jsonSerializerOptions = null)
+        {
+            Type jsonSerializerType = SelectSerializerType(dataType, jsonSerializerOptions);
+
+            if (jsonSerializerType != null)
+            {
+                jsonSerializer = (LazyJsonSerializerBase)Activator.CreateInstance(jsonSerializerType);
+                jsonSerializeTokenEventHandler = new LazyJsonSerializeTokenEventHandler(jsonSerializer.Serialize);
+            }
+
+            jsonSerializer = null;
+            jsonSerializeTokenEventHandler = new LazyJsonSerializeTokenEventHandler(SerializeObject);
+        }
+
         #endregion Methods
 
         #region Properties
