@@ -60,15 +60,27 @@ namespace Lazy.Vinke.Json
         }
 
         /// <summary>
-        /// Deserialize the json object to an object
+        /// Deserialize the json property to an object
         /// </summary>
         /// <typeparam name="T">The data type</typeparam>
-        /// <param name="jsonObject">The json object</param>
+        /// <param name="jsonProperty">The json property</param>
         /// <param name="jsonDeserializerOptions">The json deserializer options</param>
         /// <returns>The object</returns>
-        public static T DeserializeObject<T>(LazyJsonObject jsonObject, LazyJsonDeserializerOptions jsonDeserializerOptions = null)
+        public static T DeserializePropertyObject<T>(LazyJsonProperty jsonProperty, LazyJsonDeserializerOptions jsonDeserializerOptions = null)
         {
-            return (T)DeserializeObject(jsonObject, typeof(T), jsonDeserializerOptions);
+            return (T)DeserializePropertyObject(jsonProperty, typeof(T), jsonDeserializerOptions);
+        }
+
+        /// <summary>
+        /// Deserialize the json token to an object
+        /// </summary>
+        /// <typeparam name="T">The data type</typeparam>
+        /// <param name="jsonToken">The json token</param>
+        /// <param name="jsonDeserializerOptions">The json deserializer options</param>
+        /// <returns>The object</returns>
+        public static T DeserializeTokenObject<T>(LazyJsonToken jsonToken, LazyJsonDeserializerOptions jsonDeserializerOptions = null)
+        {
+            return (T)DeserializeTokenObject(jsonToken, typeof(T), jsonDeserializerOptions);
         }
 
         /// <summary>
@@ -103,7 +115,7 @@ namespace Lazy.Vinke.Json
                 }
                 else
                 {
-                    return DeserializeObject(jsonProperty, dataType, jsonDeserializerOptions);
+                    return DeserializePropertyObject(jsonProperty, dataType, jsonDeserializerOptions);
                 }
             }
 
@@ -129,7 +141,7 @@ namespace Lazy.Vinke.Json
                 }
                 else
                 {
-                    return DeserializeObject(jsonToken, dataType, jsonDeserializerOptions);
+                    return DeserializeTokenObject(jsonToken, dataType, jsonDeserializerOptions);
                 }
             }
 
@@ -143,10 +155,10 @@ namespace Lazy.Vinke.Json
         /// <param name="dataType">The data type</param>
         /// <param name="jsonDeserializerOptions">The json deserializer options</param>
         /// <returns>The object</returns>
-        public static Object DeserializeObject(LazyJsonProperty jsonProperty, Type dataType, LazyJsonDeserializerOptions jsonDeserializerOptions = null)
+        public static Object DeserializePropertyObject(LazyJsonProperty jsonProperty, Type dataType, LazyJsonDeserializerOptions jsonDeserializerOptions = null)
         {
             if (jsonProperty != null)
-                return DeserializeObject(jsonProperty.Token, dataType, jsonDeserializerOptions);
+                return DeserializeTokenObject(jsonProperty.Token, dataType, jsonDeserializerOptions);
 
             return null;
         }
@@ -158,7 +170,7 @@ namespace Lazy.Vinke.Json
         /// <param name="dataType">The data type</param>
         /// <param name="jsonDeserializerOptions">The json deserializer options</param>
         /// <returns>The object</returns>
-        public static Object DeserializeObject(LazyJsonToken jsonToken, Type dataType, LazyJsonDeserializerOptions jsonDeserializerOptions = null)
+        public static Object DeserializeTokenObject(LazyJsonToken jsonToken, Type dataType, LazyJsonDeserializerOptions jsonDeserializerOptions = null)
         {
             if (jsonToken != null && jsonToken.Type == LazyJsonType.Object && dataType != null)
             {
@@ -384,7 +396,7 @@ namespace Lazy.Vinke.Json
             else
             {
                 jsonDeserializer = null;
-                jsonDeserializePropertyEventHandler = new LazyJsonDeserializePropertyEventHandler(DeserializeObject);
+                jsonDeserializePropertyEventHandler = new LazyJsonDeserializePropertyEventHandler(DeserializePropertyObject);
             }
         }
 
@@ -407,7 +419,7 @@ namespace Lazy.Vinke.Json
             else
             {
                 jsonDeserializer = null;
-                jsonDeserializeTokenEventHandler = new LazyJsonDeserializeTokenEventHandler(DeserializeObject);
+                jsonDeserializeTokenEventHandler = new LazyJsonDeserializeTokenEventHandler(DeserializeTokenObject);
             }
         }
 
