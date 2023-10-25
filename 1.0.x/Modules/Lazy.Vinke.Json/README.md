@@ -17,10 +17,10 @@
 - ### Supported features
   - ### Globally define Serializer\Deserializer for types just once
     LazyJsonSerializerOptions options = new LazyJsonSerializerOptions();<br>
-    options.Item\<LazyJsonSerializerOptionsGlobal\>().Add\<YourSerializer\>(typeof(YourType));<br>
+    options.Item\<LazyJsonSerializerOptionsGlobal\>().Add\<YourSerializer\>(typeof(SomeType));<br>
     <br>
     LazyJsonDeserializerOptions options = new LazyJsonDeserializerOptions();<br>
-    options.Item\<LazyJsonDeserializerOptionsGlobal\>().Add\<YourDeserializer\>(typeof(YourType));<br>
+    options.Item\<LazyJsonDeserializerOptionsGlobal\>().Add\<YourDeserializer\>(typeof(SomeType));<br>
     <br>
   - ### Support easily property ignore by adding attribute to property
     [LazyJsonAttributePropertyIgnore()]<br>
