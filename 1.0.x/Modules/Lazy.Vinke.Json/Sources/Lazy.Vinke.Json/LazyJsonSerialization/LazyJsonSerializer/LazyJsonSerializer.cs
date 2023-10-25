@@ -248,10 +248,14 @@ namespace Lazy.Vinke.Json
 
                 if (dataType == typeof(DataTable)) return typeof(LazyJsonSerializerDataTable);
 
-                if (dataType.IsGenericType == true && dataType.GetGenericTypeDefinition() == typeof(List<>)) return typeof(LazyJsonSerializerList);
-                if (dataType.IsGenericType == true && dataType.GetGenericTypeDefinition() == typeof(Dictionary<,>)) return typeof(LazyJsonSerializerDictionary);
-                if (dataType.IsGenericType == true && dataType.GetGenericTypeDefinition() == typeof(Stack<>)) return typeof(LazyJsonSerializerStack);
-                if (dataType.IsGenericType == true && dataType.IsAssignableTo(typeof(ITuple)) == true) return typeof(LazyJsonSerializerTuple);
+                if (dataType.IsGenericType == true)
+                {
+                    if (dataType.GetGenericTypeDefinition() == typeof(List<>)) return typeof(LazyJsonSerializerList);
+                    if (dataType.GetGenericTypeDefinition() == typeof(Dictionary<,>)) return typeof(LazyJsonSerializerDictionary);
+                    if (dataType.GetGenericTypeDefinition() == typeof(Queue<>)) return typeof(LazyJsonSerializerQueue);
+                    if (dataType.GetGenericTypeDefinition() == typeof(Stack<>)) return typeof(LazyJsonSerializerStack);
+                    if (dataType.IsAssignableTo(typeof(ITuple)) == true) return typeof(LazyJsonSerializerTuple);
+                }
 
                 if (dataType.IsAssignableTo(typeof(Type)) == true) return typeof(LazyJsonSerializerType);
                 if (dataType == typeof(Object)) return typeof(LazyJsonSerializerObject);
