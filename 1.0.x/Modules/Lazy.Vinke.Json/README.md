@@ -1,7 +1,7 @@
 
 # Lazy.Vinke.Json
-.Net Json Serializer & Deserializer<br>
-<br>
+.Net Json Serializer & Deserializer
+&nbsp;
 - ### Built-in Serializers\Deserializers
   - Type (Based on .Net Assemblies and Namespaces)
   - DataSet (Typed data table collection)
@@ -14,40 +14,45 @@
   - Generic Dictionary\<T\>
   - Generic Queue\<T\>
   - Generic List\<T\>
-  <br>
+    &nbsp; \
+    &nbsp;
 - ### Supported features
   - ### Globally define Serializer\Deserializer for types just once
-    LazyJsonSerializerOptions options = new LazyJsonSerializerOptions();<br>
-    options.Item\<LazyJsonSerializerOptionsGlobal\>().Add\<YourSerializer\>(typeof(SomeType));<br>
-    <br>
-    LazyJsonDeserializerOptions options = new LazyJsonDeserializerOptions();<br>
-    options.Item\<LazyJsonDeserializerOptionsGlobal\>().Add\<YourDeserializer\>(typeof(SomeType));<br>
-    <br>
+    LazyJsonSerializerOptions options = new LazyJsonSerializerOptions();
+    options.Item\<LazyJsonSerializerOptionsGlobal\>().Add\<YourSerializer\>(typeof(SomeType));
+    
+    LazyJsonDeserializerOptions options = new LazyJsonDeserializerOptions();
+    options.Item\<LazyJsonDeserializerOptionsGlobal\>().Add\<YourDeserializer\>(typeof(SomeType));
+    &nbsp;
   - ### Support easily property ignore by adding attribute to property
-    [LazyJsonAttributePropertyIgnore()]<br>
-    public Int32 Id { get; set; }<br>
-    <br>
+    [LazyJsonAttributePropertyIgnore()]
+    public Int32 Id { get; set; }
+    &nbsp;
   - ### Support easily property renaming by adding attribute to property
-    [LazyJsonAttributePropertyRename("NewName")]<br>
-    public Decimal Amount { get; set; }<br>
-    <br>
+    [LazyJsonAttributePropertyRename("NewName")]
+    public Decimal Amount { get; set; }
+    &nbsp;
   - ### Support specific Serializers\Deserializers by adding attribute to property
-    [LazyJsonAttributeTypeSerializer(typeof(YourTypeSerializer))]<br>
-    [LazyJsonAttributeTypeDeserializer(typeof(YourTypeDeserializer))]<br>
-    public YourType YourProperty { get; set; }<br>
-  <br>
+    [LazyJsonAttributeTypeSerializer(typeof(YourTypeSerializer))]
+    [LazyJsonAttributeTypeDeserializer(typeof(YourTypeDeserializer))]
+    public YourType YourProperty { get; set; }
+    &nbsp;
 - ### Usage
   - ### Reader
-    LazyJson lazyJson = LazyJsonReader.Read(yourJson);<br>
-    <br>
+    LazyJson lazyJson = LazyJsonReader.Read(yourJson);
+    &nbsp; \
+    &nbsp;
   - ### Writer
-    String yourJson = LazyJsonWriter.Write(lazyJson);<br>
-    <br>
+    String yourJson = LazyJsonWriter.Write(lazyJson);
+    &nbsp; \
+    &nbsp;
   - ### Serialization
-    String yourJson = LazyJsonSerializer.Serialize(yourObject);<br>
-    LazyJsonToken jsonToken = LazyJsonSerializer.SerializeToken(yourObject);<br>
-    <br>
+    String yourJson = LazyJsonSerializer.Serialize(yourObject); \
+    LazyJsonToken jsonToken = LazyJsonSerializer.SerializeToken(yourObject);
+    &nbsp; \
+    &nbsp;
   - ### Deserialization
-    YourObject yourObject = LazyJsonDeserializer\<YourObject\>.Deserialize(yourJson);<br>
-    YourObject yourObject = LazyJsonDeserializer\<YourObject\>.DeserializeToken(jsonToken);<br>
-    <br>
+    YourObject yourObject = LazyJsonDeserializer\<YourObject\>.Deserialize(yourJson); \
+    YourObject yourObject = LazyJsonDeserializer\<YourObject\>.DeserializeToken(jsonToken);
+    &nbsp; \
+    &nbsp;
