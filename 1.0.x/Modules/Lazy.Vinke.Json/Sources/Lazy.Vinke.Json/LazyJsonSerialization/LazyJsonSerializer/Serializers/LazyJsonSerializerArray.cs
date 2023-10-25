@@ -39,27 +39,16 @@ namespace Lazy.Vinke.Json
                 {
                     Array dataArray = (data as Array);
                     LazyJsonArray jsonArray = new LazyJsonArray();
-                    
+
                     Type dataArrayElementType = dataType.GetElementType();
 
                     LazyJsonSerializerBase jsonSerializer = null;
                     LazyJsonSerializeTokenEventHandler jsonSerializeTokenEventHandler = null;
-
-                    Type jsonSerializerType = LazyJsonSerializer.SelectSerializerType(dataArrayElementType, jsonSerializerOptions);
-                    
-                    if (jsonSerializerType != null)
-                    {
-                        jsonSerializer = (LazyJsonSerializerBase)Activator.CreateInstance(jsonSerializerType);
-                        jsonSerializeTokenEventHandler = new LazyJsonSerializeTokenEventHandler(jsonSerializer.Serialize);
-                    }
-                    else
-                    {
-                        jsonSerializeTokenEventHandler = new LazyJsonSerializeTokenEventHandler(LazyJsonSerializer.SerializeToken);
-                    }
+                    LazyJsonSerializer.SelectSerializeTokenEventHandler(dataArrayElementType, out jsonSerializer, out jsonSerializeTokenEventHandler, jsonSerializerOptions);
 
                     foreach (Object item in dataArray)
                         jsonArray.Add(jsonSerializeTokenEventHandler(item, jsonSerializerOptions));
-                    
+
                     return jsonArray;
                 }
             }

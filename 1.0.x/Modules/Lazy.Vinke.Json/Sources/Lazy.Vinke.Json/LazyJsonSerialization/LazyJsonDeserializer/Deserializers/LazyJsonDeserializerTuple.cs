@@ -45,17 +45,11 @@ namespace Lazy.Vinke.Json
 
                     for (int index = 0; index < jsonArray.Length; index++)
                     {
-                        Type jsonDeserializerType = LazyJsonDeserializer.SelectDeserializerType(dataType.GenericTypeArguments[index], jsonDeserializerOptions);
+                        LazyJsonDeserializerBase jsonDeserializer = null;
+                        LazyJsonDeserializeTokenEventHandler jsonDeserializeTokenEventHandler = null;
+                        LazyJsonDeserializer.SelectDeserializeTokenEventHandler(dataType.GenericTypeArguments[index], out jsonDeserializer, out jsonDeserializeTokenEventHandler, jsonDeserializerOptions);
 
-                        if (jsonDeserializerType != null)
-                        {
-                            LazyJsonDeserializerBase jsonDeserializer = (LazyJsonDeserializerBase)Activator.CreateInstance(jsonDeserializerType);
-                            tupleValuesArray[index] = jsonDeserializer.Deserialize(jsonArray[index], dataType.GenericTypeArguments[index], jsonDeserializerOptions);
-                        }
-                        else
-                        {
-                            tupleValuesArray[index] = LazyJsonDeserializer.DeserializeToken(jsonArray[index], dataType.GenericTypeArguments[index], jsonDeserializerOptions);
-                        }
+                        tupleValuesArray[index] = jsonDeserializeTokenEventHandler(jsonArray[index], dataType.GenericTypeArguments[index], jsonDeserializerOptions);
                     }
 
                     return Activator.CreateInstance(dataType, tupleValuesArray);

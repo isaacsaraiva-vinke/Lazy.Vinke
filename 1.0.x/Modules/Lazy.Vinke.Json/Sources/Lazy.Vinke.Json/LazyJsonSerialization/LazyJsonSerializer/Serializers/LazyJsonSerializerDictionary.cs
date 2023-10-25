@@ -12,6 +12,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace Lazy.Vinke.Json
 {
@@ -52,35 +53,13 @@ namespace Lazy.Vinke.Json
                     collection = dataType.GetProperties().First(x => x.Name == "Values").GetValue(data);
                     collection.GetType().GetMethods().First(x => x.Name == "CopyTo").Invoke(collection, new Object[] { valuesArray, 0 });
 
-                    Type jsonSerializerType = null;
                     LazyJsonSerializerBase jsonSerializerKeys = null;
-                    LazyJsonSerializerBase jsonSerializerValues = null;
                     LazyJsonSerializeTokenEventHandler jsonSerializeTokenEventHandlerKeys = null;
+                    LazyJsonSerializer.SelectSerializeTokenEventHandler(dataType.GenericTypeArguments[0], out jsonSerializerKeys, out jsonSerializeTokenEventHandlerKeys, jsonSerializerOptions);
+
+                    LazyJsonSerializerBase jsonSerializerValues = null;
                     LazyJsonSerializeTokenEventHandler jsonSerializeTokenEventHandlerValues = null;
-
-                    jsonSerializerType = LazyJsonSerializer.SelectSerializerType(dataType.GenericTypeArguments[0], jsonSerializerOptions);
-
-                    if (jsonSerializerType != null)
-                    {
-                        jsonSerializerKeys = (LazyJsonSerializerBase)Activator.CreateInstance(jsonSerializerType);
-                        jsonSerializeTokenEventHandlerKeys = new LazyJsonSerializeTokenEventHandler(jsonSerializerKeys.Serialize);
-                    }
-                    else
-                    {
-                        jsonSerializeTokenEventHandlerKeys = new LazyJsonSerializeTokenEventHandler(LazyJsonSerializer.SerializeToken);
-                    }
-
-                    jsonSerializerType = LazyJsonSerializer.SelectSerializerType(dataType.GenericTypeArguments[1], jsonSerializerOptions);
-
-                    if (jsonSerializerType != null)
-                    {
-                        jsonSerializerValues = (LazyJsonSerializerBase)Activator.CreateInstance(jsonSerializerType);
-                        jsonSerializeTokenEventHandlerValues = new LazyJsonSerializeTokenEventHandler(jsonSerializerValues.Serialize);
-                    }
-                    else
-                    {
-                        jsonSerializeTokenEventHandlerValues = new LazyJsonSerializeTokenEventHandler(LazyJsonSerializer.SerializeToken);
-                    }
+                    LazyJsonSerializer.SelectSerializeTokenEventHandler(dataType.GenericTypeArguments[1], out jsonSerializerValues, out jsonSerializeTokenEventHandlerValues, jsonSerializerOptions);
 
                     for (int index = 0; index < count; index++)
                     {

@@ -49,18 +49,7 @@ namespace Lazy.Vinke.Json
 
                     LazyJsonSerializerBase jsonSerializer = null;
                     LazyJsonSerializeTokenEventHandler jsonSerializeTokenEventHandler = null;
-
-                    Type jsonSerializerType = LazyJsonSerializer.SelectSerializerType(dataType.GenericTypeArguments[0], jsonSerializerOptions);
-
-                    if (jsonSerializerType != null)
-                    {
-                        jsonSerializer = (LazyJsonSerializerBase)Activator.CreateInstance(jsonSerializerType);
-                        jsonSerializeTokenEventHandler = new LazyJsonSerializeTokenEventHandler(jsonSerializer.Serialize);
-                    }
-                    else
-                    {
-                        jsonSerializeTokenEventHandler = new LazyJsonSerializeTokenEventHandler(LazyJsonSerializer.SerializeToken);
-                    }
+                    LazyJsonSerializer.SelectSerializeTokenEventHandler(dataType.GenericTypeArguments[0], out jsonSerializer, out jsonSerializeTokenEventHandler, jsonSerializerOptions);
 
                     LazyJsonSerializerOptions options = jsonSerializerOptions != null ? jsonSerializerOptions : new LazyJsonSerializerOptions();
                     LazyJsonSerializerOptionsStack optionsStack = options.Contains<LazyJsonSerializerOptionsStack>() == true ? options.Item<LazyJsonSerializerOptionsStack>() : new LazyJsonSerializerOptionsStack();

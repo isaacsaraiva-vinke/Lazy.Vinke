@@ -43,21 +43,10 @@ namespace Lazy.Vinke.Json
                     
                     Int32 count = (Int32)dataType.GetProperties().First(x => x.Name == "Count").GetValue(data);
                     MethodInfo methodInfoDequeue = dataType.GetMethods().First(x => x.Name == "Dequeue");
-                    
+
                     LazyJsonSerializerBase jsonSerializer = null;
                     LazyJsonSerializeTokenEventHandler jsonSerializeTokenEventHandler = null;
-
-                    Type jsonSerializerType = LazyJsonSerializer.SelectSerializerType(dataType.GenericTypeArguments[0], jsonSerializerOptions);
-
-                    if (jsonSerializerType != null)
-                    {
-                        jsonSerializer = (LazyJsonSerializerBase)Activator.CreateInstance(jsonSerializerType);
-                        jsonSerializeTokenEventHandler = new LazyJsonSerializeTokenEventHandler(jsonSerializer.Serialize);
-                    }
-                    else
-                    {
-                        jsonSerializeTokenEventHandler = new LazyJsonSerializeTokenEventHandler(LazyJsonSerializer.SerializeToken);
-                    }
+                    LazyJsonSerializer.SelectSerializeTokenEventHandler(dataType.GenericTypeArguments[0], out jsonSerializer, out jsonSerializeTokenEventHandler, jsonSerializerOptions);
 
                     for (int index = 0; index < count; index++)
                         jsonArray.Add(jsonSerializeTokenEventHandler(methodInfoDequeue.Invoke(data, null), jsonSerializerOptions));

@@ -41,35 +41,13 @@ namespace Lazy.Vinke.Json
                 Object dataDictionary = Activator.CreateInstance(dataType);
                 MethodInfo methodInfoAdd = dataType.GetMethods().First(x => x.Name == "Add");
 
-                Type jsonDeserializerType = null;
                 LazyJsonDeserializerBase jsonDeserializerKeys = null;
-                LazyJsonDeserializerBase jsonDeserializerValues = null;
                 LazyJsonDeserializeTokenEventHandler jsonDeserializeTokenEventHandlerKeys = null;
+                LazyJsonDeserializer.SelectDeserializeTokenEventHandler(dataType.GenericTypeArguments[0], out jsonDeserializerKeys, out jsonDeserializeTokenEventHandlerKeys, jsonDeserializerOptions);
+
+                LazyJsonDeserializerBase jsonDeserializerValues = null;
                 LazyJsonDeserializeTokenEventHandler jsonDeserializeTokenEventHandlerValues = null;
-
-                jsonDeserializerType = LazyJsonDeserializer.SelectDeserializerType(dataType.GenericTypeArguments[0], jsonDeserializerOptions);
-
-                if (jsonDeserializerType != null)
-                {
-                    jsonDeserializerKeys = (LazyJsonDeserializerBase)Activator.CreateInstance(jsonDeserializerType);
-                    jsonDeserializeTokenEventHandlerKeys = new LazyJsonDeserializeTokenEventHandler(jsonDeserializerKeys.Deserialize);
-                }
-                else
-                {
-                    jsonDeserializeTokenEventHandlerKeys = new LazyJsonDeserializeTokenEventHandler(LazyJsonDeserializer.DeserializeToken);
-                }
-
-                jsonDeserializerType = LazyJsonDeserializer.SelectDeserializerType(dataType.GenericTypeArguments[1], jsonDeserializerOptions);
-
-                if (jsonDeserializerType != null)
-                {
-                    jsonDeserializerValues = (LazyJsonDeserializerBase)Activator.CreateInstance(jsonDeserializerType);
-                    jsonDeserializeTokenEventHandlerValues = new LazyJsonDeserializeTokenEventHandler(jsonDeserializerValues.Deserialize);
-                }
-                else
-                {
-                    jsonDeserializeTokenEventHandlerValues = new LazyJsonDeserializeTokenEventHandler(LazyJsonDeserializer.DeserializeToken);
-                }
+                LazyJsonDeserializer.SelectDeserializeTokenEventHandler(dataType.GenericTypeArguments[1], out jsonDeserializerValues, out jsonDeserializeTokenEventHandlerValues, jsonDeserializerOptions);
 
                 for (int index = 0; index < jsonArray.Length; index++)
                 {

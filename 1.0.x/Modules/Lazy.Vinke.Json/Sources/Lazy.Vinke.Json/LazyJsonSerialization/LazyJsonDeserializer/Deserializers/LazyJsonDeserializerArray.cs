@@ -41,18 +41,7 @@ namespace Lazy.Vinke.Json
 
                 LazyJsonDeserializerBase jsonDeserializer = null;
                 LazyJsonDeserializeTokenEventHandler jsonDeserializeTokenEventHandler = null;
-
-                Type jsonDeserializerType = LazyJsonDeserializer.SelectDeserializerType(dataArrayElementType, jsonDeserializerOptions);
-
-                if (jsonDeserializerType != null)
-                {
-                    jsonDeserializer = (LazyJsonDeserializerBase)Activator.CreateInstance(jsonDeserializerType);
-                    jsonDeserializeTokenEventHandler = new LazyJsonDeserializeTokenEventHandler(jsonDeserializer.Deserialize);
-                }
-                else
-                {
-                    jsonDeserializeTokenEventHandler = new LazyJsonDeserializeTokenEventHandler(LazyJsonDeserializer.DeserializeToken);
-                }
+                LazyJsonDeserializer.SelectDeserializeTokenEventHandler(dataArrayElementType, out jsonDeserializer, out jsonDeserializeTokenEventHandler, jsonDeserializerOptions);
 
                 for (int index = 0; index < jsonArray.Length; index++)
                     dataArray.SetValue(jsonDeserializeTokenEventHandler(jsonArray[index], dataArrayElementType, jsonDeserializerOptions), index);

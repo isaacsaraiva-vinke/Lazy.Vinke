@@ -48,17 +48,11 @@ namespace Lazy.Vinke.Json
                         MemberInfo memberInfo = dataType.GetMembers().First(x => x.Name == "Item" + (index + 1));
                         MethodInfo methodInfoGetValue = memberInfo.GetType().GetMethods().First(x => x.Name == "GetValue" && x.GetParameters().Length == 1);
 
-                        Type jsonSerializerType = LazyJsonSerializer.SelectSerializerType(dataType.GenericTypeArguments[index], jsonSerializerOptions);
+                        LazyJsonSerializerBase jsonSerializer = null;
+                        LazyJsonSerializeTokenEventHandler jsonSerializeTokenEventHandler = null;
+                        LazyJsonSerializer.SelectSerializeTokenEventHandler(dataType.GenericTypeArguments[index], out jsonSerializer, out jsonSerializeTokenEventHandler, jsonSerializerOptions);
 
-                        if (jsonSerializerType != null)
-                        {
-                            LazyJsonSerializerBase jsonSerializer = (LazyJsonSerializerBase)Activator.CreateInstance(jsonSerializerType);
-                            jsonArray.Add(jsonSerializer.Serialize(methodInfoGetValue.Invoke(memberInfo, new Object[] { data }), jsonSerializerOptions));
-                        }
-                        else
-                        {
-                            jsonArray.Add(LazyJsonSerializer.SerializeToken(methodInfoGetValue.Invoke(memberInfo, new Object[] { data }), jsonSerializerOptions));
-                        }
+                        jsonArray.Add(jsonSerializeTokenEventHandler(methodInfoGetValue.Invoke(memberInfo, new Object[] { data }), jsonSerializerOptions));
                     }
 
                     return jsonArray;
