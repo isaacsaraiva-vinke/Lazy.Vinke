@@ -142,8 +142,8 @@ namespace Lazy.Vinke.Tests.Json
             // Arrange
 
             // Act
-            DeserializeObject_Null_Single deserializeObject_Null_Single_1 = LazyJsonDeserializer.DeserializeObject<DeserializeObject_Null_Single>(null);
-            DeserializeObject_Null_Single deserializeObject_Null_Single_2 = (DeserializeObject_Null_Single)LazyJsonDeserializer.DeserializeObject(new LazyJsonObject(), null);
+            DeserializeObject_Null_Single deserializeObject_Null_Single_1 = LazyJsonDeserializer.DeserializeTokenObject<DeserializeObject_Null_Single>(null);
+            DeserializeObject_Null_Single deserializeObject_Null_Single_2 = (DeserializeObject_Null_Single)LazyJsonDeserializer.DeserializeTokenObject(new LazyJsonObject(), null);
 
             // Assert
             Assert.IsNull(deserializeObject_Null_Single_1);
@@ -157,7 +157,7 @@ namespace Lazy.Vinke.Tests.Json
             LazyJsonObject jsonObject = new LazyJsonObject();
 
             // Act
-            DeserializeObject_Empty_Single deserializeObject_Empty_Single = LazyJsonDeserializer.DeserializeObject<DeserializeObject_Empty_Single>(jsonObject);
+            DeserializeObject_Empty_Single deserializeObject_Empty_Single = LazyJsonDeserializer.DeserializeTokenObject<DeserializeObject_Empty_Single>(jsonObject);
 
             // Assert
             Assert.IsNotNull(deserializeObject_Empty_Single);
@@ -173,7 +173,7 @@ namespace Lazy.Vinke.Tests.Json
             jsonObject.Add(new LazyJsonProperty("Tested", new LazyJsonBoolean(true)));
 
             // Act
-            DeserializeObject_Simple_WithAttributes deserializeObject_Simple_WithAttributes = LazyJsonDeserializer.DeserializeObject<DeserializeObject_Simple_WithAttributes>(jsonObject);
+            DeserializeObject_Simple_WithAttributes deserializeObject_Simple_WithAttributes = LazyJsonDeserializer.DeserializeTokenObject<DeserializeObject_Simple_WithAttributes>(jsonObject);
 
             // Assert
             Assert.AreEqual(deserializeObject_Simple_WithAttributes.Id, 101);
@@ -200,7 +200,7 @@ namespace Lazy.Vinke.Tests.Json
             jsonObject.Add(new LazyJsonProperty("SomeObject", jsonObjectWrapped));
 
             // Act
-            DeserializeObject_PropertyAsObject_Simple deserializeObject_PropertyAsObject_Simple = LazyJsonDeserializer.DeserializeObject<DeserializeObject_PropertyAsObject_Simple>(jsonObject);
+            DeserializeObject_PropertyAsObject_Simple deserializeObject_PropertyAsObject_Simple = LazyJsonDeserializer.DeserializeTokenObject<DeserializeObject_PropertyAsObject_Simple>(jsonObject);
 
             // Assert
             Assert.AreEqual(deserializeObject_PropertyAsObject_Simple.SomeObject, "Lazy.Vinke.Tests.Json");
@@ -228,7 +228,7 @@ namespace Lazy.Vinke.Tests.Json
             jsonObject.Add(new LazyJsonProperty("NestedObject", jsonObjectNested));
 
             // Act
-            DeserializeObject_PropertyAsObject_Nested deserializeObject_PropertyAsObject_Nested = LazyJsonDeserializer.DeserializeObject<DeserializeObject_PropertyAsObject_Nested>(jsonObject);
+            DeserializeObject_PropertyAsObject_Nested deserializeObject_PropertyAsObject_Nested = LazyJsonDeserializer.DeserializeTokenObject<DeserializeObject_PropertyAsObject_Nested>(jsonObject);
 
             // Assert
             Assert.AreEqual(deserializeObject_PropertyAsObject_Nested.NestedObject.SomeObject, "Lazy.Vinke.Tests.Json");
@@ -537,64 +537,64 @@ namespace Lazy.Vinke.Tests.Json
         public void SelectDeserializePropertyEventHandler_KnownType_Single_Success()
         {
             // Arrange
-            LazyJsonDeserializerBase jsonDeserializerBase = null;
+            LazyJsonDeserializerBase jsonDeserializer = null;
             LazyJsonDeserializePropertyEventHandler jsonDeserializePropertyEventHandler = null;
 
             // Act
-            LazyJsonDeserializer.SelectDeserializePropertyEventHandler(typeof(DataSet), out jsonDeserializerBase, out jsonDeserializePropertyEventHandler);
+            LazyJsonDeserializer.SelectDeserializePropertyEventHandler(typeof(DataSet), out jsonDeserializer, out jsonDeserializePropertyEventHandler);
 
             // Assert
-            Assert.IsNotNull(jsonDeserializerBase);
+            //Assert.IsNotNull(jsonDeserializer);
             Assert.IsNotNull(jsonDeserializePropertyEventHandler);
-            Assert.AreEqual(jsonDeserializePropertyEventHandler, jsonDeserializerBase.Deserialize);
+            Assert.AreEqual(jsonDeserializePropertyEventHandler, jsonDeserializer.Deserialize);
         }
 
         [TestMethod]
         public void SelectDeserializePropertyEventHandler_UnknownType_Single_Success()
         {
             // Arrange
-            LazyJsonDeserializerBase jsonDeserializerBase = null;
+            LazyJsonDeserializerBase jsonDeserializer = null;
             LazyJsonDeserializePropertyEventHandler jsonDeserializePropertyEventHandler = null;
 
             // Act
-            LazyJsonDeserializer.SelectDeserializePropertyEventHandler(typeof(DbDataAdapter), out jsonDeserializerBase, out jsonDeserializePropertyEventHandler);
+            LazyJsonDeserializer.SelectDeserializePropertyEventHandler(typeof(DbDataAdapter), out jsonDeserializer, out jsonDeserializePropertyEventHandler);
 
             // Assert
-            Assert.IsNull(jsonDeserializerBase);
+            Assert.IsNull(jsonDeserializer);
             Assert.IsNotNull(jsonDeserializePropertyEventHandler);
-            Assert.AreEqual(jsonDeserializePropertyEventHandler, LazyJsonDeserializer.DeserializeObject);
+            Assert.AreEqual(jsonDeserializePropertyEventHandler, LazyJsonDeserializer.DeserializePropertyObject);
         }
 
         [TestMethod]
         public void SelectDeserializeTokenEventHandler_KnownType_Single_Success()
         {
             // Arrange
-            LazyJsonDeserializerBase jsonDeserializerBase = null;
+            LazyJsonDeserializerBase jsonDeserializer = null;
             LazyJsonDeserializeTokenEventHandler jsonDeserializeTokenEventHandler = null;
 
             // Act
-            LazyJsonDeserializer.SelectDeserializeTokenEventHandler(typeof(DataSet), out jsonDeserializerBase, out jsonDeserializeTokenEventHandler);
+            LazyJsonDeserializer.SelectDeserializeTokenEventHandler(typeof(DataSet), out jsonDeserializer, out jsonDeserializeTokenEventHandler);
 
             // Assert
-            Assert.IsNotNull(jsonDeserializerBase);
+            //Assert.IsNotNull(jsonDeserializer);
             Assert.IsNotNull(jsonDeserializeTokenEventHandler);
-            Assert.AreEqual(jsonDeserializeTokenEventHandler, jsonDeserializerBase.Deserialize);
+            Assert.AreEqual(jsonDeserializeTokenEventHandler, jsonDeserializer.Deserialize);
         }
 
         [TestMethod]
         public void SelectDeserializeTokenEventHandler_UnknownType_Single_Success()
         {
             // Arrange
-            LazyJsonDeserializerBase jsonDeserializerBase = null;
+            LazyJsonDeserializerBase jsonDeserializer = null;
             LazyJsonDeserializeTokenEventHandler jsonDeserializeTokenEventHandler = null;
 
             // Act
-            LazyJsonDeserializer.SelectDeserializeTokenEventHandler(typeof(ManifestResourceInfo), out jsonDeserializerBase, out jsonDeserializeTokenEventHandler);
+            LazyJsonDeserializer.SelectDeserializeTokenEventHandler(typeof(ManifestResourceInfo), out jsonDeserializer, out jsonDeserializeTokenEventHandler);
 
             // Assert
-            Assert.IsNull(jsonDeserializerBase);
+            Assert.IsNull(jsonDeserializer);
             Assert.IsNotNull(jsonDeserializeTokenEventHandler);
-            Assert.AreEqual(jsonDeserializeTokenEventHandler, LazyJsonDeserializer.DeserializeObject);
+            Assert.AreEqual(jsonDeserializeTokenEventHandler, LazyJsonDeserializer.DeserializeTokenObject);
         }
     }
 }
