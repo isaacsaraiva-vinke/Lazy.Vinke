@@ -2,7 +2,7 @@
 # Lazy.Vinke.Json
 .Net Json Serializer & Deserializer
 
-- ### Built-in Serializers\Deserializers
+- ### Built-in Serializers \ Deserializers
   - Type (Based on .Net Assemblies and Namespaces)
   - DataSet (Typed data table collection)
   - DataTable (Typed columns preserving row state and values)
