@@ -46,6 +46,19 @@ namespace Lazy.Vinke.Json
         }
 
         /// <summary>
+        /// Retrieves the serializer options from the collection if contains
+        /// </summary>
+        /// <typeparam name="T">The serializer options type</typeparam>
+        /// <returns>The serializer options instance</returns>
+        public T ItemIfContains<T>() where T : LazyJsonSerializerOptionsBase
+        {
+            if (this.serializerOptionsDictionary.ContainsKey(typeof(T)) == true)
+                return (T)this.serializerOptionsDictionary[typeof(T)];
+
+            return null;
+        }
+
+        /// <summary>
         /// Verify if the serializer options is on the collection
         /// </summary>
         /// <typeparam name="T">The serializer options type</typeparam>
@@ -53,6 +66,25 @@ namespace Lazy.Vinke.Json
         public Boolean Contains<T>() where T : LazyJsonSerializerOptionsBase
         {
             return this.serializerOptionsDictionary.ContainsKey(typeof(T));
+        }
+
+        /// <summary>
+        /// Retrieves the serializer options from the collection if contains or new instance if not
+        /// </summary>
+        /// <typeparam name="T">The serializer options type</typeparam>
+        /// <param name="jsonSerializerOptions">The json serializer options</param>
+        /// <returns>The serializer options instance</returns>
+        public static T CurrentOrNew<T>(LazyJsonSerializerOptions jsonSerializerOptions) where T : LazyJsonSerializerOptionsBase
+        {
+            if (jsonSerializerOptions != null)
+            {
+                T item = jsonSerializerOptions.ItemIfContains<T>();
+
+                if (item != null)
+                    return item;
+            }
+
+            return (T)Activator.CreateInstance(typeof(T));
         }
 
         #endregion Methods

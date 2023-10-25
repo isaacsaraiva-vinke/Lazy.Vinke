@@ -45,10 +45,9 @@ namespace Lazy.Vinke.Json
                 LazyJsonDeserializeTokenEventHandler jsonDeserializeTokenEventHandler = null;
                 LazyJsonDeserializer.SelectDeserializeTokenEventHandler(dataType.GenericTypeArguments[0], out jsonDeserializer, out jsonDeserializeTokenEventHandler, jsonDeserializerOptions);
 
-                LazyJsonDeserializerOptions options = jsonDeserializerOptions != null ? jsonDeserializerOptions : new LazyJsonDeserializerOptions();
-                LazyJsonDeserializerOptionsStack optionsStack = options.Contains<LazyJsonDeserializerOptionsStack>() == true ? options.Item<LazyJsonDeserializerOptionsStack>() : new LazyJsonDeserializerOptionsStack();
+                LazyJsonDeserializerOptionsStack jsonDeserializerOptionsStack = LazyJsonDeserializerOptions.CurrentOrNew<LazyJsonDeserializerOptionsStack>(jsonDeserializerOptions);
 
-                if (optionsStack.ReadReverse == true)
+                if (jsonDeserializerOptionsStack.ReadReverse == true)
                 {
                     for (int index = (jsonArray.Length - 1); index >= 0; index--)
                         methodInfoPush.Invoke(dataStack, new Object[] { jsonDeserializeTokenEventHandler(jsonArray[index], dataType.GenericTypeArguments[0], jsonDeserializerOptions) });

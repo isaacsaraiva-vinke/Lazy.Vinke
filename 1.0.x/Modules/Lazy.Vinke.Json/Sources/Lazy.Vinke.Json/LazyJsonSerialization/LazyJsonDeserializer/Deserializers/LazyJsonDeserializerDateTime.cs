@@ -40,12 +40,11 @@ namespace Lazy.Vinke.Json
 
                     if (jsonString.Value != null)
                     {
-                        LazyJsonDeserializerOptions options = jsonDeserializerOptions != null ? jsonDeserializerOptions : new LazyJsonDeserializerOptions();
-                        LazyJsonDeserializerOptionsDateTime optionsDateTime = options.Contains<LazyJsonDeserializerOptionsDateTime>() == true ? options.Item<LazyJsonDeserializerOptionsDateTime>() : new LazyJsonDeserializerOptionsDateTime();
+                        LazyJsonDeserializerOptionsDateTime jsonDeserializerOptionsDateTime = LazyJsonDeserializerOptions.CurrentOrNew<LazyJsonDeserializerOptionsDateTime>(jsonDeserializerOptions);
 
                         DateTime dateTime = DateTime.MinValue;
 
-                        if (DateTime.TryParseExact(jsonString.Value, optionsDateTime.Format, optionsDateTime.CultureInfo, optionsDateTime.DateTimeStyles, out dateTime) == true)
+                        if (DateTime.TryParseExact(jsonString.Value, jsonDeserializerOptionsDateTime.Format, jsonDeserializerOptionsDateTime.CultureInfo, jsonDeserializerOptionsDateTime.DateTimeStyles, out dateTime) == true)
                             return dateTime;
                     }
                 }
