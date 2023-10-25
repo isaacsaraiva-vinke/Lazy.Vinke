@@ -8,17 +8,20 @@
   - DataTable (Typed columns preserving row state and values)
   - DateTime (Customizable format [default: yyyy-MM-ddTHH:mm:ss:fffZ])
   - Object (Wrap\Unwrap properties declared as "Object" by exporting its instance type)
-  - Generic Dictionary\<T\>
+  - Generic Stack\<T\> (With write\read reverse options)
   - Generic Tuple\<T\>
+  - Generic ValueTuple\<T\>
+  - Generic Dictionary\<T\>
+  - Generic Queue\<T\>
   - Generic List\<T\>
   <br>
 - ### Supported features
   - ### Globally define Serializer\Deserializer for types just once
-    LazyJsonSerializerOptions serializerOptions = new LazyJsonSerializerOptions();<br>
-    serializerOptions.Item\<LazyJsonSerializerOptionsGlobal\>().Add\<YourTypeSerializer\>(typeof(YourType));<br>
+    LazyJsonSerializerOptions options = new LazyJsonSerializerOptions();<br>
+    options.Item\<LazyJsonSerializerOptionsGlobal\>().Add\<YourSerializer\>(typeof(SomeType));<br>
     <br>
-    LazyJsonDeserializerOptions deserializerOptions = new LazyJsonDeserializerOptions();<br>
-    deserializerOptions.Item\<LazyJsonDeserializerOptionsGlobal\>().Add\<YourTypeDeserializer\>(typeof(YourType));<br>
+    LazyJsonDeserializerOptions options = new LazyJsonDeserializerOptions();<br>
+    options.Item\<LazyJsonDeserializerOptionsGlobal\>().Add\<YourDeserializer\>(typeof(SomeType));<br>
     <br>
   - ### Support easily property ignore by adding attribute to property
     [LazyJsonAttributePropertyIgnore()]<br>
