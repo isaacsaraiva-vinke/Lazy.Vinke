@@ -35,5 +35,48 @@ namespace Lazy.Vinke.Tests.Json
             Assert.IsNotNull(deserializerOptionsBase);
             Assert.IsTrue(deserializerOptions.Contains<LazyJsonDeserializerOptionsBase>());
         }
+
+        [TestMethod]
+        public void ItemIfContains_DeserializerOptionsBase_Single_Success()
+        {
+            // Arrange
+            LazyJsonDeserializerOptions deserializerOptions = new LazyJsonDeserializerOptions();
+
+            // Act
+            LazyJsonDeserializerOptionsBase deserializerOptionsBase = deserializerOptions.ItemIfContains<LazyJsonDeserializerOptionsBase>();
+
+            // Assert
+            Assert.IsNull(deserializerOptionsBase);
+            Assert.IsFalse(deserializerOptions.Contains<LazyJsonDeserializerOptionsBase>());
+        }
+
+        [TestMethod]
+        public void CurrentOrNew_DeserializerOptionsBase_Current_Success()
+        {
+            // Arrange
+            LazyJsonDeserializerOptions deserializerOptions = new LazyJsonDeserializerOptions();
+            deserializerOptions.Item<LazyJsonDeserializerOptionsBase>();
+
+            // Act
+            LazyJsonDeserializerOptionsBase deserializerOptionsBase = LazyJsonDeserializerOptions.CurrentOrNew<LazyJsonDeserializerOptionsBase>(deserializerOptions);
+
+            // Assert
+            Assert.IsNotNull(deserializerOptionsBase);
+            Assert.IsTrue(deserializerOptions.Contains<LazyJsonDeserializerOptionsBase>());
+        }
+
+        [TestMethod]
+        public void CurrentOrNew_DeserializerOptionsBase_New_Success()
+        {
+            // Arrange
+            LazyJsonDeserializerOptions deserializerOptions = new LazyJsonDeserializerOptions();
+
+            // Act
+            LazyJsonDeserializerOptionsBase deserializerOptionsBase = LazyJsonDeserializerOptions.CurrentOrNew<LazyJsonDeserializerOptionsBase>(deserializerOptions);
+
+            // Assert
+            Assert.IsNotNull(deserializerOptionsBase);
+            Assert.IsFalse(deserializerOptions.Contains<LazyJsonDeserializerOptionsBase>());
+        }
     }
 }
