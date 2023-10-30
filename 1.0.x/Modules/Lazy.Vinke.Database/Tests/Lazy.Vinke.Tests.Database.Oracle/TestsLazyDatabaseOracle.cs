@@ -29,7 +29,7 @@ namespace Lazy.Vinke.Tests.Database.Oracle
         [TestInitialize]
         public override void TestInitialize_OpenConnection_Single_Success()
         {
-            this.Database = new LazyDatabaseOracle(File.ReadAllText(".\\Properties\\Miscellaneous\\ConnectionString.txt"));
+            this.Database = new LazyDatabaseOracle(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "Properties", "Miscellaneous", "ConnectionString.txt")));
             base.TestInitialize_OpenConnection_Single_Success();
         }
 
