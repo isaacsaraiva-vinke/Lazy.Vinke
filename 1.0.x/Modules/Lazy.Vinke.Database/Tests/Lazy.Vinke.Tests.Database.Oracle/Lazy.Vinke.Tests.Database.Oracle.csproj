@@ -17,6 +17,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Content Include="Properties\Miscellaneous\ConnectionString.txt">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<Compile Update="Properties\TestsLazyResourcesDatabaseOracle.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
