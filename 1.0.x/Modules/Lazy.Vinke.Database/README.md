@@ -1,7 +1,7 @@
 # Lazy.Vinke.Database
 .Net Generic Database Connectors
 
-- ### Currently supported database
+- ### Currently supported databases
   - **MySql**
   - **Oracle**
   - **Postgre**
