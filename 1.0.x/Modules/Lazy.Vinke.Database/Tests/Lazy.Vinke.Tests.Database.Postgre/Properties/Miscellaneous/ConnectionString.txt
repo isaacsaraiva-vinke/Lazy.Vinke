@@ -1,0 +1,1 @@
+﻿Server=localhost;Port=5432;Database=TestsLazy;User Id=lazy;Password=lazy;
