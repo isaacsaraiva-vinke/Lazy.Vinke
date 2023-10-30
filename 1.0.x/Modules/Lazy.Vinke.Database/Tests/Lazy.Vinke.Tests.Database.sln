@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lazy.Vinke.Tests.Database", "Lazy.Vinke.Tests.Database\Lazy.Vinke.Tests.Database.csproj", "{D4B6337D-51F7-4D2D-BD0D-D595B4455CAE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lazy.Vinke.Tests.Database.MySql", "Lazy.Vinke.Tests.Database.MySql\Lazy.Vinke.Tests.Database.MySql.csproj", "{55FC6EBB-F2EF-4F3D-99DD-F05E47B96EB7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D4B6337D-51F7-4D2D-BD0D-D595B4455CAE} = {D4B6337D-51F7-4D2D-BD0D-D595B4455CAE}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lazy.Vinke.Tests.Database.Oracle", "Lazy.Vinke.Tests.Database.Oracle\Lazy.Vinke.Tests.Database.Oracle.csproj", "{AF96DAA9-0970-4474-A164-124B0A0BECEA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D4B6337D-51F7-4D2D-BD0D-D595B4455CAE} = {D4B6337D-51F7-4D2D-BD0D-D595B4455CAE}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lazy.Vinke.Tests.Database.Postgre", "Lazy.Vinke.Tests.Database.Postgre\Lazy.Vinke.Tests.Database.Postgre.csproj", "{E58CC235-2152-40C8-8265-ACC5CEE747C2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D4B6337D-51F7-4D2D-BD0D-D595B4455CAE} = {D4B6337D-51F7-4D2D-BD0D-D595B4455CAE}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lazy.Vinke.Tests.Database.SqlServer", "Lazy.Vinke.Tests.Database.SqlServer\Lazy.Vinke.Tests.Database.SqlServer.csproj", "{B2409E74-97CE-4ED3-B4F5-34FF78FB67F1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D4B6337D-51F7-4D2D-BD0D-D595B4455CAE} = {D4B6337D-51F7-4D2D-BD0D-D595B4455CAE}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D4B6337D-51F7-4D2D-BD0D-D595B4455CAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4B6337D-51F7-4D2D-BD0D-D595B4455CAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4B6337D-51F7-4D2D-BD0D-D595B4455CAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4B6337D-51F7-4D2D-BD0D-D595B4455CAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55FC6EBB-F2EF-4F3D-99DD-F05E47B96EB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55FC6EBB-F2EF-4F3D-99DD-F05E47B96EB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55FC6EBB-F2EF-4F3D-99DD-F05E47B96EB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55FC6EBB-F2EF-4F3D-99DD-F05E47B96EB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF96DAA9-0970-4474-A164-124B0A0BECEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF96DAA9-0970-4474-A164-124B0A0BECEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF96DAA9-0970-4474-A164-124B0A0BECEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF96DAA9-0970-4474-A164-124B0A0BECEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E58CC235-2152-40C8-8265-ACC5CEE747C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E58CC235-2152-40C8-8265-ACC5CEE747C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E58CC235-2152-40C8-8265-ACC5CEE747C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E58CC235-2152-40C8-8265-ACC5CEE747C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2409E74-97CE-4ED3-B4F5-34FF78FB67F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2409E74-97CE-4ED3-B4F5-34FF78FB67F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2409E74-97CE-4ED3-B4F5-34FF78FB67F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2409E74-97CE-4ED3-B4F5-34FF78FB67F1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AF8DF6BD-162A-4A47-AB22-8371670ED578}
+	EndGlobalSection
+EndGlobal

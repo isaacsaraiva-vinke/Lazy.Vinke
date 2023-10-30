@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Product>Lazy</Product>
+		<Description>Lazy Vinke Tests Database Postgre</Description>
+		<Authors>Vinke</Authors>
+		<Version>1.0.0</Version>
+		<IsTestProject>true</IsTestProject>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\..\..\..\LICENSE" Pack="true" PackagePath="">
+			<Link>Properties\Miscellaneous\LICENSE</Link>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Properties\Miscellaneous\ConnectionString.txt">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\TestsLazyResourcesDatabasePostgre.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>TestsLazyResourcesDatabasePostgre.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\TestsLazyResourcesDatabasePostgre.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>TestsLazyResourcesDatabasePostgre.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+		<PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
+		<PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
+		<PackageReference Include="coverlet.collector" Version="3.2.0" />
+		<PackageReference Include="Lazy.Vinke.Database" Version="1.0.0" />
+		<PackageReference Include="Lazy.Vinke.Database.Postgre" Version="1.0.0" />
+		<PackageReference Include="Npgsql" Version="7.0.6" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Lazy.Vinke.Tests.Database\Lazy.Vinke.Tests.Database.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Product>Lazy</Product>
+		<Description>Lazy Vinke Database MySql</Description>
+		<Authors>Vinke</Authors>
+		<Version>1.0.0</Version>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageOutputPath>$(SolutionDir)..\..\..\Packages\</PackageOutputPath>
+		<RepositoryUrl>https://github.com/isaacsaraiva-vinke/Lazy.Vinke</RepositoryUrl>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="Properties\Miscellaneous\README.md" Pack="true" PackagePath="" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\..\..\..\LICENSE" Pack="true" PackagePath="">
+			<Link>Properties\Miscellaneous\LICENSE</Link>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\LazyResourcesDatabaseMySql.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>LazyResourcesDatabaseMySql.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\LazyResourcesDatabaseMySql.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>LazyResourcesDatabaseMySql.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Lazy.Vinke.Database" Version="1.0.0" />
+		<PackageReference Include="MySql.Data" Version="8.1.0" />
+	</ItemGroup>
+
+	<PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">
+		<PostBuildEvent Condition="'$(Configuration)' == 'Debug' and '$(TargetFramework)' == 'net6.0'">
+			xcopy /y $(SolutionDir)Lazy.Vinke.Database.MySql\bin\Debug\net6.0\Lazy.Vinke.Database.MySql.dll %SystemDrive%%HomePath%\.nuget\Packages\lazy.vinke.database.mysql\1.0.0\lib\net6.0\
+			xcopy /y $(SolutionDir)Lazy.Vinke.Database.MySql\bin\Debug\net6.0\Lazy.Vinke.Database.MySql.dll $(SolutionDir)..\..\..\..\..\..\Debug\1.0.x\Unix\All\Bin\lazy.vinke.database.mysql\1.0.0\lib\net6.0\
+			xcopy /y $(SolutionDir)Lazy.Vinke.Database.MySql\bin\Debug\net6.0\Lazy.Vinke.Database.MySql.dll $(SolutionDir)..\..\..\..\..\..\Debug\1.0.x\Windows\All\Bin\lazy.vinke.database.mysql\1.0.0\lib\net6.0\
+		</PostBuildEvent>
+		<PostBuildEvent Condition="'$(Configuration)' == 'Release' and '$(TargetFramework)' == 'net6.0'">
+			xcopy /y $(SolutionDir)Lazy.Vinke.Database.MySql\bin\Release\net6.0\Lazy.Vinke.Database.MySql.dll $(SolutionDir)..\..\..\..\..\..\Release\1.0.x\Unix\All\Bin\lazy.vinke.database.mysql\1.0.0\lib\net6.0\
+			xcopy /y $(SolutionDir)Lazy.Vinke.Database.MySql\bin\Release\net6.0\Lazy.Vinke.Database.MySql.dll $(SolutionDir)..\..\..\..\..\..\Release\1.0.x\Windows\All\Bin\lazy.vinke.database.mysql\1.0.0\lib\net6.0\
+		</PostBuildEvent>
+	</PropertyGroup>
+
+</Project>
