@@ -6,14 +6,14 @@ if exists (select 1 from syslogins where loginname = 'lazy')
 if exists (select * from sys.database_principals where name = N'lazy')
 	drop user lazy;
 
-if exists (select 1 from sys.databases where name = 'TestsLazy')
-	drop database TestsLazy;
+if exists (select 1 from sys.databases where name = 'Lazy')
+	drop database Lazy;
 
-create database TestsLazy;
-use TestsLazy;
+create database Lazy;
+use Lazy;
 create login lazy with password = 'lazy';
 create user lazy for login lazy;
-grant control on database::TestsLazy to lazy with grant option;
+grant control on database::Lazy to lazy with grant option;
 
 create table Transaction_CommitRollback
 (

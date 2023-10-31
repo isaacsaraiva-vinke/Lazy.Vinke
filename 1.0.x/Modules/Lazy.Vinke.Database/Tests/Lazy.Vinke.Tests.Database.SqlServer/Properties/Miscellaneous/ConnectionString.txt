@@ -1,1 +1,1 @@
-﻿Server=localhost;Database=TestsLazy;User Id=lazy;Password=lazy;Encrypt=no
+﻿Server=localhost;Database=Lazy;User Id=lazy;Password=lazy;Encrypt=no

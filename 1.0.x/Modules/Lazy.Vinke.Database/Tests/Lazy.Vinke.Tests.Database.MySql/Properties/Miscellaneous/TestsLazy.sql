@@ -1,10 +1,10 @@
 drop user if exists 'lazy'@'localhost';
-drop database if exists TestsLazy;
-create database TestsLazy;
+drop database if exists Lazy;
+create database Lazy;
 create user 'lazy'@'localhost' identified by 'lazy';
-grant all privileges on TestsLazy.* to 'lazy'@'localhost';
+grant all privileges on Lazy.* to 'lazy'@'localhost';
 flush privileges;
-use TestsLazy;
+use Lazy;
 
 create table Transaction_CommitRollback
 (

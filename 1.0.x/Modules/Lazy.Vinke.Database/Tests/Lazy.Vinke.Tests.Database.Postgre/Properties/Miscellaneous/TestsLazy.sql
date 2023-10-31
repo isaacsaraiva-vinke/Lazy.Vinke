@@ -1,10 +1,10 @@
 -- Kill all user session
-select pg_terminate_backend(pid) from pg_stat_activity where datname = 'TestsLazy';
+select pg_terminate_backend(pid) from pg_stat_activity where datname = 'Lazy';
 
 -- Execute on postgre database logged in as postgre user
-drop database if exists "TestsLazy";
+drop database if exists "Lazy";
 drop user if exists lazy;
-create database "TestsLazy";
+create database "Lazy";
 create user lazy with password 'lazy';
 
 -- Execute on created database logged in as postgre user
