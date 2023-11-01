@@ -33,6 +33,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Lazy.Vinke" Version="1.0.0" />
+		<PackageReference Include="Lazy.Vinke.Database" Version="1.0.0" />
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">

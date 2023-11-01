@@ -8,7 +8,8 @@
     ".NETCoreApp,Version=v6.0": {
       "Lazy.Vinke.DbCheck/1.0.0": {
         "dependencies": {
-          "Lazy.Vinke": "1.0.0"
+          "Lazy.Vinke": "1.0.0",
+          "Lazy.Vinke.Database": "1.0.0"
         },
         "runtime": {
           "Lazy.Vinke.DbCheck.dll": {}
@@ -17,6 +18,14 @@
       "Lazy.Vinke/1.0.0": {
         "runtime": {
           "lib/net6.0/Lazy.Vinke.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Lazy.Vinke.Database/1.0.0": {
+        "runtime": {
+          "lib/net6.0/Lazy.Vinke.Database.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -36,6 +45,13 @@
       "sha512": "sha512-r8yEFPMYqAXCYFyH5RzBtCBaeDUq3L2Yy/zFg4GDjKeQ/NbhfVjtav69bLs56ioxVuRT1rjI2DPuQnw83GoZiA==",
       "path": "lazy.vinke/1.0.0",
       "hashPath": "lazy.vinke.1.0.0.nupkg.sha512"
+    },
+    "Lazy.Vinke.Database/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-YDZ3NK4l9uH5a5lO1ewWHCgZikvH+QFh0PWdYGKpwOd/qhIewNhxy+rjaYpqS5lq2zEu5LKWaeTPRMUI/gk3ww==",
+      "path": "lazy.vinke.database/1.0.0",
+      "hashPath": "lazy.vinke.database.1.0.0.nupkg.sha512"
     }
   }
 }
