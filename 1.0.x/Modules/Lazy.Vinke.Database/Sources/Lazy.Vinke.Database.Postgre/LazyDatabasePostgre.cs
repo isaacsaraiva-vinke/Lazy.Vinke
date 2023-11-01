@@ -16,7 +16,6 @@ using NpgsqlTypes;
 
 using Lazy.Vinke.Database;
 using Lazy.Vinke.Database.Properties;
-using System.Transactions;
 
 namespace Lazy.Vinke.Database.Postgre
 {
