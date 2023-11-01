@@ -5,6 +5,11 @@ VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lazy.Vinke", "Lazy.Vinke\Lazy.Vinke.csproj", "{C6A59DF9-1B80-4170-B0AD-ED621AAB2597}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lazy.Vinke.DbCheck", "Lazy.Vinke.DbCheck\Lazy.Vinke.DbCheck.csproj", "{53F5F165-EDEB-4435-82AE-D1FB7C03B49E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C6A59DF9-1B80-4170-B0AD-ED621AAB2597} = {C6A59DF9-1B80-4170-B0AD-ED621AAB2597}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +20,10 @@ Global
 		{C6A59DF9-1B80-4170-B0AD-ED621AAB2597}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6A59DF9-1B80-4170-B0AD-ED621AAB2597}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6A59DF9-1B80-4170-B0AD-ED621AAB2597}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53F5F165-EDEB-4435-82AE-D1FB7C03B49E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53F5F165-EDEB-4435-82AE-D1FB7C03B49E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53F5F165-EDEB-4435-82AE-D1FB7C03B49E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53F5F165-EDEB-4435-82AE-D1FB7C03B49E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

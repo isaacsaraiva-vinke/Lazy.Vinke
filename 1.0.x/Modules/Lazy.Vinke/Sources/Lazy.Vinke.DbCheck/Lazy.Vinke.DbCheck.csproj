@@ -1,0 +1,88 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Product>Lazy</Product>
+		<Description>Lazy Vinke DbCheck</Description>
+		<Authors>Vinke</Authors>
+		<Version>1.0.0</Version>
+		<RepositoryUrl>https://github.com/isaacsaraiva-vinke/Lazy.Vinke</RepositoryUrl>
+		<OutputType>Exe</OutputType>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\..\..\..\LICENSE" Pack="true" PackagePath="">
+			<Link>Properties\Miscellaneous\LICENSE</Link>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\LazyResourcesDbCheck.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>LazyResourcesDbCheck.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\LazyResourcesDbCheck.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>LazyResourcesDbCheck.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Lazy.Vinke" Version="1.0.0" />
+	</ItemGroup>
+
+	<PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">
+		<PostBuildEvent Condition="'$(Configuration)' == 'Debug' and '$(TargetFramework)' == 'net6.0'">
+			xcopy /y $(SolutionDir)Lazy.Vinke.DbCheck\bin\Debug\net6.0\Lazy.Vinke.DbCheck.dll $(SolutionDir)..\..\..\..\..\..\Debug\1.0.x\Unix\All\
+			xcopy /y $(SolutionDir)Lazy.Vinke.DbCheck\bin\Debug\net6.0\Lazy.Vinke.DbCheck.dll $(SolutionDir)..\..\..\..\..\..\Debug\1.0.x\Windows\All\
+			xcopy /y $(SolutionDir)Lazy.Vinke.DbCheck\Properties\Miscellaneous\Lazy.Vinke.DbCheck.sh $(SolutionDir)..\..\..\..\..\..\Debug\1.0.x\Unix\All\
+			xcopy /y $(SolutionDir)Lazy.Vinke.DbCheck\bin\Debug\net6.0\Lazy.Vinke.DbCheck.exe $(SolutionDir)..\..\..\..\..\..\Debug\1.0.x\Windows\All\
+			xcopy /y $(SolutionDir)Lazy.Vinke.DbCheck\Properties\Miscellaneous\Lazy.Vinke.DbCheck.deps.json $(SolutionDir)..\..\..\..\..\..\Debug\1.0.x\Unix\All\
+			xcopy /y $(SolutionDir)Lazy.Vinke.DbCheck\Properties\Miscellaneous\Lazy.Vinke.DbCheck.deps.json $(SolutionDir)..\..\..\..\..\..\Debug\1.0.x\Windows\All\
+			copy /y $(SolutionDir)Lazy.Vinke.DbCheck\Properties\Miscellaneous\Lazy.Vinke.DbCheck.runtimeconfig.Unix.json $(SolutionDir)..\..\..\..\..\..\Debug\1.0.x\Unix\All\Lazy.Vinke.DbCheck.runtimeconfig.json
+			copy /y $(SolutionDir)Lazy.Vinke.DbCheck\Properties\Miscellaneous\Lazy.Vinke.DbCheck.runtimeconfig.Windows.json $(SolutionDir)..\..\..\..\..\..\Debug\1.0.x\Windows\All\Lazy.Vinke.DbCheck.runtimeconfig.json
+		</PostBuildEvent>
+		<PostBuildEvent Condition="'$(Configuration)' == 'Release' and '$(TargetFramework)' == 'net6.0'">
+			xcopy /y $(SolutionDir)Lazy.Vinke.DbCheck\bin\Release\net6.0\Lazy.Vinke.DbCheck.dll $(SolutionDir)..\..\..\..\..\..\Release\1.0.x\Unix\All\
+			xcopy /y $(SolutionDir)Lazy.Vinke.DbCheck\bin\Release\net6.0\Lazy.Vinke.DbCheck.dll $(SolutionDir)..\..\..\..\..\..\Release\1.0.x\Windows\All\
+			xcopy /y $(SolutionDir)Lazy.Vinke.DbCheck\Properties\Miscellaneous\Lazy.Vinke.DbCheck.sh $(SolutionDir)..\..\..\..\..\..\Release\1.0.x\Unix\All\
+			xcopy /y $(SolutionDir)Lazy.Vinke.DbCheck\bin\Release\net6.0\Lazy.Vinke.DbCheck.exe $(SolutionDir)..\..\..\..\..\..\Release\1.0.x\Windows\All\
+			xcopy /y $(SolutionDir)Lazy.Vinke.DbCheck\Properties\Miscellaneous\Lazy.Vinke.DbCheck.deps.json $(SolutionDir)..\..\..\..\..\..\Release\1.0.x\Unix\All\
+			xcopy /y $(SolutionDir)Lazy.Vinke.DbCheck\Properties\Miscellaneous\Lazy.Vinke.DbCheck.deps.json $(SolutionDir)..\..\..\..\..\..\Release\1.0.x\Windows\All\
+			copy /y $(SolutionDir)Lazy.Vinke.DbCheck\Properties\Miscellaneous\Lazy.Vinke.DbCheck.runtimeconfig.Unix.json $(SolutionDir)..\..\..\..\..\..\Release\1.0.x\Unix\All\Lazy.Vinke.DbCheck.runtimeconfig.json
+			copy /y $(SolutionDir)Lazy.Vinke.DbCheck\Properties\Miscellaneous\Lazy.Vinke.DbCheck.runtimeconfig.Windows.json $(SolutionDir)..\..\..\..\..\..\Release\1.0.x\Windows\All\Lazy.Vinke.DbCheck.runtimeconfig.json
+		</PostBuildEvent>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">
+		<PostBuildEvent Condition="'$(Configuration)' == 'Debug' and '$(TargetFramework)' == 'net6.0'">
+			mkdir -p $(SolutionDir)../../../../../../Debug/1.0.x/Unix/All/
+			mkdir -p $(SolutionDir)../../../../../../Debug/1.0.x/Windows/All/
+			cp -f $(SolutionDir)Lazy.Vinke.DbCheck/bin/Debug/net6.0/Lazy.Vinke.DbCheck.dll $(SolutionDir)../../../../../../Debug/1.0.x/Unix/All/
+			cp -f $(SolutionDir)Lazy.Vinke.DbCheck/bin/Debug/net6.0/Lazy.Vinke.DbCheck.dll $(SolutionDir)../../../../../../Debug/1.0.x/Windows/All/
+			cp -f $(SolutionDir)Lazy.Vinke.DbCheck/Properties/Miscellaneous/Lazy.Vinke.DbCheck.sh $(SolutionDir)../../../../../../Debug/1.0.x/Unix/All/
+			cp -f $(SolutionDir)Lazy.Vinke.DbCheck/bin/Debug/net6.0/Lazy.Vinke.DbCheck.exe $(SolutionDir)../../../../../../Debug/1.0.x/Windows/All/
+			cp -f $(SolutionDir)Lazy.Vinke.DbCheck/Properties/Miscellaneous/Lazy.Vinke.DbCheck.deps.json $(SolutionDir)../../../../../../Debug/1.0.x/Unix/All/
+			cp -f $(SolutionDir)Lazy.Vinke.DbCheck/Properties/Miscellaneous/Lazy.Vinke.DbCheck.deps.json $(SolutionDir)../../../../../../Debug/1.0.x/Windows/All/
+			cp -f $(SolutionDir)Lazy.Vinke.DbCheck/Properties/Miscellaneous/Lazy.Vinke.DbCheck.runtimeconfig.Unix.json $(SolutionDir)../../../../../../Debug/1.0.x/Unix/All/Lazy.Vinke.DbCheck.runtimeconfig.json
+			cp -f $(SolutionDir)Lazy.Vinke.DbCheck/Properties/Miscellaneous/Lazy.Vinke.DbCheck.runtimeconfig.Windows.json $(SolutionDir)../../../../../../Debug/1.0.x/Windows/All/Lazy.Vinke.DbCheck.runtimeconfig.json
+		</PostBuildEvent>
+		<PostBuildEvent Condition="'$(Configuration)' == 'Release' and '$(TargetFramework)' == 'net6.0'">
+			mkdir -p $(SolutionDir)../../../../../../Release/1.0.x/Unix/All/
+			mkdir -p $(SolutionDir)../../../../../../Release/1.0.x/Windows/All/
+			cp -f $(SolutionDir)Lazy.Vinke.DbCheck/bin/Release/net6.0/Lazy.Vinke.DbCheck.dll $(SolutionDir)../../../../../../Release/1.0.x/Unix/All/
+			cp -f $(SolutionDir)Lazy.Vinke.DbCheck/bin/Release/net6.0/Lazy.Vinke.DbCheck.dll $(SolutionDir)../../../../../../Release/1.0.x/Windows/All/
+			cp -f $(SolutionDir)Lazy.Vinke.DbCheck/Properties/Miscellaneous/Lazy.Vinke.DbCheck.sh $(SolutionDir)../../../../../../Release/1.0.x/Unix/All/
+			cp -f $(SolutionDir)Lazy.Vinke.DbCheck/bin/Release/net6.0/Lazy.Vinke.DbCheck.exe $(SolutionDir)../../../../../../Release/1.0.x/Windows/All/
+			cp -f $(SolutionDir)Lazy.Vinke.DbCheck/Properties/Miscellaneous/Lazy.Vinke.DbCheck.deps.json $(SolutionDir)../../../../../../Release/1.0.x/Unix/All/
+			cp -f $(SolutionDir)Lazy.Vinke.DbCheck/Properties/Miscellaneous/Lazy.Vinke.DbCheck.deps.json $(SolutionDir)../../../../../../Release/1.0.x/Windows/All/
+			cp -f $(SolutionDir)Lazy.Vinke.DbCheck/Properties/Miscellaneous/Lazy.Vinke.DbCheck.runtimeconfig.Unix.json $(SolutionDir)../../../../../../Release/1.0.x/Unix/All/Lazy.Vinke.DbCheck.runtimeconfig.json
+			cp -f $(SolutionDir)Lazy.Vinke.DbCheck/Properties/Miscellaneous/Lazy.Vinke.DbCheck.runtimeconfig.Windows.json $(SolutionDir)../../../../../../Release/1.0.x/Windows/All/Lazy.Vinke.DbCheck.runtimeconfig.json
+		</PostBuildEvent>
+	</PropertyGroup>
+
+</Project>
