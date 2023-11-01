@@ -1,0 +1,70 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Product>Lazy</Product>
+		<Description>Lazy Vinke</Description>
+		<Authors>Vinke</Authors>
+		<Version>1.0.0</Version>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageOutputPath>$(SolutionDir)..\..\..\Packages\</PackageOutputPath>
+		<RepositoryUrl>https://github.com/isaacsaraiva-vinke/Lazy.Vinke</RepositoryUrl>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="Properties\Miscellaneous\README.md" Pack="true" PackagePath="" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\..\..\..\LICENSE" Pack="true" PackagePath="">
+			<Link>Properties\Miscellaneous\LICENSE</Link>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\LazyResources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>LazyResources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\LazyResources.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>LazyResources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">
+		<PostBuildEvent Condition="'$(Configuration)' == 'Debug' and '$(TargetFramework)' == 'net6.0'">
+			xcopy /y $(SolutionDir)Lazy.Vinke\bin\Debug\net6.0\Lazy.Vinke.dll %SystemDrive%%HomePath%\.nuget\Packages\lazy.vinke\1.0.0\lib\net6.0\
+			xcopy /y $(SolutionDir)Lazy.Vinke\bin\Debug\net6.0\Lazy.Vinke.dll $(SolutionDir)..\..\..\..\..\..\Debug\1.0.x\Unix\All\Bin\lazy.vinke\1.0.0\lib\net6.0\
+			xcopy /y $(SolutionDir)Lazy.Vinke\bin\Debug\net6.0\Lazy.Vinke.dll $(SolutionDir)..\..\..\..\..\..\Debug\1.0.x\Windows\All\Bin\lazy.vinke\1.0.0\lib\net6.0\
+		</PostBuildEvent>
+		<PostBuildEvent Condition="'$(Configuration)' == 'Release' and '$(TargetFramework)' == 'net6.0'">
+			xcopy /y $(SolutionDir)Lazy.Vinke\bin\Release\net6.0\Lazy.Vinke.dll $(SolutionDir)..\..\..\..\..\..\Release\1.0.x\Unix\All\Bin\lazy.vinke\1.0.0\lib\net6.0\
+			xcopy /y $(SolutionDir)Lazy.Vinke\bin\Release\net6.0\Lazy.Vinke.dll $(SolutionDir)..\..\..\..\..\..\Release\1.0.x\Windows\All\Bin\lazy.vinke\1.0.0\lib\net6.0\
+		</PostBuildEvent>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">
+		<PostBuildEvent Condition="'$(Configuration)' == 'Debug' and '$(TargetFramework)' == 'net6.0'">
+			mkdir -p $(SolutionDir)../../../../../../Debug/1.0.x/Unix/All/Bin/lazy.vinke/1.0.0/lib/net6.0/
+			mkdir -p $(SolutionDir)../../../../../../Debug/1.0.x/Windows/All/Bin/lazy.vinke/1.0.0/lib/net6.0/
+			cp -f $(SolutionDir)Lazy.Vinke/bin/Debug/net6.0/Lazy.Vinke.dll ~/.nuget/Packages/lazy.vinke/1.0.0/lib/net6.0/
+			cp -f $(SolutionDir)Lazy.Vinke/bin/Debug/net6.0/Lazy.Vinke.dll $(SolutionDir)../../../../../../Debug/1.0.x/Unix/All/Bin/lazy.vinke/1.0.0/lib/net6.0/
+			cp -f $(SolutionDir)Lazy.Vinke/bin/Debug/net6.0/Lazy.Vinke.dll $(SolutionDir)../../../../../../Debug/1.0.x/Windows/All/Bin/lazy.vinke/1.0.0/lib/net6.0/
+		</PostBuildEvent>
+		<PostBuildEvent Condition="'$(Configuration)' == 'Release' and '$(TargetFramework)' == 'net6.0'">
+			mkdir -p $(SolutionDir)../../../../../../Release/1.0.x/Unix/All/Bin/lazy.vinke/1.0.0/lib/net6.0/
+			mkdir -p $(SolutionDir)../../../../../../Release/1.0.x/Windows/All/Bin/lazy.vinke/1.0.0/lib/net6.0/
+			cp -f $(SolutionDir)Lazy.Vinke/bin/Release/net6.0/Lazy.Vinke.dll $(SolutionDir)../../../../../../Release/1.0.x/Unix/All/Bin/lazy.vinke/1.0.0/lib/net6.0/
+			cp -f $(SolutionDir)Lazy.Vinke/bin/Release/net6.0/Lazy.Vinke.dll $(SolutionDir)../../../../../../Release/1.0.x/Windows/All/Bin/lazy.vinke/1.0.0/lib/net6.0/
+		</PostBuildEvent>
+	</PropertyGroup>
+
+</Project>

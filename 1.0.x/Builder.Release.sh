@@ -12,6 +12,11 @@ rsync -a -u ./Defaults/ ./../../../Release/1.0.x
 find ./../../../Release/1.0.x/ -name ".gitkeep" -type f -delete
 echo
 
+cd ./Modules/Lazy.Vinke/Sources/
+chmod +x ./Lazy.Vinke.Builder.Release.sh
+./Lazy.Vinke.Builder.Release.sh
+cd ../../../
+
 cd ./Modules/Lazy.Vinke.Json/Sources/
 chmod +x ./Lazy.Vinke.Json.Builder.Release.sh
 ./Lazy.Vinke.Json.Builder.Release.sh
