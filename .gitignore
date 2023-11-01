@@ -398,5 +398,5 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Custom
-!1.0.0/Defaults/Unix/All/[Bb]in/
-!1.0.0/Defaults/Windows/All/[Bb]in/
+!1.0.x/Defaults/Unix/All/[Bb]in/
+!1.0.x/Defaults/Windows/All/[Bb]in/
