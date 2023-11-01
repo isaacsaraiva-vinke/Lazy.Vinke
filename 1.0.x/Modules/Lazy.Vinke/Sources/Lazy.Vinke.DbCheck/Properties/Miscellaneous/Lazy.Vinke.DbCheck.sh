@@ -1,1 +1,1 @@
-﻿dotnet ./Lazy.Vinke.DbCheck.dll
+dotnet ./Lazy.Vinke.DbCheck.dll
