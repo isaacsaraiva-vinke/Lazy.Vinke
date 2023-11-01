@@ -1,7 +1,5 @@
 # Release
 
-# set echo off
-
 echo Builder Release
 echo
 

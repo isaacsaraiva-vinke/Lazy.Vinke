@@ -1,7 +1,5 @@
 # Release
 
-# set echo off
-
 CURRENTDIR=$(pwd)
 cd $(dirname "$0")
 

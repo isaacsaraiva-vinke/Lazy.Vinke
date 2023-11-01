@@ -1,7 +1,5 @@
 # Debug
 
-# set echo off
-
 echo Builder Debug
 echo
 
