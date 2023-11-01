@@ -14,7 +14,6 @@ using System.Collections.Generic;
 
 using Lazy.Vinke.Database;
 using Lazy.Vinke.Database.Properties;
-using Newtonsoft.Json.Linq;
 
 namespace Lazy.Vinke.Tests.Database
 {
