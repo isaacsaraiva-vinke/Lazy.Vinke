@@ -760,7 +760,7 @@ namespace Lazy.Vinke.Database.Postgre
             queryPageResult.PageNum = queryPageData.PageNum;
             queryPageResult.PageSize = queryPageData.PageSize;
             queryPageResult.PageItems = dataTable.Rows.Count;
-            queryPageResult.CurrentCount = offset + dataTable.Rows.Count;
+            queryPageResult.CurrentCount = dataTable.Rows.Count > 0 ? offset + dataTable.Rows.Count : 0;
             queryPageResult.TotalCount = dataTable.Rows.Count > 0 ? Convert.ToInt32(dataTable.Rows[0][0]) : 0;
             queryPageResult.PageCount = Convert.ToInt32(Math.Ceiling(((Decimal)queryPageResult.TotalCount) / ((Decimal)queryPageResult.PageSize)));
             queryPageResult.HasNextPage = queryPageResult.CurrentCount < queryPageResult.TotalCount;
@@ -820,7 +820,7 @@ namespace Lazy.Vinke.Database.Postgre
             queryPageResult.PageNum = queryPageData.PageNum;
             queryPageResult.PageSize = queryPageData.PageSize;
             queryPageResult.PageItems = dataTable.Rows.Count;
-            queryPageResult.CurrentCount = offset + dataTable.Rows.Count;
+            queryPageResult.CurrentCount = dataTable.Rows.Count > 0 ? offset + dataTable.Rows.Count : 0;
             queryPageResult.TotalCount = dataTable.Rows.Count > 0 ? Convert.ToInt32(dataTable.Rows[0][0]) : 0;
             queryPageResult.PageCount = Convert.ToInt32(Math.Ceiling(((Decimal)queryPageResult.TotalCount) / ((Decimal)queryPageResult.PageSize)));
             queryPageResult.HasNextPage = queryPageResult.CurrentCount < queryPageResult.TotalCount;
