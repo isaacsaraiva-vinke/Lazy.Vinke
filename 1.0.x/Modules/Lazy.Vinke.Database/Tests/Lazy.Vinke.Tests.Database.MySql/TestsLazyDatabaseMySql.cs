@@ -1113,7 +1113,7 @@ namespace Lazy.Vinke.Tests.Database.MySql
             Assert.AreEqual(dbTypeNull, MySqlDbType.VarString);
             Assert.AreEqual(dbTypeChar, MySqlDbType.VarChar);
             Assert.AreEqual(dbTypeVarChar, MySqlDbType.VarString);
-            Assert.AreEqual(dbTypeVarText, MySqlDbType.Text);
+            Assert.AreEqual(dbTypeVarText, MySqlDbType.LongText);
             Assert.AreEqual(dbTypeByte, MySqlDbType.Byte);
             Assert.AreEqual(dbTypeInt16, MySqlDbType.Int16);
             Assert.AreEqual(dbTypeInt32, MySqlDbType.Int32);
