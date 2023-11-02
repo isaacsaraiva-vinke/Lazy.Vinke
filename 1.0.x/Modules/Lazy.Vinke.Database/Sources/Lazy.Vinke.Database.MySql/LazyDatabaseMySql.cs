@@ -861,7 +861,7 @@ namespace Lazy.Vinke.Database.MySql
             {
                 if (dbType == LazyDbType.Char) return (Int32)MySqlDbType.VarChar;
                 if (dbType == LazyDbType.VarChar) return (Int32)MySqlDbType.VarString;
-                if (dbType == LazyDbType.VarText) return (Int32)MySqlDbType.Text;
+                if (dbType == LazyDbType.VarText) return (Int32)MySqlDbType.LongText;
                 if (dbType == LazyDbType.Byte) return (Int32)MySqlDbType.Byte;
                 if (dbType == LazyDbType.Int16) return (Int32)MySqlDbType.Int16;
                 if (dbType == LazyDbType.Int32) return (Int32)MySqlDbType.Int32;
