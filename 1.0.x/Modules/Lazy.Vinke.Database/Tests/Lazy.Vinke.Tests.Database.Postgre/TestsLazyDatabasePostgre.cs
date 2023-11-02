@@ -209,6 +209,58 @@ namespace Lazy.Vinke.Tests.Database.Postgre
         }
 
         [TestMethod]
+        public void ExecuteProcedure_Validations_DbmsDbType_Exception()
+        {
+            // Arrange
+            String procName = "ExecuteProcedure_Validations_DbmsDbType";
+
+            Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
+            NpgsqlDbType[] dbTypes = new NpgsqlDbType[] { NpgsqlDbType.Integer, NpgsqlDbType.Varchar };
+            String[] parameters = new String[] { "id", "name" };
+
+            Object[] valuesLess = new Object[] { 1 };
+            NpgsqlDbType[] dbTypesLess = new NpgsqlDbType[] { NpgsqlDbType.Integer };
+            String[] parametersLess = new String[] { "id" };
+
+            Exception exceptionConnection = null;
+            Exception exceptionProcNameNull = null;
+            Exception exceptionValuesButOthers = null;
+            Exception exceptionDbTypesButOthers = null;
+            Exception exceptionDbParametersButOthers = null;
+            Exception exceptionValuesLessButOthers = null;
+            Exception exceptionDbTypesLessButOthers = null;
+            Exception exceptionDbParametersLessButOthers = null;
+
+            LazyDatabasePostgre databasePostgre = (LazyDatabasePostgre)this.Database;
+
+            // Act
+            databasePostgre.CloseConnection();
+
+            try { databasePostgre.ExecuteProcedure(procName, values, dbTypes, parameters); } catch (Exception exp) { exceptionConnection = exp; }
+
+            databasePostgre.OpenConnection();
+
+            try { databasePostgre.ExecuteProcedure(null, values, dbTypes, parameters); } catch (Exception exp) { exceptionProcNameNull = exp; }
+            try { databasePostgre.ExecuteProcedure(procName, values, null, null); } catch (Exception exp) { exceptionValuesButOthers = exp; }
+            try { databasePostgre.ExecuteProcedure(procName, null, dbTypes, null); } catch (Exception exp) { exceptionDbTypesButOthers = exp; }
+            try { databasePostgre.ExecuteProcedure(procName, null, null, parameters); } catch (Exception exp) { exceptionDbParametersButOthers = exp; }
+
+            try { databasePostgre.ExecuteProcedure(procName, valuesLess, dbTypes, parameters); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
+            try { databasePostgre.ExecuteProcedure(procName, values, dbTypesLess, parameters); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
+            try { databasePostgre.ExecuteProcedure(procName, values, dbTypes, parametersLess); } catch (Exception exp) { exceptionDbParametersLessButOthers = exp; }
+
+            // Assert
+            Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+            Assert.AreEqual(exceptionProcNameNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionStatementNullOrEmpty);
+            Assert.AreEqual(exceptionValuesButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+            Assert.AreEqual(exceptionDbTypesButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+            Assert.AreEqual(exceptionDbParametersButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+            Assert.AreEqual(exceptionValuesLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+            Assert.AreEqual(exceptionDbTypesLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+            Assert.AreEqual(exceptionDbParametersLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+        }
+
+        [TestMethod]
         public void ExecuteProcedure_ExecuteNonQuery_DbmsDbType_Success()
         {
             // Arrange
@@ -236,6 +288,12 @@ namespace Lazy.Vinke.Tests.Database.Postgre
             // Clean
             try { this.Database.Execute(sqlDelete, null); }
             catch { /* Just to be sure that the table will be empty */ }
+        }
+
+        [TestMethod]
+        public override void ExecuteProcedure_Validations_LazyDbType_Exception()
+        {
+            base.ExecuteProcedure_Validations_LazyDbType_Exception();
         }
 
         [TestMethod]
