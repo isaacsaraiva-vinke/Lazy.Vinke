@@ -921,6 +921,46 @@ namespace Lazy.Vinke.Tests.Database.Postgre
         }
 
         [TestMethod]
+        public virtual void QueryPage_DataAdapterFill_DbmsDbTypeOutOfRange_Success()
+        {
+            // Arrange
+            String tableName = "QueryPage_DataAdapterFill";
+            String columnsName = "Id, Name, Description";
+            String columnsParameter = "@Id, @Name, @Description";
+            String sqlDelete = "delete from QueryPage_DataAdapterFill where Id in (3,4)";
+            String sqlInsert = "insert into QueryPage_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
+            String sql = "select * from QueryPage_DataAdapterFill where Id in (@Id3,@Id4)";
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+
+            this.Database.Execute(sqlInsert, new Object[] { 3, "Name 3", "Description 3" });
+            this.Database.Execute(sqlInsert, new Object[] { 4, "Name 4", "Description 4" });
+
+            LazyQueryPageData queryPageData = new LazyQueryPageData();
+            queryPageData.OrderBy = "Id";
+            queryPageData.PageNum = 2;
+            queryPageData.PageSize = 2;
+
+            LazyDatabasePostgre databasePostgre = (LazyDatabasePostgre)this.Database;
+
+            // Act
+            LazyQueryPageResult queryPageResult = databasePostgre.QueryPage(sql, tableName, queryPageData, new Object[] { 3, 4 }, new NpgsqlDbType[] { NpgsqlDbType.Integer, NpgsqlDbType.Integer }, new String[] { "Id3", "Id4" });
+
+            // Assert
+            Assert.AreEqual(queryPageResult.PageNum, 2);
+            Assert.AreEqual(queryPageResult.PageSize, 2);
+            Assert.AreEqual(queryPageResult.PageItems, 0);
+            Assert.AreEqual(queryPageResult.PageCount, 0);
+            Assert.AreEqual(queryPageResult.CurrentCount, 0);
+            Assert.AreEqual(queryPageResult.TotalCount, 0);
+            Assert.AreEqual(queryPageResult.HasNextPage, false);
+
+            // Clean
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+        }
+
+        [TestMethod]
         public override void QueryPage_Validations_LazyDbType_Exception()
         {
             base.QueryPage_Validations_LazyDbType_Exception();
@@ -936,6 +976,12 @@ namespace Lazy.Vinke.Tests.Database.Postgre
         public override void QueryPage_DataAdapterFill_LazyDbTypeHigherPage_Success()
         {
             base.QueryPage_DataAdapterFill_LazyDbTypeHigherPage_Success();
+        }
+
+        [TestMethod]
+        public override void QueryPage_DataAdapterFill_LazyDbTypeOutOfRange_Success()
+        {
+            base.QueryPage_DataAdapterFill_LazyDbTypeOutOfRange_Success();
         }
 
         [TestMethod]

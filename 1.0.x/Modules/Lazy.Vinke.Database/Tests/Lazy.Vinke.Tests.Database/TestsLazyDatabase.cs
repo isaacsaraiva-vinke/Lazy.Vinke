@@ -1281,6 +1281,43 @@ namespace Lazy.Vinke.Tests.Database
             catch { /* Just to be sure that the table will be empty */ }
         }
 
+        public virtual void QueryPage_DataAdapterFill_LazyDbTypeOutOfRange_Success()
+        {
+            // Arrange
+            String tableName = "QueryPage_DataAdapterFill";
+            String columnsName = "Id, Name, Description";
+            String columnsParameter = "@Id, @Name, @Description";
+            String sqlDelete = "delete from QueryPage_DataAdapterFill where Id in (1,2)";
+            String sqlInsert = "insert into QueryPage_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
+            String sql = "select * from QueryPage_DataAdapterFill where Id in (@Id1,@Id2)";
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+
+            this.Database.Execute(sqlInsert, new Object[] { 1, "Name 1", "Description 1" });
+            this.Database.Execute(sqlInsert, new Object[] { 2, "Name 2", "Description 2" });
+
+            LazyQueryPageData queryPageData = new LazyQueryPageData();
+            queryPageData.OrderBy = "Id";
+            queryPageData.PageNum = 2;
+            queryPageData.PageSize = 2;
+
+            // Act
+            LazyQueryPageResult queryPageResult = this.Database.QueryPage(sql, tableName, queryPageData, new Object[] { 1, 2 });
+
+            // Assert
+            Assert.AreEqual(queryPageResult.PageNum, 2);
+            Assert.AreEqual(queryPageResult.PageSize, 2);
+            Assert.AreEqual(queryPageResult.PageItems, 0);
+            Assert.AreEqual(queryPageResult.PageCount, 0);
+            Assert.AreEqual(queryPageResult.CurrentCount, 0);
+            Assert.AreEqual(queryPageResult.TotalCount, 0);
+            Assert.AreEqual(queryPageResult.HasNextPage, false);
+
+            // Clean
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+        }
+
         public virtual void QueryLike_DataAdapterFill_LazyDbType_Success()
         {
             // Arrange
