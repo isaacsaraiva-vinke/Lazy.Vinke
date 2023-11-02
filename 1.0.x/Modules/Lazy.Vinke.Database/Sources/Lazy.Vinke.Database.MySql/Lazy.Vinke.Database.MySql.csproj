@@ -58,6 +58,7 @@
 
 	<PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">
 		<PostBuildEvent Condition="'$(Configuration)' == 'Debug' and '$(TargetFramework)' == 'net6.0'">
+			mkdir -p ~/.nuget/packages/lazy.vinke.database.mysql/1.0.0/lib/net6.0/
 			mkdir -p $(SolutionDir)../../../../../../Debug/1.0.x/Unix/All/Bin/lazy.vinke.database.mysql/1.0.0/lib/net6.0/
 			mkdir -p $(SolutionDir)../../../../../../Debug/1.0.x/Windows/All/Bin/lazy.vinke.database.mysql/1.0.0/lib/net6.0/
 			cp -f $(SolutionDir)Lazy.Vinke.Database.MySql/bin/Debug/net6.0/Lazy.Vinke.Database.MySql.dll ~/.nuget/packages/lazy.vinke.database.mysql/1.0.0/lib/net6.0/
