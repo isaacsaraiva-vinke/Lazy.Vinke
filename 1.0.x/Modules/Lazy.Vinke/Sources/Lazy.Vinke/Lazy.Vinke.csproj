@@ -55,7 +55,7 @@
 		<PostBuildEvent Condition="'$(Configuration)' == 'Debug' and '$(TargetFramework)' == 'net6.0'">
 			mkdir -p $(SolutionDir)../../../../../../Debug/1.0.x/Unix/All/Bin/lazy.vinke/1.0.0/lib/net6.0/
 			mkdir -p $(SolutionDir)../../../../../../Debug/1.0.x/Windows/All/Bin/lazy.vinke/1.0.0/lib/net6.0/
-			cp -f $(SolutionDir)Lazy.Vinke/bin/Debug/net6.0/Lazy.Vinke.dll ~/.nuget/Packages/lazy.vinke/1.0.0/lib/net6.0/
+			cp -f $(SolutionDir)Lazy.Vinke/bin/Debug/net6.0/Lazy.Vinke.dll ~/.nuget/packages/lazy.vinke/1.0.0/lib/net6.0/
 			cp -f $(SolutionDir)Lazy.Vinke/bin/Debug/net6.0/Lazy.Vinke.dll $(SolutionDir)../../../../../../Debug/1.0.x/Unix/All/Bin/lazy.vinke/1.0.0/lib/net6.0/
 			cp -f $(SolutionDir)Lazy.Vinke/bin/Debug/net6.0/Lazy.Vinke.dll $(SolutionDir)../../../../../../Debug/1.0.x/Windows/All/Bin/lazy.vinke/1.0.0/lib/net6.0/
 		</PostBuildEvent>

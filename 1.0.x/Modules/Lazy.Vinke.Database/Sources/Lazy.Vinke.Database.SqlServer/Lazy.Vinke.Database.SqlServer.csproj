@@ -60,7 +60,7 @@
 		<PostBuildEvent Condition="'$(Configuration)' == 'Debug' and '$(TargetFramework)' == 'net6.0'">
 			mkdir -p $(SolutionDir)../../../../../../Debug/1.0.x/Unix/All/Bin/lazy.vinke.database.sqlserver/1.0.0/lib/net6.0/
 			mkdir -p $(SolutionDir)../../../../../../Debug/1.0.x/Windows/All/Bin/lazy.vinke.database.sqlserver/1.0.0/lib/net6.0/
-			cp -f $(SolutionDir)Lazy.Vinke.Database.SqlServer/bin/Debug/net6.0/Lazy.Vinke.Database.SqlServer.dll ~/.nuget/Packages/lazy.vinke.database.sqlserver/1.0.0/lib/net6.0/
+			cp -f $(SolutionDir)Lazy.Vinke.Database.SqlServer/bin/Debug/net6.0/Lazy.Vinke.Database.SqlServer.dll ~/.nuget/packages/lazy.vinke.database.sqlserver/1.0.0/lib/net6.0/
 			cp -f $(SolutionDir)Lazy.Vinke.Database.SqlServer/bin/Debug/net6.0/Lazy.Vinke.Database.SqlServer.dll $(SolutionDir)../../../../../../Debug/1.0.x/Unix/All/Bin/lazy.vinke.database.sqlserver/1.0.0/lib/net6.0/
 			cp -f $(SolutionDir)Lazy.Vinke.Database.SqlServer/bin/Debug/net6.0/Lazy.Vinke.Database.SqlServer.dll $(SolutionDir)../../../../../../Debug/1.0.x/Windows/All/Bin/lazy.vinke.database.sqlserver/1.0.0/lib/net6.0/
 		</PostBuildEvent>

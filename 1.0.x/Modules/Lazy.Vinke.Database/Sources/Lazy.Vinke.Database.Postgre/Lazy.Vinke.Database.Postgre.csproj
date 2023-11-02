@@ -60,7 +60,7 @@
 		<PostBuildEvent Condition="'$(Configuration)' == 'Debug' and '$(TargetFramework)' == 'net6.0'">
 			mkdir -p $(SolutionDir)../../../../../../Debug/1.0.x/Unix/All/Bin/lazy.vinke.database.postgre/1.0.0/lib/net6.0/
 			mkdir -p $(SolutionDir)../../../../../../Debug/1.0.x/Windows/All/Bin/lazy.vinke.database.postgre/1.0.0/lib/net6.0/
-			cp -f $(SolutionDir)Lazy.Vinke.Database.Postgre/bin/Debug/net6.0/Lazy.Vinke.Database.Postgre.dll ~/.nuget/Packages/lazy.vinke.database.postgre/1.0.0/lib/net6.0/
+			cp -f $(SolutionDir)Lazy.Vinke.Database.Postgre/bin/Debug/net6.0/Lazy.Vinke.Database.Postgre.dll ~/.nuget/packages/lazy.vinke.database.postgre/1.0.0/lib/net6.0/
 			cp -f $(SolutionDir)Lazy.Vinke.Database.Postgre/bin/Debug/net6.0/Lazy.Vinke.Database.Postgre.dll $(SolutionDir)../../../../../../Debug/1.0.x/Unix/All/Bin/lazy.vinke.database.postgre/1.0.0/lib/net6.0/
 			cp -f $(SolutionDir)Lazy.Vinke.Database.Postgre/bin/Debug/net6.0/Lazy.Vinke.Database.Postgre.dll $(SolutionDir)../../../../../../Debug/1.0.x/Windows/All/Bin/lazy.vinke.database.postgre/1.0.0/lib/net6.0/
 		</PostBuildEvent>
