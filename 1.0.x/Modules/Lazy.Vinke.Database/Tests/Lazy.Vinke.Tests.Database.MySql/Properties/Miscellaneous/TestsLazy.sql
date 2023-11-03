@@ -91,6 +91,14 @@ create table QueryPage_DataAdapterFill
     constraint Pk_QueryPage_DataAdapterFill primary key (Id)
 );
 
+create table Select_QueryTable
+(
+	Id integer,
+    Name varchar(32),
+    Amount Decimal(13,4),
+    constraint Pk_Select_QueryTable primary key (Id)
+);
+
 create table QueryLike_DataAdapterFill
 (
 	TestId integer,

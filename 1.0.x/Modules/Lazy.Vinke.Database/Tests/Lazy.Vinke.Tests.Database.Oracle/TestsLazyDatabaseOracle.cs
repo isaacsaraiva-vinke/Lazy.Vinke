@@ -1043,6 +1043,12 @@ namespace Lazy.Vinke.Tests.Database.Oracle
         }
 
         [TestMethod]
+        public override void Select_QueryTable_DataRowWithtPrimaryKey_Success()
+        {
+            base.Select_QueryTable_DataRowWithtPrimaryKey_Success();
+        }
+
+        [TestMethod]
         public void QueryLike_DataAdapterFill_DbmsDbType_Success()
         {
             // Arrange
