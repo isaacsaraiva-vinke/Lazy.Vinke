@@ -1,17 +1,22 @@
-use master;
+declare @UseLazy varchar(16) = N'use [Lazy]';
+
+if exists (select 1 from sys.database_principals where name = N'lazy')
+	execute sp_executesql @UseLazy;
+
+if exists (select 1 from sys.database_principals where name = N'lazy')
+	drop user lazy;
 
 if exists (select 1 from syslogins where loginname = 'lazy')
 	drop login lazy;
 
-if exists (select * from sys.database_principals where name = N'lazy')
-	drop user lazy;
+use master;
 
 if exists (select 1 from sys.databases where name = 'Lazy')
 	drop database Lazy;
 
 create database Lazy;
-use Lazy;
 create login lazy with password = 'lazy';
+use Lazy;
 create user lazy for login lazy;
 grant control on database::Lazy to lazy with grant option;
 
