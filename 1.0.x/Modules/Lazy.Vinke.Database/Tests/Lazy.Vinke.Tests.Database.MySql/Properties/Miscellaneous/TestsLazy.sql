@@ -58,15 +58,6 @@ create table QueryValue_DataAdapterFill
 	constraint Pk_QueryValue_DataAdapterFill primary key (TestCode)
 );
 
-create table QueryFind_DataAdapterFill
-(
-	Id integer,
-    Code varchar(8),
-    Description varchar(256),
-    Amount Decimal(38),
-	constraint Pk_QueryFind_DataAdapterFill primary key (Id)
-);
-
 create table QueryRecord_DataAdapterFill
 (
 	Id smallint,
@@ -91,14 +82,6 @@ create table QueryPage_DataAdapterFill
     constraint Pk_QueryPage_DataAdapterFill primary key (Id)
 );
 
-create table Select_QueryTable
-(
-	Id integer,
-    Name varchar(32),
-    Amount Decimal(13,4),
-    constraint Pk_Select_QueryTable primary key (Id)
-);
-
 create table QueryLike_DataAdapterFill
 (
 	TestId integer,
@@ -121,3 +104,65 @@ begin
 	insert into QueryProc_ExecuteNonQuery values (Id, Name, Description);
 end;;
 delimiter ;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- drop table TestsQueryFind
+create table TestsQueryFind
+(
+	Id integer,
+    Code varchar(8),
+    Description varchar(256),
+    Amount Decimal(13,4),
+    constraint Pk_TestsQueryFind primary key (Id)
+);
+
+-- drop table TestsSelectQueryTable
+create table TestsSelectQueryTable
+(
+	Id integer,
+    Name varchar(32),
+    Amount Decimal(13,4),
+    constraint Pk_TestsSelectQueryTable primary key (Id)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
