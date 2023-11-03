@@ -37,15 +37,15 @@ namespace Lazy.Vinke.Tests.Database.SqlServer
         public void Execute_Validations_DbmsDbType_Exception()
         {
             // Arrange
-            String sql = "insert into Execute_Validations_DbmsDbType (id, name) values (@id, @name)";
+            String sql = "insert into TestsExecuteDbmsDbType (Id, Name) values (@Id, @Name)";
 
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             SqlDbType[] dbTypes = new SqlDbType[] { SqlDbType.SmallInt, SqlDbType.VarChar };
-            String[] parameters = new String[] { "id", "name" };
+            String[] parameters = new String[] { "Id", "Name" };
 
             Object[] valuesLess = new Object[] { 1 };
             SqlDbType[] dbTypesLess = new SqlDbType[] { SqlDbType.Int };
-            String[] parametersLess = new String[] { "id" };
+            String[] parametersLess = new String[] { "Id" };
 
             Exception exceptionConnection = null;
             Exception exceptionSqlNull = null;
@@ -91,9 +91,9 @@ namespace Lazy.Vinke.Tests.Database.SqlServer
             // Arrange
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             SqlDbType[] dbTypes = new SqlDbType[] { SqlDbType.Int, SqlDbType.VarChar };
-            String sqlCreate = "create table NonQuery_WithValuesDbmsType ( id int, name varchar(256) )";
-            String sqlInsert = "insert into NonQuery_WithValuesDbmsType (id, name) values (@id, @name)";
-            String sqlDrop = "drop table NonQuery_WithValuesDbmsType";
+            String sqlCreate = "create table TestsExecuteDbmsType ( Id integer, Name varchar(256) )";
+            String sqlInsert = "insert into TestsExecuteDbmsType (Id, Name) values (@Id, @Name)";
+            String sqlDrop = "drop table TestsExecuteDbmsType";
             try { this.Database.Execute(sqlDrop, null); }
             catch { /* Just to be sure that the table will not exists */ }
 
@@ -113,15 +113,15 @@ namespace Lazy.Vinke.Tests.Database.SqlServer
         }
 
         [TestMethod]
-        public override void Execute_ExecuteNonQuery_WithoutValues_Success()
+        public override void Execute_ExecuteNonQuery_DropTable_Success()
         {
-            base.Execute_ExecuteNonQuery_WithoutValues_Success();
+            base.Execute_ExecuteNonQuery_DropTable_Success();
         }
 
         [TestMethod]
-        public override void Execute_ExecuteNonQuery_WithValues_Success()
+        public override void Execute_ExecuteNonQuery_InsertValues_Success()
         {
-            base.Execute_ExecuteNonQuery_WithValues_Success();
+            base.Execute_ExecuteNonQuery_InsertValues_Success();
         }
 
         [TestCleanup]

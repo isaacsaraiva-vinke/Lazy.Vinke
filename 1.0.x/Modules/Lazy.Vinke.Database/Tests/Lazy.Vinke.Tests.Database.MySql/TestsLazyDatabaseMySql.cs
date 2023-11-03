@@ -46,6 +46,66 @@ namespace Lazy.Vinke.Tests.Database.MySql
         }
 
         [TestMethod]
+        public override void OpenConnection_ConnectionString_StringNullOrEmpty_Exception()
+        {
+            base.OpenConnection_ConnectionString_StringNullOrEmpty_Exception();
+        }
+
+        [TestMethod]
+        public override void OpenConnection_ConnectionState_AlreadyOpen_Exception()
+        {
+            base.OpenConnection_ConnectionState_AlreadyOpen_Exception();
+        }
+
+        [TestMethod]
+        public override void OpenConnection_ConnectionState_Opened_Success()
+        {
+            base.OpenConnection_ConnectionState_Opened_Success();
+        }
+
+        [TestMethod]
+        public override void CloseConnection_ConnectionState_AlreadyClose_Exception()
+        {
+            base.CloseConnection_ConnectionState_AlreadyClose_Exception();
+        }
+
+        [TestMethod]
+        public override void CloseConnection_ConnectionState_Close_Success()
+        {
+            base.CloseConnection_ConnectionState_Close_Success();
+        }
+
+        [TestMethod]
+        public override void BeginTransaction_Connection_NotOpen_Exception()
+        {
+            base.BeginTransaction_Connection_NotOpen_Exception();
+        }
+
+        [TestMethod]
+        public override void BeginTransaction_Transaction_AlreadyOpen_Exception()
+        {
+            base.BeginTransaction_Transaction_AlreadyOpen_Exception();
+        }
+
+        [TestMethod]
+        public override void BeginTransaction_Transaction_NotOpen_Success()
+        {
+            base.BeginTransaction_Transaction_NotOpen_Success();
+        }
+
+        [TestMethod]
+        public override void CommitTransaction_Commit_Single_Success()
+        {
+            base.CommitTransaction_Commit_Single_Success();
+        }
+
+        [TestMethod]
+        public override void RollbackTransaction_Rollback_Single_Success()
+        {
+            base.RollbackTransaction_Rollback_Single_Success();
+        }
+
+        [TestMethod]
         public override void CreateNew_Instance_ConnectionOwnerNull_Success()
         {
             base.CreateNew_Instance_ConnectionOwnerNull_Success();
@@ -61,11 +121,11 @@ namespace Lazy.Vinke.Tests.Database.MySql
         public void QueryLike_DataAdapterFill_DbmsDbType_Success()
         {
             // Arrange
-            String tableName = "QueryLike_DataAdapterFill";
+            String tableName = "TestsQueryLike";
             String columnsName = "TestId, Content, Notes";
             String columnsParameter = "@TestId, @Content, @Notes";
-            String sqlDelete = "delete from QueryLike_DataAdapterFill where TestId in (20,21,22)";
-            String sqlInsert = "insert into QueryLike_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlDelete = "delete from " + tableName + " where TestId in (20,21,22)";
+            String sqlInsert = "insert into " + tableName + " (" + columnsName + ") values (" + columnsParameter + ")";
             try { this.Database.Execute(sqlDelete, null); }
             catch { /* Just to be sure that the table will be empty */ }
 
@@ -76,9 +136,9 @@ namespace Lazy.Vinke.Tests.Database.MySql
             databaseMySql.Execute(sqlInsert, new Object[] { 22, "Content 22 Content", "Notes 22 22 Notes 22 22 Notes 22 22 Notes" });
 
             // Act
-            DataRow dataRowTest1 = databaseMySql.QueryRecord("select * from QueryLike_DataAdapterFill where cast(TestId as char(2048)) like @TestId", tableName, new Object[] { "%20" });
-            DataRow dataRowTest2 = databaseMySql.QueryRecord("select * from QueryLike_DataAdapterFill where cast(TestId as char(2048)) like @TestId", tableName, new Object[] { "21%" });
-            DataRow dataRowTest3 = databaseMySql.QueryRecord("select * from QueryLike_DataAdapterFill where cast(TestId as char(2048)) like @TestId", tableName, new Object[] { "%22%" });
+            DataRow dataRowTest1 = databaseMySql.QueryRecord("select * from " + tableName + " where cast(TestId as char(2048)) like @TestId", tableName, new Object[] { "%20" });
+            DataRow dataRowTest2 = databaseMySql.QueryRecord("select * from " + tableName + " where cast(TestId as char(2048)) like @TestId", tableName, new Object[] { "21%" });
+            DataRow dataRowTest3 = databaseMySql.QueryRecord("select * from " + tableName + " where cast(TestId as char(2048)) like @TestId", tableName, new Object[] { "%22%" });
 
             // Assert
             Assert.IsNotNull(dataRowTest1);

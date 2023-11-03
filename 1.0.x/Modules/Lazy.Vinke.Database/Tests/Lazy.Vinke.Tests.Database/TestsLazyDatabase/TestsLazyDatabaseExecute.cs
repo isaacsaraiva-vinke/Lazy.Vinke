@@ -29,15 +29,15 @@ namespace Lazy.Vinke.Tests.Database
         public virtual void Execute_Validations_LazyDbType_Exception()
         {
             // Arrange
-            String sql = "insert into Execute_Validations_LazyDbType (id, name) values (@id, @name)";
+            String sql = "insert into TestsExecuteLazyDbType (Id, Name) values (@Id, @Name)";
 
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             LazyDbType[] dbTypes = new LazyDbType[] { LazyDbType.Int32, LazyDbType.VarChar };
-            String[] parameters = new String[] { "id", "name" };
+            String[] parameters = new String[] { "Id", "Name" };
 
             Object[] valuesLess = new Object[] { 1 };
             LazyDbType[] dbTypesLess = new LazyDbType[] { LazyDbType.Int32 };
-            String[] parametersLess = new String[] { "id" };
+            String[] parametersLess = new String[] { "Id" };
 
             Exception exceptionConnection = null;
             Exception exceptionSqlNull = null;
@@ -75,12 +75,12 @@ namespace Lazy.Vinke.Tests.Database
             Assert.AreEqual(exceptionDbParametersLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
         }
 
-        public virtual void Execute_ExecuteNonQuery_WithoutValues_Success()
+        public virtual void Execute_ExecuteNonQuery_DropTable_Success()
         {
             // Arrange
-            String sqlCreate = "create table NonQuery_WithoutValues ( id int, name varchar(256) )";
-            String sqlDrop = "drop table NonQuery_WithoutValues";
-            String sqlInsert = "insert into NonQuery_WithoutValues (id, name) values (1, 'Lazy.Vinke.Database')";
+            String sqlCreate = "create table TestsExecuteTable1 ( Id integer, Name varchar(256) )";
+            String sqlInsert = "insert into TestsExecuteTable1 (Id, Name) values (@Id, @Name)";
+            String sqlDrop = "drop table TestsExecuteTable1";
             try { this.Database.Execute(sqlDrop, null); }
             catch { /* Just to be sure that the table will not exists */ }
 
@@ -96,13 +96,13 @@ namespace Lazy.Vinke.Tests.Database
             Assert.IsNotNull(exception);
         }
 
-        public virtual void Execute_ExecuteNonQuery_WithValues_Success()
+        public virtual void Execute_ExecuteNonQuery_InsertValues_Success()
         {
             // Arrange
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
-            String sqlCreate = "create table NonQuery_WithValues ( id int, name varchar(256) )";
-            String sqlInsert = "insert into NonQuery_WithValues (id, name) values (@id, @name)";
-            String sqlDrop = "drop table NonQuery_WithValues";
+            String sqlCreate = "create table TestsExecuteTable2 ( Id integer, Name varchar(256) )";
+            String sqlInsert = "insert into TestsExecuteTable2 (Id, Name) values (@Id, @Name)";
+            String sqlDrop = "drop table TestsExecuteTable2";
             try { this.Database.Execute(sqlDrop, null); }
             catch { /* Just to be sure that the table will not exists */ }
 

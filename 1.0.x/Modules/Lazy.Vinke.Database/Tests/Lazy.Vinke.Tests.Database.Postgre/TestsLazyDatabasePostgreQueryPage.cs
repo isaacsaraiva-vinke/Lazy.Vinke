@@ -226,13 +226,13 @@ namespace Lazy.Vinke.Tests.Database.Postgre
         public virtual void QueryPage_DataAdapterFill_DbmsDbTypeOutOfRange_Success()
         {
             // Arrange
-            String tableName = "QueryPage_DataAdapterFill";
+            String tableName = "TestsQueryPage";
             String columnsName = "Id, Name, Description";
             String columnsParameter = "@Id, @Name, @Description";
-            String sqlDelete = "delete from QueryPage_DataAdapterFill where Id in (3,4)";
-            String sqlInsert = "insert into QueryPage_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sql = "select * from QueryPage_DataAdapterFill where Id in (@Id3,@Id4)";
-            try { this.Database.Execute(sqlDelete, null); }
+            String sqlDelete = "delete from " + tableName + " where Id between @LowId and @HighId";
+            String sqlInsert = "insert into " + tableName + " (" + columnsName + ") values (" + columnsParameter + ")";
+            String sql = "select * from TestsQueryPage where Id between @LowId and @HighId and Name is not null and Description is not null";
+            try { this.Database.Execute(sqlDelete, new Object[] { 3, 4 }); }
             catch { /* Just to be sure that the table will be empty */ }
 
             this.Database.Execute(sqlInsert, new Object[] { 3, "Name 3", "Description 3" });
@@ -246,7 +246,7 @@ namespace Lazy.Vinke.Tests.Database.Postgre
             LazyDatabasePostgre databasePostgre = (LazyDatabasePostgre)this.Database;
 
             // Act
-            LazyQueryPageResult queryPageResult = databasePostgre.QueryPage(sql, tableName, queryPageData, new Object[] { 3, 4 }, new NpgsqlDbType[] { NpgsqlDbType.Integer, NpgsqlDbType.Integer }, new String[] { "Id3", "Id4" });
+            LazyQueryPageResult queryPageResult = databasePostgre.QueryPage(sql, tableName, queryPageData, new Object[] { 3, 4 }, new NpgsqlDbType[] { NpgsqlDbType.Integer, NpgsqlDbType.Integer }, new String[] { "LowId", "HighId" });
 
             // Assert
             Assert.AreEqual(queryPageResult.PageNum, 2);
@@ -258,7 +258,7 @@ namespace Lazy.Vinke.Tests.Database.Postgre
             Assert.AreEqual(queryPageResult.HasNextPage, false);
 
             // Clean
-            try { this.Database.Execute(sqlDelete, null); }
+            try { this.Database.Execute(sqlDelete, new Object[] { 3, 4 }); }
             catch { /* Just to be sure that the table will be empty */ }
         }
 

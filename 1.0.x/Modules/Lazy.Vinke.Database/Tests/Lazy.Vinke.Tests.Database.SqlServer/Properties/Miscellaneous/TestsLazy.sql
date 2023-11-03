@@ -15,33 +15,24 @@ create login lazy with password = 'lazy';
 create user lazy for login lazy;
 grant control on database::Lazy to lazy with grant option;
 
-create table Transaction_CommitRollback
+
+
+-- drop table TestsTransaction
+create table TestsTransaction
 (
 	Id smallint,
     Content varchar(256),
-    constraint Pk_Transaction_CommitRollback primary key (Id)
+    constraint Pk_TestsTransaction primary key (Id)
 );
 
-create table QueryLike_DataAdapterFill
+-- drop table TestsQueryLike
+create table TestsQueryLike
 (
 	TestId integer,
     Content varchar(256),
     Notes text,
-    constraint Pk_QueryLike_DataAdapterFill primary key (TestId)
+    constraint Pk_TestsQueryLike primary key (TestId)
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 -- drop table TestsQueryFind
 create table TestsQueryFind
