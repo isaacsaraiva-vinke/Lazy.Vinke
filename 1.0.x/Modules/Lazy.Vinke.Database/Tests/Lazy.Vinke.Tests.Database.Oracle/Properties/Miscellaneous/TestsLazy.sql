@@ -10,50 +10,7 @@ create table Transaction_CommitRollback
     constraint Pk_Transaction_CommitRollback primary key (Id)
 );
 
-create table QueryValue_DataAdapterFill
-(
-	TestCode varchar2(128),
-	ColumnCharD char(1),
-    ColumnCharB char(1),
-    ColumnCharNull char(1),
-	ColumnVarChar1 varchar2(32),
-    ColumnVarChar2 varchar2(256),
-    ColumnVarCharNull varchar2(512),
-    ColumnVarText1 clob,
-    ColumnVarText2 clob,
-    ColumnVarTextNull clob,
-    ColumnByteN smallint,
-    ColumnByteP smallint,
-    ColumnByteNull smallint,
-    ColumnInt16N smallint,
-    ColumnInt16P smallint,
-    ColumnInt16Null smallint,
-    ColumnInt32N integer,
-    ColumnInt32P integer,
-    ColumnInt32Null integer,
-    ColumnInt64N number,
-    ColumnInt64P number,
-    ColumnInt64Null number,
-    ColumnUByte1 smallint,
-    ColumnUByte2 smallint,
-    ColumnUByteNull smallint,
-    ColumnFloatN float(24),
-    ColumnFloatP float(24),
-    ColumnFloatNull float(24),
-    ColumnDoubleN float(53),
-    ColumnDoubleP float(53),
-    ColumnDoubleNull float(53),
-    ColumnDecimalN number(38),
-    ColumnDecimalP number(38),
-    ColumnDecimalNull number(38),
-    ColumnDateTime1 date,
-    ColumnDateTime2 date,
-    ColumnDateTimeNull date,
-    ColumnVarUByte1 blob,
-    ColumnVarUByte2 blob,
-    ColumnVarUByteNull blob,
-	constraint Pk_QueryValue_DataAdapterFill primary key (TestCode)
-);
+
 
 create table QueryRecord_DataAdapterFill
 (
@@ -164,6 +121,51 @@ create table TestsSelectQueryTable
     constraint Pk_TestsSelectQueryTable primary key (Id)
 );
 
+-- drop table TestsQueryValue
+create table TestsQueryValue
+(
+	TestCode varchar2(128),
+	ColumnCharD char(1),
+    ColumnCharB char(1),
+    ColumnCharNull char(1),
+	ColumnVarChar1 varchar2(32),
+    ColumnVarChar2 varchar2(256),
+    ColumnVarCharNull varchar2(512),
+    ColumnVarText1 clob,
+    ColumnVarText2 clob,
+    ColumnVarTextNull clob,
+    ColumnByteN smallint,
+    ColumnByteP smallint,
+    ColumnByteNull smallint,
+    ColumnInt16N smallint,
+    ColumnInt16P smallint,
+    ColumnInt16Null smallint,
+    ColumnInt32N integer,
+    ColumnInt32P integer,
+    ColumnInt32Null integer,
+    ColumnInt64N number,
+    ColumnInt64P number,
+    ColumnInt64Null number,
+    ColumnUByte1 smallint,
+    ColumnUByte2 smallint,
+    ColumnUByteNull smallint,
+    ColumnFloatN float(24),
+    ColumnFloatP float(24),
+    ColumnFloatNull float(24),
+    ColumnDoubleN float(53),
+    ColumnDoubleP float(53),
+    ColumnDoubleNull float(53),
+    ColumnDecimalN number(38),
+    ColumnDecimalP number(38),
+    ColumnDecimalNull number(38),
+    ColumnDateTime1 date,
+    ColumnDateTime2 date,
+    ColumnDateTimeNull date,
+    ColumnVarUByte1 blob,
+    ColumnVarUByte2 blob,
+    ColumnVarUByteNull blob,
+	constraint Pk_TestsQueryValue primary key (TestCode)
+);
 
 
 

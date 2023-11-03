@@ -37,15 +37,15 @@ namespace Lazy.Vinke.Tests.Database.MySql
         public void QueryValue_Validations_DbmsDbType_Exception()
         {
             // Arrange
-            String sql = "insert into QueryValue_Validations_DbmsDbType (id, name) values (@id, @name)";
+            String sql = "select ColumnVarChar1 from TestsQueryValue where TestCode = @TestCode";
 
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             MySqlDbType[] dbTypes = new MySqlDbType[] { MySqlDbType.Int32, MySqlDbType.VarChar };
-            String[] parameters = new String[] { "id", "name" };
+            String[] parameters = new String[] { "ColumnInt16P", "ColumnInt32P" };
 
             Object[] valuesLess = new Object[] { 1 };
             MySqlDbType[] dbTypesLess = new MySqlDbType[] { MySqlDbType.Int32 };
-            String[] parametersLess = new String[] { "id" };
+            String[] parametersLess = new String[] { "ColumnCharD" };
 
             Exception exceptionConnection = null;
             Exception exceptionSqlNull = null;
@@ -95,9 +95,9 @@ namespace Lazy.Vinke.Tests.Database.MySql
             String columnsName = "TestCode, ColumnDecimalN, ColumnDecimalP, ColumnDecimalNull";
             String columnsParameter = "@TestCode, @ColumnDecimalN, @ColumnDecimalP, @ColumnDecimalNull";
             Object[] values = new Object[] { testCode, minValue, maxValue, null };
-            String sqlDelete = "delete from QueryValue_DataAdapterFill where TestCode = @TestCode";
-            String sqlInsert = "insert into QueryValue_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sqlselect = "select {0} from QueryValue_DataAdapterFill where TestCode = @TestCode";
+            String sqlDelete = "delete from TestsQueryValue where TestCode = @TestCode";
+            String sqlInsert = "insert into TestsQueryValue (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlselect = "select {0} from TestsQueryValue where TestCode = @TestCode";
             Object[] tableKeyArray = new Object[] { testCode };
             MySqlDbType[] dbKeyTypes = new MySqlDbType[] { MySqlDbType.VarChar };
             try { this.Database.Execute(sqlDelete, tableKeyArray); }

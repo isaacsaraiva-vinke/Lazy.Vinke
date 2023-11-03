@@ -29,15 +29,15 @@ namespace Lazy.Vinke.Tests.Database
         public virtual void QueryValue_Validations_LazyDbType_Exception()
         {
             // Arrange
-            String sql = "insert into QueryValue_Validations_LazyDbType (id, name) values (@id, @name)";
+            String sql = "select ColumnVarChar1 from TestsQueryValue where TestCode = @TestCode";
 
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             LazyDbType[] dbTypes = new LazyDbType[] { LazyDbType.Int32, LazyDbType.VarChar };
-            String[] parameters = new String[] { "id", "name" };
+            String[] parameters = new String[] { "ColumnInt16P", "ColumnInt32P" };
 
             Object[] valuesLess = new Object[] { 1 };
             LazyDbType[] dbTypesLess = new LazyDbType[] { LazyDbType.Int32 };
-            String[] parametersLess = new String[] { "id" };
+            String[] parametersLess = new String[] { "ColumnCharD" };
 
             Exception exceptionConnection = null;
             Exception exceptionSqlNull = null;
@@ -82,9 +82,9 @@ namespace Lazy.Vinke.Tests.Database
             String columnsName = "TestCode, ColumnCharD, ColumnCharB, ColumnCharNull";
             String columnsParameter = "@TestCode, @ColumnCharD, @ColumnCharB, @ColumnCharNull";
             Object[] values = new Object[] { testCode, 'D', 'B', DBNull.Value };
-            String sqlDelete = "delete from QueryValue_DataAdapterFill where TestCode = @TestCode";
-            String sqlInsert = "insert into QueryValue_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sqlselect = "select {0} from QueryValue_DataAdapterFill where TestCode = @TestCode";
+            String sqlDelete = "delete from TestsQueryValue where TestCode = @TestCode";
+            String sqlInsert = "insert into TestsQueryValue (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlselect = "select {0} from TestsQueryValue where TestCode = @TestCode";
             Object[] tableKeyArray = new Object[] { testCode };
             try { this.Database.Execute(sqlDelete, tableKeyArray); }
             catch { /* Just to be sure that the table will be empty */ }
@@ -113,9 +113,9 @@ namespace Lazy.Vinke.Tests.Database
             String columnsName = "TestCode, ColumnVarChar1, ColumnVarChar2, ColumnVarCharNull";
             String columnsParameter = "@TestCode, @ColumnVarChar1, @ColumnVarChar2, @ColumnVarCharNull";
             Object[] values = new Object[] { testCode, "Lazy.Vinke", "Tests.Database", null };
-            String sqlDelete = "delete from QueryValue_DataAdapterFill where TestCode = @TestCode";
-            String sqlInsert = "insert into QueryValue_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sqlselect = "select {0} from QueryValue_DataAdapterFill where TestCode = @TestCode";
+            String sqlDelete = "delete from TestsQueryValue where TestCode = @TestCode";
+            String sqlInsert = "insert into TestsQueryValue (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlselect = "select {0} from TestsQueryValue where TestCode = @TestCode";
             Object[] tableKeyArray = new Object[] { testCode };
             try { this.Database.Execute(sqlDelete, tableKeyArray); }
             catch { /* Just to be sure that the table will be empty */ }
@@ -147,9 +147,9 @@ namespace Lazy.Vinke.Tests.Database
             String columnsParameter = "@TestCode, @ColumnVarText1, @ColumnVarText2, @ColumnVarTextNull";
             Object[] values = new Object[] { testCode, text1, text2, DBNull.Value };
             LazyDbType[] dbTypes = new LazyDbType[] { LazyDbType.VarChar, LazyDbType.VarText, LazyDbType.VarText, LazyDbType.VarText };
-            String sqlDelete = "delete from QueryValue_DataAdapterFill where TestCode = @TestCode";
-            String sqlInsert = "insert into QueryValue_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sqlselect = "select {0} from QueryValue_DataAdapterFill where TestCode = @TestCode";
+            String sqlDelete = "delete from TestsQueryValue where TestCode = @TestCode";
+            String sqlInsert = "insert into TestsQueryValue (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlselect = "select {0} from TestsQueryValue where TestCode = @TestCode";
             Object[] tableKeyArray = new Object[] { testCode };
             try { this.Database.Execute(sqlDelete, tableKeyArray); }
             catch { /* Just to be sure that the table will be empty */ }
@@ -178,9 +178,9 @@ namespace Lazy.Vinke.Tests.Database
             String columnsName = "TestCode, ColumnByteN, ColumnByteP, ColumnByteNull";
             String columnsParameter = "@TestCode, @ColumnByteN, @ColumnByteP, @ColumnByteNull";
             Object[] values = new Object[] { testCode, SByte.MinValue, SByte.MaxValue, null };
-            String sqlDelete = "delete from QueryValue_DataAdapterFill where TestCode = @TestCode";
-            String sqlInsert = "insert into QueryValue_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sqlselect = "select {0} from QueryValue_DataAdapterFill where TestCode = @TestCode";
+            String sqlDelete = "delete from TestsQueryValue where TestCode = @TestCode";
+            String sqlInsert = "insert into TestsQueryValue (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlselect = "select {0} from TestsQueryValue where TestCode = @TestCode";
             Object[] tableKeyArray = new Object[] { testCode };
             try { this.Database.Execute(sqlDelete, tableKeyArray); }
             catch { /* Just to be sure that the table will be empty */ }
@@ -209,9 +209,9 @@ namespace Lazy.Vinke.Tests.Database
             String columnsName = "TestCode, ColumnInt16N, ColumnInt16P, ColumnInt16Null";
             String columnsParameter = "@TestCode, @ColumnInt16N, @ColumnInt16P, @ColumnInt16Null";
             Object[] values = new Object[] { testCode, Int16.MinValue, Int16.MaxValue, null };
-            String sqlDelete = "delete from QueryValue_DataAdapterFill where TestCode = @TestCode";
-            String sqlInsert = "insert into QueryValue_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sqlselect = "select {0} from QueryValue_DataAdapterFill where TestCode = @TestCode";
+            String sqlDelete = "delete from TestsQueryValue where TestCode = @TestCode";
+            String sqlInsert = "insert into TestsQueryValue (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlselect = "select {0} from TestsQueryValue where TestCode = @TestCode";
             Object[] tableKeyArray = new Object[] { testCode };
             try { this.Database.Execute(sqlDelete, tableKeyArray); }
             catch { /* Just to be sure that the table will be empty */ }
@@ -240,9 +240,9 @@ namespace Lazy.Vinke.Tests.Database
             String columnsName = "TestCode, ColumnInt32N, ColumnInt32P, ColumnInt32Null";
             String columnsParameter = "@TestCode, @ColumnInt32N, @ColumnInt32P, @ColumnInt32Null";
             Object[] values = new Object[] { testCode, Int32.MinValue, Int32.MaxValue, null };
-            String sqlDelete = "delete from QueryValue_DataAdapterFill where TestCode = @TestCode";
-            String sqlInsert = "insert into QueryValue_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sqlselect = "select {0} from QueryValue_DataAdapterFill where TestCode = @TestCode";
+            String sqlDelete = "delete from TestsQueryValue where TestCode = @TestCode";
+            String sqlInsert = "insert into TestsQueryValue (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlselect = "select {0} from TestsQueryValue where TestCode = @TestCode";
             Object[] tableKeyArray = new Object[] { testCode };
             try { this.Database.Execute(sqlDelete, tableKeyArray); }
             catch { /* Just to be sure that the table will be empty */ }
@@ -271,9 +271,9 @@ namespace Lazy.Vinke.Tests.Database
             String columnsName = "TestCode, ColumnInt64N, ColumnInt64P, ColumnInt64Null";
             String columnsParameter = "@TestCode, @ColumnInt64N, @ColumnInt64P, @ColumnInt64Null";
             Object[] values = new Object[] { testCode, Int64.MinValue, Int64.MaxValue, null };
-            String sqlDelete = "delete from QueryValue_DataAdapterFill where TestCode = @TestCode";
-            String sqlInsert = "insert into QueryValue_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sqlselect = "select {0} from QueryValue_DataAdapterFill where TestCode = @TestCode";
+            String sqlDelete = "delete from TestsQueryValue where TestCode = @TestCode";
+            String sqlInsert = "insert into TestsQueryValue (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlselect = "select {0} from TestsQueryValue where TestCode = @TestCode";
             Object[] tableKeyArray = new Object[] { testCode };
             try { this.Database.Execute(sqlDelete, tableKeyArray); }
             catch { /* Just to be sure that the table will be empty */ }
@@ -302,9 +302,9 @@ namespace Lazy.Vinke.Tests.Database
             String columnsName = "TestCode, ColumnUByte1, ColumnUByte2, ColumnUByteNull";
             String columnsParameter = "@TestCode, @ColumnUByte1, @ColumnUByte2, @ColumnUByteNull";
             Object[] values = new Object[] { testCode, Byte.MinValue, Byte.MaxValue, null };
-            String sqlDelete = "delete from QueryValue_DataAdapterFill where TestCode = @TestCode";
-            String sqlInsert = "insert into QueryValue_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sqlselect = "select {0} from QueryValue_DataAdapterFill where TestCode = @TestCode";
+            String sqlDelete = "delete from TestsQueryValue where TestCode = @TestCode";
+            String sqlInsert = "insert into TestsQueryValue (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlselect = "select {0} from TestsQueryValue where TestCode = @TestCode";
             Object[] tableKeyArray = new Object[] { testCode };
             try { this.Database.Execute(sqlDelete, tableKeyArray); }
             catch { /* Just to be sure that the table will be empty */ }
@@ -335,9 +335,9 @@ namespace Lazy.Vinke.Tests.Database
             String columnsName = "TestCode, ColumnFloatN, ColumnFloatP, ColumnFloatNull";
             String columnsParameter = "@TestCode, @ColumnFloatN, @ColumnFloatP, @ColumnFloatNull";
             Object[] values = new Object[] { testCode, minValue, maxValue, null };
-            String sqlDelete = "delete from QueryValue_DataAdapterFill where TestCode = @TestCode";
-            String sqlInsert = "insert into QueryValue_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sqlselect = "select {0} from QueryValue_DataAdapterFill where TestCode = @TestCode";
+            String sqlDelete = "delete from TestsQueryValue where TestCode = @TestCode";
+            String sqlInsert = "insert into TestsQueryValue (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlselect = "select {0} from TestsQueryValue where TestCode = @TestCode";
             Object[] tableKeyArray = new Object[] { testCode };
             try { this.Database.Execute(sqlDelete, tableKeyArray); }
             catch { /* Just to be sure that the table will be empty */ }
@@ -368,9 +368,9 @@ namespace Lazy.Vinke.Tests.Database
             String columnsName = "TestCode, ColumnDoubleN, ColumnDoubleP, ColumnDoubleNull";
             String columnsParameter = "@TestCode, @ColumnDoubleN, @ColumnDoubleP, @ColumnDoubleNull";
             Object[] values = new Object[] { testCode, minValue, maxValue, null };
-            String sqlDelete = "delete from QueryValue_DataAdapterFill where TestCode = @TestCode";
-            String sqlInsert = "insert into QueryValue_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sqlselect = "select {0} from QueryValue_DataAdapterFill where TestCode = @TestCode";
+            String sqlDelete = "delete from TestsQueryValue where TestCode = @TestCode";
+            String sqlInsert = "insert into TestsQueryValue (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlselect = "select {0} from TestsQueryValue where TestCode = @TestCode";
             Object[] tableKeyArray = new Object[] { testCode };
             try { this.Database.Execute(sqlDelete, tableKeyArray); }
             catch { /* Just to be sure that the table will be empty */ }
@@ -401,9 +401,9 @@ namespace Lazy.Vinke.Tests.Database
             String columnsName = "TestCode, ColumnDecimalN, ColumnDecimalP, ColumnDecimalNull";
             String columnsParameter = "@TestCode, @ColumnDecimalN, @ColumnDecimalP, @ColumnDecimalNull";
             Object[] values = new Object[] { testCode, minValue, maxValue, null };
-            String sqlDelete = "delete from QueryValue_DataAdapterFill where TestCode = @TestCode";
-            String sqlInsert = "insert into QueryValue_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sqlselect = "select {0} from QueryValue_DataAdapterFill where TestCode = @TestCode";
+            String sqlDelete = "delete from TestsQueryValue where TestCode = @TestCode";
+            String sqlInsert = "insert into TestsQueryValue (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlselect = "select {0} from TestsQueryValue where TestCode = @TestCode";
             Object[] tableKeyArray = new Object[] { testCode };
             try { this.Database.Execute(sqlDelete, tableKeyArray); }
             catch { /* Just to be sure that the table will be empty */ }
@@ -434,9 +434,9 @@ namespace Lazy.Vinke.Tests.Database
             String columnsName = "TestCode, ColumnDateTime1, ColumnDateTime2, ColumnDateTimeNull";
             String columnsParameter = "@TestCode, @ColumnDateTime1, @ColumnDateTime2, @ColumnDateTimeNull";
             Object[] values = new Object[] { testCode, minValue, maxValue, null };
-            String sqlDelete = "delete from QueryValue_DataAdapterFill where TestCode = @TestCode";
-            String sqlInsert = "insert into QueryValue_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sqlselect = "select {0} from QueryValue_DataAdapterFill where TestCode = @TestCode";
+            String sqlDelete = "delete from TestsQueryValue where TestCode = @TestCode";
+            String sqlInsert = "insert into TestsQueryValue (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlselect = "select {0} from TestsQueryValue where TestCode = @TestCode";
             Object[] tableKeyArray = new Object[] { testCode };
             try { this.Database.Execute(sqlDelete, tableKeyArray); }
             catch { /* Just to be sure that the table will be empty */ }
@@ -467,9 +467,9 @@ namespace Lazy.Vinke.Tests.Database
             String columnsName = "TestCode, ColumnVarUByte1, ColumnVarUByte2, ColumnVarUByteNull";
             String columnsParameter = "@TestCode, @ColumnVarUByte1, @ColumnVarUByte2, @ColumnVarUByteNull";
             Object[] values = new Object[] { testCode, values1, values2, null };
-            String sqlDelete = "delete from QueryValue_DataAdapterFill where TestCode = @TestCode";
-            String sqlInsert = "insert into QueryValue_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sqlselect = "select {0} from QueryValue_DataAdapterFill where TestCode = @TestCode";
+            String sqlDelete = "delete from TestsQueryValue where TestCode = @TestCode";
+            String sqlInsert = "insert into TestsQueryValue (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlselect = "select {0} from TestsQueryValue where TestCode = @TestCode";
             Object[] tableKeyArray = new Object[] { testCode };
             try { this.Database.Execute(sqlDelete, tableKeyArray); }
             catch { /* Just to be sure that the table will be empty */ }
