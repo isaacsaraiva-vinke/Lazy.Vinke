@@ -291,6 +291,64 @@ namespace Lazy.Vinke.Database
         public abstract LazyQueryPageResult QueryPage(String sql, String tableName, LazyQueryPageData queryPageData, Object[] values, LazyDbType[] dbTypes, String[] parameters);
 
         /// <summary>
+        /// Select records from table filtering by data row primary key columns
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="dataRow">The data row to be used on the filter</param>
+        /// <param name="dataRowState">The data row state to be considered</param>
+        /// <param name="returnFields">The fields to be returned from table</param>
+        /// <returns>The records found</returns>
+        public virtual DataTable Select(String tableName, DataRow dataRow, DataRowState dataRowState = DataRowState.Unchanged, String[] returnFields = null)
+        {
+            ValidateParameters(tableName, dataRow);
+
+            (Object[] values, LazyDbType[] dbTypes, String[] fields) = Select(dataRow, dataRowState);
+
+            return Select(tableName, values, dbTypes, fields, returnFields);
+        }
+
+        /// <summary>
+        /// Select paged records from table filtering by data row primary key columns
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="queryPageData">The query page data</param>
+        /// <param name="dataRow">The data row to be used on the filter</param>
+        /// <param name="dataRowState">The data row state to be considered</param>
+        /// <param name="returnFields">The fields to be returned from table</param>
+        /// <returns>The paged records found</returns>
+        public virtual LazyQueryPageResult Select(String tableName, LazyQueryPageData queryPageData, DataRow dataRow, DataRowState dataRowState = DataRowState.Unchanged, String[] returnFields = null)
+        {
+            ValidateParameters(tableName, dataRow);
+
+            (Object[] values, LazyDbType[] dbTypes, String[] fields) = Select(dataRow, dataRowState);
+
+            return Select(tableName, queryPageData, values, dbTypes, fields, returnFields);
+        }
+
+        /// <summary>
+        /// Select records from table filtering by array collection
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="returnFields">The fields to be returned from table</param>
+        /// <returns>The records found</returns>
+        public abstract DataTable Select(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] returnFields = null);
+
+        /// <summary>
+        /// Select paged records from table filtering by array collection
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="queryPageData">The query page data</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="returnFields">The fields to be returned from table</param>
+        /// <returns>The paged records found</returns>
+        public abstract LazyQueryPageResult Select(String tableName, LazyQueryPageData queryPageData, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] returnFields = null);
+
+        /// <summary>
         /// Validate parameters
         /// </summary>
         /// <param name="sql">The sql statement</param>
@@ -372,6 +430,55 @@ namespace Lazy.Vinke.Database
         }
 
         /// <summary>
+        /// Validate parameters
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="dataRow">The data row</param>
+        protected virtual void ValidateParameters(String tableName, DataRow dataRow)
+        {
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true) /* Avoid sends subqueries as table name */
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (dataRow == null)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionDataRowNull);
+        }
+
+        /// <summary>
+        /// Validate parameters
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="dataRow">The data row</param>
+        protected virtual void ValidateParameters(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields)
+        {
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true) /* Avoid sends subqueries as table name */
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (values == null && (dbTypes != null || fields != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (dbTypes == null && (values != null || fields != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (fields == null && (values != null || dbTypes != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (values != null && dbTypes != null && fields != null && (values.Length != dbTypes.Length || values.Length != fields.Length))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+        }
+
+        /// <summary>
         /// Convert the system values array to lazy database type array
         /// </summary>
         /// <param name="values">The system values array</param>
@@ -406,6 +513,39 @@ namespace Lazy.Vinke.Database
         /// <param name="dbType">The lazy database type</param>
         /// <returns>The dbms type</returns>
         protected abstract Int32 ConvertLazyDbTypeToDbmsType(LazyDbType dbType);
+
+        /// <summary>
+        /// Select parameters arrays from data row
+        /// </summary>
+        /// <param name="dataRow">The data row</param>
+        /// <param name="dataRowState">The data row state</param>
+        /// <returns>The parameters arrays</returns>
+        private (Object[], LazyDbType[], String[]) Select(DataRow dataRow, DataRowState dataRowState)
+        {
+            Object[] values = null;
+            LazyDbType[] dbTypes = null;
+            String[] fields = null;
+
+            if (dataRowState.HasFlag(dataRow.RowState) == true)
+            {
+                if (dataRow.Table.PrimaryKey != null && dataRow.Table.PrimaryKey.Length > 0)
+                {
+                    values = new Object[dataRow.Table.PrimaryKey.Length];
+                    dbTypes = new LazyDbType[dataRow.Table.PrimaryKey.Length];
+                    fields = new String[dataRow.Table.PrimaryKey.Length];
+
+                    for (int index = 0; index < dataRow.Table.PrimaryKey.Length; index++)
+                    {
+                        String columnName = dataRow.Table.PrimaryKey[index].ColumnName;
+                        values[index] = (dataRowState == DataRowState.Modified || dataRowState == DataRowState.Deleted) ? dataRow[columnName, DataRowVersion.Original] : dataRow[columnName];
+                        dbTypes[index] = LazyDatabaseType.FromSystemType(dataRow.Table.Columns[columnName].DataType);
+                        fields[index] = columnName;
+                    }
+                }
+            }
+
+            return (values, dbTypes, fields);
+        }
 
         #endregion Methods
 

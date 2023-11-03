@@ -832,6 +832,43 @@ namespace Lazy.Vinke.Database.Postgre
         }
 
         /// <summary>
+        /// Select records from table filtering by array collection
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="returnFields">The fields to be returned from table</param>
+        /// <returns>The records found</returns>
+        public override DataTable Select(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] returnFields = null)
+        {
+            ValidateParameters(tableName, values, dbTypes, fields);
+
+            String sql = Select(tableName, fields, returnFields);
+
+            return QueryTable(sql, tableName, values, dbTypes, fields);
+        }
+
+        /// <summary>
+        /// Select paged records from table filtering by array collection
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="queryPageData">The query page data</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="returnFields">The fields to be returned from table</param>
+        /// <returns>The paged records found</returns>
+        public override LazyQueryPageResult Select(String tableName, LazyQueryPageData queryPageData, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] returnFields = null)
+        {
+            ValidateParameters(tableName, values, dbTypes, fields);
+
+            String sql = Select(tableName, fields, returnFields);
+
+            return QueryPage(sql, tableName, queryPageData, values, dbTypes, fields);
+        }
+
+        /// <summary>
         /// Validate parameters
         /// </summary>
         /// <param name="values">The sql statement parameters values</param>
@@ -877,6 +914,46 @@ namespace Lazy.Vinke.Database.Postgre
             }
 
             return (Int32)NpgsqlDbType.Unknown;
+        }
+
+        /// <summary>
+        /// Select sql query
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="returnFields">The fields to be returned from table</param>
+        /// <returns>The sql query</returns>
+        private String Select(String tableName, String[] fields, String[] returnFields)
+        {
+            String parameterString = String.Empty;
+            String returnFieldString = String.Empty;
+
+            if (fields != null)
+            {
+                for (int index = 0; index < fields.Length; index++)
+                {
+                    if (String.IsNullOrWhiteSpace(fields[index]) == false)
+                        parameterString += fields[index] + " = " + this.DbmsParameterChar + fields[index] + " and ";
+                }
+                if (parameterString.EndsWith(" and ") == true)
+                    parameterString = " where " + parameterString.Remove(parameterString.Length - 5, 5);
+            }
+
+            if (returnFields != null)
+            {
+                for (int index = 0; index < returnFields.Length; index++)
+                {
+                    if (String.IsNullOrWhiteSpace(returnFields[index]) == false)
+                        returnFieldString += returnFields[index] + ",";
+                }
+                if (returnFieldString.EndsWith(",") == true)
+                    returnFieldString = returnFieldString.Remove(returnFieldString.Length - 1, 1);
+            }
+
+            if (returnFieldString == String.Empty)
+                returnFieldString = "*";
+
+            return String.Format("select {0} from {1}{2}", returnFieldString, tableName, parameterString);
         }
 
         #endregion Methods

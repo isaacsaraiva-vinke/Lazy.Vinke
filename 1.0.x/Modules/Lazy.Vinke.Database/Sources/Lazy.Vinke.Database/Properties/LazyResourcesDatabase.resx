@@ -129,6 +129,9 @@
   <data name="LazyDatabaseExceptionConnectionStringNullOrEmpty" xml:space="preserve">
     <value>The database connection string cannot be null or empty!</value>
   </data>
+  <data name="LazyDatabaseExceptionDataRowNull" xml:space="preserve">
+    <value>The data row cannot be null!</value>
+  </data>
   <data name="LazyDatabaseExceptionQueryPageDataNull" xml:space="preserve">
     <value>The query page data cannot be null!</value>
   </data>
@@ -144,14 +147,23 @@
   <data name="LazyDatabaseExceptionStatementNullOrEmpty" xml:space="preserve">
     <value>The sql statement or procedure name cannot be null or empty!</value>
   </data>
+  <data name="LazyDatabaseExceptionTableNameContainsWhiteSpace" xml:space="preserve">
+    <value>The table name cannot contains white spaces!</value>
+  </data>
   <data name="LazyDatabaseExceptionTableNameNull" xml:space="preserve">
     <value>The table name cannot be null!</value>
+  </data>
+  <data name="LazyDatabaseExceptionTableNameNullOrEmpty" xml:space="preserve">
+    <value>The table name cannot be null or empty!</value>
   </data>
   <data name="LazyDatabaseExceptionTransactionAlreadyOpen" xml:space="preserve">
     <value>The database transaction is already open!</value>
   </data>
   <data name="LazyDatabaseExceptionTransactionNotOpen" xml:space="preserve">
     <value>The database transaction is not open!</value>
+  </data>
+  <data name="LazyDatabaseExceptionValuesTypesFieldsNotMatch" xml:space="preserve">
+    <value>The values array, the types array and the fields array must have the same number of elements!</value>
   </data>
   <data name="LazyDatabaseExceptionValuesTypesParametersNotMatch" xml:space="preserve">
     <value>The values array, the types array and the parameters array must have the same number of elements!</value>

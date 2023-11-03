@@ -97,6 +97,15 @@ namespace Lazy.Vinke.Database.Properties {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The data row cannot be null!.
+        /// </summary>
+        public static string LazyDatabaseExceptionDataRowNull {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionDataRowNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a The query page data cannot be null!.
         /// </summary>
         public static string LazyDatabaseExceptionQueryPageDataNull {
@@ -142,11 +151,29 @@ namespace Lazy.Vinke.Database.Properties {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The table name cannot contains white spaces!.
+        /// </summary>
+        public static string LazyDatabaseExceptionTableNameContainsWhiteSpace {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionTableNameContainsWhiteSpace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a The table name cannot be null!.
         /// </summary>
         public static string LazyDatabaseExceptionTableNameNull {
             get {
                 return ResourceManager.GetString("LazyDatabaseExceptionTableNameNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The table name cannot be null or empty!.
+        /// </summary>
+        public static string LazyDatabaseExceptionTableNameNullOrEmpty {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionTableNameNullOrEmpty", resourceCulture);
             }
         }
         
@@ -165,6 +192,15 @@ namespace Lazy.Vinke.Database.Properties {
         public static string LazyDatabaseExceptionTransactionNotOpen {
             get {
                 return ResourceManager.GetString("LazyDatabaseExceptionTransactionNotOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The values array, the types array and the fields array must have the same number of elements!.
+        /// </summary>
+        public static string LazyDatabaseExceptionValuesTypesFieldsNotMatch {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionValuesTypesFieldsNotMatch", resourceCulture);
             }
         }
         
