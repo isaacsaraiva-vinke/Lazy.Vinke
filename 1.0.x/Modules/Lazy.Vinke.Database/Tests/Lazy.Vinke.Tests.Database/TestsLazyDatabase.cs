@@ -1367,7 +1367,7 @@ namespace Lazy.Vinke.Tests.Database
             catch { /* Just to be sure that the table will be empty */ }
         }
 
-        public virtual void Select_QueryTable_DataRowWithtPrimaryKey_Success()
+        public virtual void Select_QueryTable_DataRowWithPrimaryKey_Success()
         {
             // Arrange
             String tableName = "Select_QueryTable";

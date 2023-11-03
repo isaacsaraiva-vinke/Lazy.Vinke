@@ -1043,9 +1043,9 @@ namespace Lazy.Vinke.Tests.Database.Postgre
         }
 
         [TestMethod]
-        public override void Select_QueryTable_DataRowWithtPrimaryKey_Success()
+        public override void Select_QueryTable_DataRowWithPrimaryKey_Success()
         {
-            base.Select_QueryTable_DataRowWithtPrimaryKey_Success();
+            base.Select_QueryTable_DataRowWithPrimaryKey_Success();
         }
 
         [TestMethod]
