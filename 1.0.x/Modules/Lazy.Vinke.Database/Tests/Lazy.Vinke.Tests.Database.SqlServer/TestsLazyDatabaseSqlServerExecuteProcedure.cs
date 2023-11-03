@@ -37,15 +37,15 @@ namespace Lazy.Vinke.Tests.Database.SqlServer
         public void ExecuteProcedure_Validations_DbmsDbType_Exception()
         {
             // Arrange
-            String procName = "ExecuteProcedure_Validations_DbmsDbType";
+            String procName = "Sp_TestsExecuteProcedure";
 
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             SqlDbType[] dbTypes = new SqlDbType[] { SqlDbType.Int, SqlDbType.VarChar };
-            String[] parameters = new String[] { "id", "name" };
+            String[] parameters = new String[] { "Id", "Name" };
 
             Object[] valuesLess = new Object[] { 1 };
             SqlDbType[] dbTypesLess = new SqlDbType[] { SqlDbType.Int };
-            String[] parametersLess = new String[] { "id" };
+            String[] parametersLess = new String[] { "Id" };
 
             Exception exceptionConnection = null;
             Exception exceptionProcNameNull = null;
@@ -89,21 +89,21 @@ namespace Lazy.Vinke.Tests.Database.SqlServer
         public void ExecuteProcedure_ExecuteNonQuery_DbmsDbType_Success()
         {
             // Arrange
-            String procedureName = "ExecuteProcedure_ExecuteNonQuery";
+            String procedureName = "Sp_TestsExecuteProcedure";
             SqlDbType[] dbTypes = new SqlDbType[] { SqlDbType.Int, SqlDbType.VarChar, SqlDbType.VarChar };
             String[] parameters = new String[] { "Id", "Name", "Description" };
-            String sqlSelect = "select count(*) from QueryProc_ExecuteNonQuery where Id in (5,6,7,8)";
-            String sqlDelete = "delete from QueryProc_ExecuteNonQuery where Id in (5,6,7,8)";
+            String sqlSelect = "select count(*) from TestsExecuteProcedure where Id in (5,6,7,8)";
+            String sqlDelete = "delete from TestsExecuteProcedure where Id in (5,6,7,8)";
             try { this.Database.Execute(sqlDelete, null); }
             catch { /* Just to be sure that the table will be empty */ }
 
             LazyDatabaseSqlServer databaseSqlServer = (LazyDatabaseSqlServer)this.Database;
 
             // Act
-            databaseSqlServer.ExecuteProcedure(procedureName, new Object[] { 5, "SqlLazy", "Description Sql Lazy" }, dbTypes, parameters);
-            databaseSqlServer.ExecuteProcedure(procedureName, new Object[] { 6, "SqlVinke", "Description Sql Vinke" }, dbTypes, parameters);
-            databaseSqlServer.ExecuteProcedure(procedureName, new Object[] { 7, "SqlTests", "Description Sql Tests" }, dbTypes, parameters);
-            databaseSqlServer.ExecuteProcedure(procedureName, new Object[] { 8, "SqlDatabase", "Description Sql Database" }, dbTypes, parameters);
+            databaseSqlServer.ExecuteProcedure(procedureName, new Object[] { 5, "SqlServer Lazy", "Description SqlServer Lazy" }, dbTypes, parameters);
+            databaseSqlServer.ExecuteProcedure(procedureName, new Object[] { 6, "SqlServer Vinke", "Description SqlServer Vinke" }, dbTypes, parameters);
+            databaseSqlServer.ExecuteProcedure(procedureName, new Object[] { 7, "SqlServer Tests", "Description SqlServer Tests" }, dbTypes, parameters);
+            databaseSqlServer.ExecuteProcedure(procedureName, new Object[] { 8, "SqlServer Database", "Description SqlServer Database" }, dbTypes, parameters);
 
             Int32 count = Convert.ToInt32(databaseSqlServer.QueryValue(sqlSelect, null));
 

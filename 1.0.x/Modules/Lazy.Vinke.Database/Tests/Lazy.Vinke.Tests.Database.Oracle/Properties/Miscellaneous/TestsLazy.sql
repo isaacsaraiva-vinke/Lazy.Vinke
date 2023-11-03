@@ -10,32 +10,6 @@ create table Transaction_CommitRollback
     constraint Pk_Transaction_CommitRollback primary key (Id)
 );
 
-
-
-create table QueryRecord_DataAdapterFill
-(
-	Id smallint,
-    Name varchar2(64),
-    Birthdate date,
-    constraint Pk_QueryRecord_DataAdapterFill primary key (Id)
-);
-
-create table QueryTable_DataAdapterFill
-(
-	Code varchar2(8),
-    Elements blob,
-    Active char(1),
-    constraint Pk_QueryTable_DataAdapterFill primary key (Code)
-);
-
-create table QueryPage_DataAdapterFill
-(
-	Id integer,
-    Name varchar2(32),
-    Description varchar2(256),
-    constraint Pk_QueryPage_DataAdapterFill primary key (Id)
-);
-
 create table QueryLike_DataAdapterFill
 (
 	TestId integer,
@@ -44,18 +18,7 @@ create table QueryLike_DataAdapterFill
     constraint Pk_QueryLike_DataAdapterFill primary key (TestId)
 );
 
-create table QueryProc_ExecuteNonQuery
-(
-	Id integer,
-    Name varchar2(32),
-    Description varchar(256),
-    constraint Pk_QueryProc_ExecuteNonQuery primary key (Id)
-);
 
-create procedure ExecuteProcedure_ExecuteNonQuery (Id integer, Name varchar2, Description varchar2) as
-begin
-    insert into QueryProc_ExecuteNonQuery values (Id, Name, Description);
-end;
 
 
 
@@ -167,7 +130,20 @@ create table TestsQueryValue
 	constraint Pk_TestsQueryValue primary key (TestCode)
 );
 
+-- drop table TestsExecuteProcedure
+create table TestsExecuteProcedure
+(
+	Id integer,
+    Name varchar2(32),
+    Description varchar(256),
+    constraint Pk_TestsExecuteProcedure primary key (Id)
+);
 
+-- drop procedure Sp_TestsExecuteProcedure
+create procedure Sp_TestsExecuteProcedure (Id integer, Name varchar2, Description varchar2) as
+begin
+    insert into TestsExecuteProcedure values (Id, Name, Description);
+end;
 
 
 

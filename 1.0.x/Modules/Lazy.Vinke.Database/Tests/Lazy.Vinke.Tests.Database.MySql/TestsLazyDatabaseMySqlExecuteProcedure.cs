@@ -37,15 +37,15 @@ namespace Lazy.Vinke.Tests.Database.MySql
         public void ExecuteProcedure_Validations_DbmsDbType_Exception()
         {
             // Arrange
-            String procName = "ExecuteProcedure_Validations_DbmsDbType";
+            String procName = "Sp_TestsExecuteProcedure";
 
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             MySqlDbType[] dbTypes = new MySqlDbType[] { MySqlDbType.Int32, MySqlDbType.VarChar };
-            String[] parameters = new String[] { "id", "name" };
+            String[] parameters = new String[] { "Id", "Name" };
 
             Object[] valuesLess = new Object[] { 1 };
             MySqlDbType[] dbTypesLess = new MySqlDbType[] { MySqlDbType.Int32 };
-            String[] parametersLess = new String[] { "id" };
+            String[] parametersLess = new String[] { "Id" };
 
             Exception exceptionConnection = null;
             Exception exceptionProcNameNull = null;
@@ -89,21 +89,21 @@ namespace Lazy.Vinke.Tests.Database.MySql
         public void ExecuteProcedure_ExecuteNonQuery_DbmsDbType_Success()
         {
             // Arrange
-            String procedureName = "ExecuteProcedure_ExecuteNonQuery";
+            String procedureName = "Sp_TestsExecuteProcedure";
             MySqlDbType[] dbTypes = new MySqlDbType[] { MySqlDbType.Int32, MySqlDbType.VarString, MySqlDbType.VarString };
             String[] parameters = new String[] { "Id", "Name", "Description" };
-            String sqlSelect = "select count(*) from QueryProc_ExecuteNonQuery where Id in (5,6,7,8)";
-            String sqlDelete = "delete from QueryProc_ExecuteNonQuery where Id in (5,6,7,8)";
+            String sqlSelect = "select count(*) from TestsExecuteProcedure where Id in (5,6,7,8)";
+            String sqlDelete = "delete from TestsExecuteProcedure where Id in (5,6,7,8)";
             try { this.Database.Execute(sqlDelete, null); }
             catch { /* Just to be sure that the table will be empty */ }
 
             LazyDatabaseMySql databaseMySql = (LazyDatabaseMySql)this.Database;
 
             // Act
-            databaseMySql.ExecuteProcedure(procedureName, new Object[] { 5, "MySqlLazy", "Description MySql Lazy" }, dbTypes, parameters);
-            databaseMySql.ExecuteProcedure(procedureName, new Object[] { 6, "MySqlVinke", "Description MySql Vinke" }, dbTypes, parameters);
-            databaseMySql.ExecuteProcedure(procedureName, new Object[] { 7, "MySqlTests", "Description MySql Tests" }, dbTypes, parameters);
-            databaseMySql.ExecuteProcedure(procedureName, new Object[] { 8, "MySqlDatabase", "Description MySql Database" }, dbTypes, parameters);
+            databaseMySql.ExecuteProcedure(procedureName, new Object[] { 5, "MySql Lazy", "Description MySql Lazy" }, dbTypes, parameters);
+            databaseMySql.ExecuteProcedure(procedureName, new Object[] { 6, "MySql Vinke", "Description MySql Vinke" }, dbTypes, parameters);
+            databaseMySql.ExecuteProcedure(procedureName, new Object[] { 7, "MySql Tests", "Description MySql Tests" }, dbTypes, parameters);
+            databaseMySql.ExecuteProcedure(procedureName, new Object[] { 8, "MySql Database", "Description MySql Database" }, dbTypes, parameters);
 
             Int32 count = Convert.ToInt32(databaseMySql.QueryValue(sqlSelect, null));
 

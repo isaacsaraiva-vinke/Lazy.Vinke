@@ -37,15 +37,15 @@ namespace Lazy.Vinke.Tests.Database.Postgre
         public void ExecuteProcedure_Validations_DbmsDbType_Exception()
         {
             // Arrange
-            String procName = "ExecuteProcedure_Validations_DbmsDbType";
+            String procName = "Sp_TestsExecuteProcedure";
 
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             NpgsqlDbType[] dbTypes = new NpgsqlDbType[] { NpgsqlDbType.Integer, NpgsqlDbType.Varchar };
-            String[] parameters = new String[] { "id", "name" };
+            String[] parameters = new String[] { "Id", "Name" };
 
             Object[] valuesLess = new Object[] { 1 };
             NpgsqlDbType[] dbTypesLess = new NpgsqlDbType[] { NpgsqlDbType.Integer };
-            String[] parametersLess = new String[] { "id" };
+            String[] parametersLess = new String[] { "Id" };
 
             Exception exceptionConnection = null;
             Exception exceptionProcNameNull = null;
@@ -89,21 +89,21 @@ namespace Lazy.Vinke.Tests.Database.Postgre
         public void ExecuteProcedure_ExecuteNonQuery_DbmsDbType_Success()
         {
             // Arrange
-            String procedureName = "ExecuteProcedure_ExecuteNonQuery";
+            String procedureName = "Sp_TestsExecuteProcedure";
             NpgsqlDbType[] dbTypes = new NpgsqlDbType[] { NpgsqlDbType.Integer, NpgsqlDbType.Varchar, NpgsqlDbType.Varchar };
             String[] parameters = new String[] { "Id", "Name", "Description" };
-            String sqlSelect = "select count(*) from QueryProc_ExecuteNonQuery where Id in (5,6,7,8)";
-            String sqlDelete = "delete from QueryProc_ExecuteNonQuery where Id in (5,6,7,8)";
+            String sqlSelect = "select count(*) from TestsExecuteProcedure where Id in (5,6,7,8)";
+            String sqlDelete = "delete from TestsExecuteProcedure where Id in (5,6,7,8)";
             try { this.Database.Execute(sqlDelete, null); }
             catch { /* Just to be sure that the table will be empty */ }
 
             LazyDatabasePostgre databasePostgre = (LazyDatabasePostgre)this.Database;
 
             // Act
-            databasePostgre.ExecuteProcedure(procedureName, new Object[] { 5, "NpgsqlLazy", "Description Npgsql Lazy" }, dbTypes, parameters);
-            databasePostgre.ExecuteProcedure(procedureName, new Object[] { 6, "NpgsqlVinke", "Description Npgsql Vinke" }, dbTypes, parameters);
-            databasePostgre.ExecuteProcedure(procedureName, new Object[] { 7, "NpgsqlTests", "Description Npgsql Tests" }, dbTypes, parameters);
-            databasePostgre.ExecuteProcedure(procedureName, new Object[] { 8, "NpgsqlDatabase", "Description Npgsql Database" }, dbTypes, parameters);
+            databasePostgre.ExecuteProcedure(procedureName, new Object[] { 5, "Postgre Lazy", "Description Postgre Lazy" }, dbTypes, parameters);
+            databasePostgre.ExecuteProcedure(procedureName, new Object[] { 6, "Postgre Vinke", "Description Postgre Vinke" }, dbTypes, parameters);
+            databasePostgre.ExecuteProcedure(procedureName, new Object[] { 7, "Postgre Tests", "Description Postgre Tests" }, dbTypes, parameters);
+            databasePostgre.ExecuteProcedure(procedureName, new Object[] { 8, "Postgre Database", "Description Postgre Database" }, dbTypes, parameters);
 
             Int32 count = Convert.ToInt32(databasePostgre.QueryValue(sqlSelect, null));
 

@@ -29,15 +29,15 @@ namespace Lazy.Vinke.Tests.Database
         public virtual void ExecuteProcedure_Validations_LazyDbType_Exception()
         {
             // Arrange
-            String procName = "ExecuteProcedure_Validations_LazyDbType";
+            String procName = "Sp_TestsExecuteProcedure";
 
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             LazyDbType[] dbTypes = new LazyDbType[] { LazyDbType.Int32, LazyDbType.VarChar };
-            String[] parameters = new String[] { "id", "name" };
+            String[] parameters = new String[] { "Id", "Name" };
 
             Object[] valuesLess = new Object[] { 1 };
             LazyDbType[] dbTypesLess = new LazyDbType[] { LazyDbType.Int32 };
-            String[] parametersLess = new String[] { "id" };
+            String[] parametersLess = new String[] { "Id" };
 
             Exception exceptionConnection = null;
             Exception exceptionProcNameNull = null;
@@ -78,11 +78,11 @@ namespace Lazy.Vinke.Tests.Database
         public virtual void ExecuteProcedure_ExecuteNonQuery_LazyDbType_Success()
         {
             // Arrange
-            String procedureName = "ExecuteProcedure_ExecuteNonQuery";
+            String procedureName = "Sp_TestsExecuteProcedure";
             LazyDbType[] dbTypes = new LazyDbType[] { LazyDbType.Int32, LazyDbType.VarChar, LazyDbType.VarChar };
             String[] parameters = new String[] { "Id", "Name", "Description" };
-            String sqlSelect = "select count(*) from QueryProc_ExecuteNonQuery where Id in (1,2,3,4)";
-            String sqlDelete = "delete from QueryProc_ExecuteNonQuery where Id in (1,2,3,4)";
+            String sqlSelect = "select count(*) from TestsExecuteProcedure where Id in (1,2,3,4)";
+            String sqlDelete = "delete from TestsExecuteProcedure where Id in (1,2,3,4)";
             try { this.Database.Execute(sqlDelete, null); }
             catch { /* Just to be sure that the table will be empty */ }
 
