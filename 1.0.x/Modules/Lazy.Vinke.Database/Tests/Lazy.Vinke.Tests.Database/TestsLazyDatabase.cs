@@ -1370,7 +1370,7 @@ namespace Lazy.Vinke.Tests.Database
         public virtual void Select_QueryTable_DataRowWithPrimaryKey_Success()
         {
             // Arrange
-            String tableName = "Select_QueryTable";
+            String table = "Select_QueryTable";
             String columnsName = "Id, Name, Amount";
             String columnsParameter = "@Id, @Name, @Amount";
             String sqlDelete = "delete from Select_QueryTable where Id in (10,11,12)";
@@ -1378,7 +1378,7 @@ namespace Lazy.Vinke.Tests.Database
             try { this.Database.Execute(sqlDelete, null); }
             catch { /* Just to be sure that the table will be empty */ }
 
-            DataTable dataTable = new DataTable(tableName);
+            DataTable dataTable = new DataTable();
             dataTable.Columns.Add("Id", typeof(Int32));
             dataTable.Columns.Add("Name", typeof(String));
             dataTable.Rows.Add(11, "Test 11");
@@ -1393,11 +1393,50 @@ namespace Lazy.Vinke.Tests.Database
             this.Database.Execute(sqlInsert, new Object[] { 12, "Test 12", 12.1m });
 
             // Act
-            dataTable = this.Database.Select(tableName, dataRow, returnFields: new String[] { "Amount" });
+            dataTable = this.Database.Select(table, dataRow, returnFields: new String[] { "Amount" });
 
             // Assert
+            Assert.AreEqual(dataTable.TableName, table);
             Assert.IsTrue(dataTable.Rows.Count == 1);
             Assert.AreEqual(Convert.ToDecimal(dataTable.Rows[0]["Amount"]), 11.1m);
+
+            // Clean
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+        }
+
+        public virtual void Select_QueryTable_SubQueryDataRowWithPrimaryKey_Success()
+        {
+            // Arrange
+            String table = "(select * from Select_QueryTable)";
+            String columnsName = "Id, Name, Amount";
+            String columnsParameter = "@Id, @Name, @Amount";
+            String sqlDelete = "delete from Select_QueryTable where Id in (13,14,15)";
+            String sqlInsert = "insert into Select_QueryTable (" + columnsName + ") values (" + columnsParameter + ")";
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("Id", typeof(Int32));
+            dataTable.Columns.Add("Name", typeof(String));
+            dataTable.Rows.Add(14, "Test 14");
+            dataTable.AcceptChanges();
+
+            dataTable.PrimaryKey = new DataColumn[] { dataTable.Columns["Id"], dataTable.Columns["Name"] };
+
+            DataRow dataRow = dataTable.Rows[0];
+
+            this.Database.Execute(sqlInsert, new Object[] { 13, "Test 13", 13.1m });
+            this.Database.Execute(sqlInsert, new Object[] { 14, "Test 14", 14.1m });
+            this.Database.Execute(sqlInsert, new Object[] { 15, "Test 15", 15.1m });
+
+            // Act
+            dataTable = this.Database.Select(table, dataRow, returnFields: new String[] { "Amount" });
+
+            // Assert
+            Assert.AreEqual(dataTable.TableName, "T");
+            Assert.IsTrue(dataTable.Rows.Count == 1);
+            Assert.AreEqual(Convert.ToDecimal(dataTable.Rows[0]["Amount"]), 14.1m);
 
             // Clean
             try { this.Database.Execute(sqlDelete, null); }
