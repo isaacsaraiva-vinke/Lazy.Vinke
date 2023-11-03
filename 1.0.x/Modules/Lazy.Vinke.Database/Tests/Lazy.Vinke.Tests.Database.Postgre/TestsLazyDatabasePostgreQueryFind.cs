@@ -38,7 +38,7 @@ namespace Lazy.Vinke.Tests.Database.Postgre
         public void QueryFind_Validations_DbmsDbType_Exception()
         {
             // Arrange
-            String sql = "insert into TestsQueryFind (Id, Code) values (@Id, @Code)";
+            String sql = "select 1 from TestsQueryFind where Id = @Id";
 
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             NpgsqlDbType[] dbTypes = new NpgsqlDbType[] { NpgsqlDbType.Smallint, NpgsqlDbType.Varchar };

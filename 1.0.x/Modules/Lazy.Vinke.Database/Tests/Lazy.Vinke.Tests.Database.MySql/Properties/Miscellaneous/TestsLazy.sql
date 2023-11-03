@@ -66,13 +66,7 @@ create table QueryRecord_DataAdapterFill
     constraint Pk_QueryRecord_DataAdapterFill primary key (Id)
 );
 
-create table QueryTable_DataAdapterFill
-(
-	Code varchar(8),
-    Elements blob,
-    Active char(1),
-    constraint Pk_QueryTable_DataAdapterFill primary key (Code)
-);
+
 
 create table QueryPage_DataAdapterFill
 (
@@ -134,6 +128,24 @@ create table TestsQueryFind
     Description varchar(256),
     Amount Decimal(13,4),
     constraint Pk_TestsQueryFind primary key (Id)
+);
+
+-- drop table TestsQueryRecord
+create table TestsQueryRecord
+(
+	Id smallint,
+    Name varchar(64),
+    Birthdate datetime,
+    constraint Pk_TestsQueryRecord primary key (Id)
+);
+
+-- drop table TestsQueryTable
+create table TestsQueryTable
+(
+	Code varchar(8),
+    Elements blob,
+    Active char(1),
+    constraint Pk_TestsQueryTable primary key (Code)
 );
 
 -- drop table TestsSelectQueryTable

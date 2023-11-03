@@ -37,15 +37,16 @@ namespace Lazy.Vinke.Tests.Database.Oracle
         public void QueryTable_Validations_DbmsDbType_Exception()
         {
             // Arrange
-            String sql = "insert into QueryTable_Validations_DbmsDbType (id, name) values (@id, @name)";
+            String tableName = "TestsQueryTable";
+            String sql = "select * from TestsQueryTable where Code = @Code";
 
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             OracleDbType[] dbTypes = new OracleDbType[] { OracleDbType.Int32, OracleDbType.Varchar2 };
-            String[] parameters = new String[] { "id", "name" };
+            String[] parameters = new String[] { "Code", "Active" };
 
             Object[] valuesLess = new Object[] { 1 };
             OracleDbType[] dbTypesLess = new OracleDbType[] { OracleDbType.Int32 };
-            String[] parametersLess = new String[] { "id" };
+            String[] parametersLess = new String[] { "Code" };
 
             Exception exceptionConnection = null;
             Exception exceptionSqlNull = null;
@@ -62,19 +63,19 @@ namespace Lazy.Vinke.Tests.Database.Oracle
             // Act
             databaseOracle.CloseConnection();
 
-            try { databaseOracle.QueryTable(sql, "tableName", values, dbTypes, parameters); } catch (Exception exp) { exceptionConnection = exp; }
+            try { databaseOracle.QueryTable(sql, tableName, values, dbTypes, parameters); } catch (Exception exp) { exceptionConnection = exp; }
 
             databaseOracle.OpenConnection();
 
-            try { databaseOracle.QueryTable(null, "tableName", values, dbTypes, parameters); } catch (Exception exp) { exceptionSqlNull = exp; }
+            try { databaseOracle.QueryTable(null, tableName, values, dbTypes, parameters); } catch (Exception exp) { exceptionSqlNull = exp; }
             try { databaseOracle.QueryTable(sql, null, values, dbTypes, parameters); } catch (Exception exp) { exceptionTableNameNull = exp; }
-            try { databaseOracle.QueryTable(sql, "tableName", values, null, null); } catch (Exception exp) { exceptionValuesButOthers = exp; }
-            try { databaseOracle.QueryTable(sql, "tableName", null, dbTypes, null); } catch (Exception exp) { exceptionDbTypesButOthers = exp; }
-            try { databaseOracle.QueryTable(sql, "tableName", null, null, parameters); } catch (Exception exp) { exceptionDbParametersButOthers = exp; }
+            try { databaseOracle.QueryTable(sql, tableName, values, null, null); } catch (Exception exp) { exceptionValuesButOthers = exp; }
+            try { databaseOracle.QueryTable(sql, tableName, null, dbTypes, null); } catch (Exception exp) { exceptionDbTypesButOthers = exp; }
+            try { databaseOracle.QueryTable(sql, tableName, null, null, parameters); } catch (Exception exp) { exceptionDbParametersButOthers = exp; }
 
-            try { databaseOracle.QueryTable(sql, "tableName", valuesLess, dbTypes, parameters); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
-            try { databaseOracle.QueryTable(sql, "tableName", values, dbTypesLess, parameters); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
-            try { databaseOracle.QueryTable(sql, "tableName", values, dbTypes, parametersLess); } catch (Exception exp) { exceptionDbParametersLessButOthers = exp; }
+            try { databaseOracle.QueryTable(sql, tableName, valuesLess, dbTypes, parameters); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
+            try { databaseOracle.QueryTable(sql, tableName, values, dbTypesLess, parameters); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
+            try { databaseOracle.QueryTable(sql, tableName, values, dbTypes, parametersLess); } catch (Exception exp) { exceptionDbParametersLessButOthers = exp; }
 
             // Assert
             Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
@@ -92,11 +93,11 @@ namespace Lazy.Vinke.Tests.Database.Oracle
         public virtual void QueryTable_DataAdapterFill_DbmsDbType_Success()
         {
             // Arrange
-            String tableName = "QueryTable_DataAdapterFill";
+            String tableName = "TestsQueryTable";
             String columnsName = "Code, Elements, Active";
             String columnsParameter = "@Code, @Elements, @Active";
-            String sqlDelete = "delete from QueryTable_DataAdapterFill where Code in ('Array3','Array4')";
-            String sqlInsert = "insert into QueryTable_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlDelete = "delete from " + tableName + " where Code in ('Array3','Array4')";
+            String sqlInsert = "insert into " + tableName + " (" + columnsName + ") values (" + columnsParameter + ")";
             try { this.Database.Execute(sqlDelete, null); }
             catch { /* Just to be sure that the table will be empty */ }
 
@@ -110,7 +111,7 @@ namespace Lazy.Vinke.Tests.Database.Oracle
             String[] parameters = new String[] { "Code1", "Code2" };
 
             // Act
-            DataTable dataTable = databaseOracle.QueryTable("select * from QueryTable_DataAdapterFill where (Code = @Code1 or Code = @Code2)", tableName, values, dbTypes, parameters);
+            DataTable dataTable = databaseOracle.QueryTable("select * from " + tableName + " where (Code = @Code1 or Code = @Code2)", tableName, values, dbTypes, parameters);
 
             // Assert
             Assert.AreEqual(dataTable.Rows.Count, 2);

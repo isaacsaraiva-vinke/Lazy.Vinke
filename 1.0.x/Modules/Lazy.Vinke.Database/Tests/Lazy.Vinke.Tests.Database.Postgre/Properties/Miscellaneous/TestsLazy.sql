@@ -154,6 +154,24 @@ create table TestsQueryFind
     constraint Pk_TestsQueryFind primary key (Id)
 );
 
+-- drop table TestsQueryRecord
+create table TestsQueryRecord
+(
+	Id smallint,
+    Name varchar(64),
+    Birthdate timestamp,
+    constraint Pk_TestsQueryRecord primary key (Id)
+);
+
+-- drop table TestsQueryTable
+create table TestsQueryTable
+(
+	Code varchar(8),
+    Elements bytea,
+    Active char(1),
+    constraint Pk_TestsQueryTable primary key (Code)
+);
+
 -- drop table TestsSelectQueryTable
 create table TestsSelectQueryTable
 (

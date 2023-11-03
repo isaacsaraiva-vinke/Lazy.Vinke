@@ -37,15 +37,16 @@ namespace Lazy.Vinke.Tests.Database.Postgre
         public void QueryRecord_Validations_DbmsDbType_Exception()
         {
             // Arrange
-            String sql = "insert into QueryRecord_Validations_DbmsDbType (id, name) values (@id, @name)";
+            String tableName = "TestsQueryRecord";
+            String sql = "select * from TestsQueryRecord where Id = @Id";
 
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             NpgsqlDbType[] dbTypes = new NpgsqlDbType[] { NpgsqlDbType.Smallint, NpgsqlDbType.Varchar };
-            String[] parameters = new String[] { "id", "name" };
+            String[] parameters = new String[] { "Id", "Name" };
 
             Object[] valuesLess = new Object[] { 1 };
             NpgsqlDbType[] dbTypesLess = new NpgsqlDbType[] { NpgsqlDbType.Integer };
-            String[] parametersLess = new String[] { "id" };
+            String[] parametersLess = new String[] { "Id" };
 
             Exception exceptionConnection = null;
             Exception exceptionSqlNull = null;
@@ -62,19 +63,19 @@ namespace Lazy.Vinke.Tests.Database.Postgre
             // Act
             databasePostgre.CloseConnection();
 
-            try { databasePostgre.QueryRecord(sql, "tableName", values, dbTypes, parameters); } catch (Exception exp) { exceptionConnection = exp; }
+            try { databasePostgre.QueryRecord(sql, tableName, values, dbTypes, parameters); } catch (Exception exp) { exceptionConnection = exp; }
 
             databasePostgre.OpenConnection();
 
-            try { databasePostgre.QueryRecord(null, "tableName", values, dbTypes, parameters); } catch (Exception exp) { exceptionSqlNull = exp; }
+            try { databasePostgre.QueryRecord(null, tableName, values, dbTypes, parameters); } catch (Exception exp) { exceptionSqlNull = exp; }
             try { databasePostgre.QueryRecord(sql, null, values, dbTypes, parameters); } catch (Exception exp) { exceptionTableNameNull = exp; }
-            try { databasePostgre.QueryRecord(sql, "tableName", values, null, null); } catch (Exception exp) { exceptionValuesButOthers = exp; }
-            try { databasePostgre.QueryRecord(sql, "tableName", null, dbTypes, null); } catch (Exception exp) { exceptionDbTypesButOthers = exp; }
-            try { databasePostgre.QueryRecord(sql, "tableName", null, null, parameters); } catch (Exception exp) { exceptionDbParametersButOthers = exp; }
+            try { databasePostgre.QueryRecord(sql, tableName, values, null, null); } catch (Exception exp) { exceptionValuesButOthers = exp; }
+            try { databasePostgre.QueryRecord(sql, tableName, null, dbTypes, null); } catch (Exception exp) { exceptionDbTypesButOthers = exp; }
+            try { databasePostgre.QueryRecord(sql, tableName, null, null, parameters); } catch (Exception exp) { exceptionDbParametersButOthers = exp; }
 
-            try { databasePostgre.QueryRecord(sql, "tableName", valuesLess, dbTypes, parameters); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
-            try { databasePostgre.QueryRecord(sql, "tableName", values, dbTypesLess, parameters); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
-            try { databasePostgre.QueryRecord(sql, "tableName", values, dbTypes, parametersLess); } catch (Exception exp) { exceptionDbParametersLessButOthers = exp; }
+            try { databasePostgre.QueryRecord(sql, tableName, valuesLess, dbTypes, parameters); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
+            try { databasePostgre.QueryRecord(sql, tableName, values, dbTypesLess, parameters); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
+            try { databasePostgre.QueryRecord(sql, tableName, values, dbTypes, parametersLess); } catch (Exception exp) { exceptionDbParametersLessButOthers = exp; }
 
             // Assert
             Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
@@ -92,34 +93,34 @@ namespace Lazy.Vinke.Tests.Database.Postgre
         public virtual void QueryRecord_DataAdapterFill_DbmsDbType_Success()
         {
             // Arrange
-            String tableName = "QueryRecord_DataAdapterFill";
+            String tableName = "TestsQueryRecord";
             String columnsName = "Id, Name, Birthdate";
             String columnsParameter = "@Id, @Name, @Birthdate";
-            String sqlDelete = "delete from QueryRecord_DataAdapterFill where Id in (10,20,30,40)";
-            String sqlInsert = "insert into QueryRecord_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlDelete = "delete from " + tableName + " where Id in (500,600,700,800)";
+            String sqlInsert = "insert into " + tableName + " (" + columnsName + ") values (" + columnsParameter + ")";
             try { this.Database.Execute(sqlDelete, null); }
             catch { /* Just to be sure that the table will be empty */ }
 
             LazyDatabasePostgre databasePostgre = (LazyDatabasePostgre)this.Database;
 
-            databasePostgre.Execute(sqlInsert, new Object[] { 10, "PostgreLazy", new DateTime(1986, 9, 14) });
-            databasePostgre.Execute(sqlInsert, new Object[] { 20, "PostgreVinke", DBNull.Value });
-            databasePostgre.Execute(sqlInsert, new Object[] { 30, "PostgreTests", new DateTime(1988, 7, 24) });
-            databasePostgre.Execute(sqlInsert, new Object[] { 40, DBNull.Value, new DateTime(1989, 6, 29) });
+            databasePostgre.Execute(sqlInsert, new Object[] { 500, "Postgre Lazy", new DateTime(1986, 9, 14) });
+            databasePostgre.Execute(sqlInsert, new Object[] { 600, "Postgre Vinke", DBNull.Value });
+            databasePostgre.Execute(sqlInsert, new Object[] { 700, "Postgre Tests", new DateTime(1988, 7, 24) });
+            databasePostgre.Execute(sqlInsert, new Object[] { 800, DBNull.Value, new DateTime(1989, 6, 29) });
 
             // Act
-            DataRow dataRecord1 = databasePostgre.QueryRecord("select * from QueryRecord_DataAdapterFill where Id = @Id", tableName, new Object[] { 10 }, new NpgsqlDbType[] { NpgsqlDbType.Smallint }, new String[] { "Id" });
-            DataRow dataRecord2 = databasePostgre.QueryRecord("select Name, Birthdate from QueryRecord_DataAdapterFill where Name = @Name", String.Empty, new Object[] { "PostgreVinke" }, new NpgsqlDbType[] { NpgsqlDbType.Varchar }, new String[] { "Name" });
-            DataRow dataRecord3 = databasePostgre.QueryRecord("select Birthdate from QueryRecord_DataAdapterFill where Id = @Id", tableName, new Object[] { 50 }, new NpgsqlDbType[] { NpgsqlDbType.Smallint }, new String[] { "Id" });
-            DataRow dataRecord4 = databasePostgre.QueryRecord("select Name, Birthdate from QueryRecord_DataAdapterFill where Name is null and Id = @Id", String.Empty, new Object[] { 40 }, new NpgsqlDbType[] { NpgsqlDbType.Smallint }, new String[] { "Id" });
+            DataRow dataRecord1 = databasePostgre.QueryRecord("select * from TestsQueryRecord where Id = @Id", tableName, new Object[] { 500 }, new NpgsqlDbType[] { NpgsqlDbType.Smallint }, new String[] { "Id" });
+            DataRow dataRecord2 = databasePostgre.QueryRecord("select Name, Birthdate from TestsQueryRecord where Name = @Name", String.Empty, new Object[] { "Postgre Vinke" }, new NpgsqlDbType[] { NpgsqlDbType.Varchar }, new String[] { "Name" });
+            DataRow dataRecord3 = databasePostgre.QueryRecord("select Birthdate from TestsQueryRecord where Id = @Id", tableName, new Object[] { 650 }, new NpgsqlDbType[] { NpgsqlDbType.Smallint }, new String[] { "Id" });
+            DataRow dataRecord4 = databasePostgre.QueryRecord("select Name, Birthdate from TestsQueryRecord where Name is null and Id = @Id", String.Empty, new Object[] { 800 }, new NpgsqlDbType[] { NpgsqlDbType.Smallint }, new String[] { "Id" });
 
             // Assert
             Assert.AreEqual(dataRecord1.Table.TableName, tableName);
-            Assert.AreEqual(Convert.ToInt16(dataRecord1["Id"]), (Int16)10);
-            Assert.AreEqual(Convert.ToString(dataRecord1["Name"]), "PostgreLazy");
+            Assert.AreEqual(Convert.ToInt16(dataRecord1["Id"]), (Int16)500);
+            Assert.AreEqual(Convert.ToString(dataRecord1["Name"]), "Postgre Lazy");
             Assert.AreEqual(Convert.ToDateTime(dataRecord1["Birthdate"]), new DateTime(1986, 9, 14));
             Assert.AreEqual(dataRecord2.Table.TableName, String.Empty);
-            Assert.AreEqual(Convert.ToString(dataRecord2["Name"]), "PostgreVinke");
+            Assert.AreEqual(Convert.ToString(dataRecord2["Name"]), "Postgre Vinke");
             Assert.AreEqual(dataRecord2["Birthdate"], DBNull.Value);
             Assert.IsNull(dataRecord3);
             Assert.AreEqual(dataRecord4.Table.TableName, String.Empty);

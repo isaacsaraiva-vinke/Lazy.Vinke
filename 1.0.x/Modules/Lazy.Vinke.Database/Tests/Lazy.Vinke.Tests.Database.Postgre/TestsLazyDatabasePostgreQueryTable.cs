@@ -37,15 +37,16 @@ namespace Lazy.Vinke.Tests.Database.Postgre
         public void QueryTable_Validations_DbmsDbType_Exception()
         {
             // Arrange
-            String sql = "insert into QueryTable_Validations_DbmsDbType (id, name) values (@id, @name)";
+            String tableName = "TestsQueryTable";
+            String sql = "select * from TestsQueryTable where Code = @Code";
 
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             NpgsqlDbType[] dbTypes = new NpgsqlDbType[] { NpgsqlDbType.Smallint, NpgsqlDbType.Varchar };
-            String[] parameters = new String[] { "id", "name" };
+            String[] parameters = new String[] { "Code", "Active" };
 
             Object[] valuesLess = new Object[] { 1 };
             NpgsqlDbType[] dbTypesLess = new NpgsqlDbType[] { NpgsqlDbType.Integer };
-            String[] parametersLess = new String[] { "id" };
+            String[] parametersLess = new String[] { "Code" };
 
             Exception exceptionConnection = null;
             Exception exceptionSqlNull = null;
@@ -62,19 +63,19 @@ namespace Lazy.Vinke.Tests.Database.Postgre
             // Act
             databasePostgre.CloseConnection();
 
-            try { databasePostgre.QueryTable(sql, "tableName", values, dbTypes, parameters); } catch (Exception exp) { exceptionConnection = exp; }
+            try { databasePostgre.QueryTable(sql, tableName, values, dbTypes, parameters); } catch (Exception exp) { exceptionConnection = exp; }
 
             databasePostgre.OpenConnection();
 
-            try { databasePostgre.QueryTable(null, "tableName", values, dbTypes, parameters); } catch (Exception exp) { exceptionSqlNull = exp; }
+            try { databasePostgre.QueryTable(null, tableName, values, dbTypes, parameters); } catch (Exception exp) { exceptionSqlNull = exp; }
             try { databasePostgre.QueryTable(sql, null, values, dbTypes, parameters); } catch (Exception exp) { exceptionTableNameNull = exp; }
-            try { databasePostgre.QueryTable(sql, "tableName", values, null, null); } catch (Exception exp) { exceptionValuesButOthers = exp; }
-            try { databasePostgre.QueryTable(sql, "tableName", null, dbTypes, null); } catch (Exception exp) { exceptionDbTypesButOthers = exp; }
-            try { databasePostgre.QueryTable(sql, "tableName", null, null, parameters); } catch (Exception exp) { exceptionDbParametersButOthers = exp; }
+            try { databasePostgre.QueryTable(sql, tableName, values, null, null); } catch (Exception exp) { exceptionValuesButOthers = exp; }
+            try { databasePostgre.QueryTable(sql, tableName, null, dbTypes, null); } catch (Exception exp) { exceptionDbTypesButOthers = exp; }
+            try { databasePostgre.QueryTable(sql, tableName, null, null, parameters); } catch (Exception exp) { exceptionDbParametersButOthers = exp; }
 
-            try { databasePostgre.QueryTable(sql, "tableName", valuesLess, dbTypes, parameters); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
-            try { databasePostgre.QueryTable(sql, "tableName", values, dbTypesLess, parameters); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
-            try { databasePostgre.QueryTable(sql, "tableName", values, dbTypes, parametersLess); } catch (Exception exp) { exceptionDbParametersLessButOthers = exp; }
+            try { databasePostgre.QueryTable(sql, tableName, valuesLess, dbTypes, parameters); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
+            try { databasePostgre.QueryTable(sql, tableName, values, dbTypesLess, parameters); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
+            try { databasePostgre.QueryTable(sql, tableName, values, dbTypes, parametersLess); } catch (Exception exp) { exceptionDbParametersLessButOthers = exp; }
 
             // Assert
             Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
@@ -92,11 +93,11 @@ namespace Lazy.Vinke.Tests.Database.Postgre
         public virtual void QueryTable_DataAdapterFill_DbmsDbType_Success()
         {
             // Arrange
-            String tableName = "QueryTable_DataAdapterFill";
+            String tableName = "TestsQueryTable";
             String columnsName = "Code, Elements, Active";
             String columnsParameter = "@Code, @Elements, @Active";
-            String sqlDelete = "delete from QueryTable_DataAdapterFill where Code in ('Array3','Array4')";
-            String sqlInsert = "insert into QueryTable_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlDelete = "delete from " + tableName + " where Code in ('Array3','Array4')";
+            String sqlInsert = "insert into " + tableName + " (" + columnsName + ") values (" + columnsParameter + ")";
             try { this.Database.Execute(sqlDelete, null); }
             catch { /* Just to be sure that the table will be empty */ }
 
@@ -110,7 +111,7 @@ namespace Lazy.Vinke.Tests.Database.Postgre
             String[] parameters = new String[] { "Code1", "Code2" };
 
             // Act
-            DataTable dataTable = databasePostgre.QueryTable("select * from QueryTable_DataAdapterFill where (Code = @Code1 or Code = @Code2)", tableName, values, dbTypes, parameters);
+            DataTable dataTable = databasePostgre.QueryTable("select * from " + tableName + " where (Code = @Code1 or Code = @Code2)", tableName, values, dbTypes, parameters);
 
             // Assert
             Assert.AreEqual(dataTable.Rows.Count, 2);

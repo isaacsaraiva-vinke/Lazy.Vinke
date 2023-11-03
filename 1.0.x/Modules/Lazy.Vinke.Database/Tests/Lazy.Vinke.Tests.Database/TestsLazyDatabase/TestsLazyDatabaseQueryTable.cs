@@ -29,15 +29,16 @@ namespace Lazy.Vinke.Tests.Database
         public virtual void QueryTable_Validations_LazyDbType_Exception()
         {
             // Arrange
-            String sql = "select * from QueryTable_Validations_LazyDbType where id = @id";
+            String tableName = "TestsQueryTable";
+            String sql = "select * from TestsQueryTable where Code = @Code";
 
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             LazyDbType[] dbTypes = new LazyDbType[] { LazyDbType.Int32, LazyDbType.VarChar };
-            String[] parameters = new String[] { "id", "name" };
+            String[] parameters = new String[] { "Code", "Active" };
 
             Object[] valuesLess = new Object[] { 1 };
             LazyDbType[] dbTypesLess = new LazyDbType[] { LazyDbType.Int32 };
-            String[] parametersLess = new String[] { "id" };
+            String[] parametersLess = new String[] { "Code" };
 
             Exception exceptionConnection = null;
             Exception exceptionSqlNull = null;
@@ -52,19 +53,19 @@ namespace Lazy.Vinke.Tests.Database
             // Act
             this.Database.CloseConnection();
 
-            try { this.Database.QueryTable(sql, "tableName", values, dbTypes, parameters); } catch (Exception exp) { exceptionConnection = exp; }
+            try { this.Database.QueryTable(sql, tableName, values, dbTypes, parameters); } catch (Exception exp) { exceptionConnection = exp; }
 
             this.Database.OpenConnection();
 
-            try { this.Database.QueryTable(null, "tableName", values, dbTypes, parameters); } catch (Exception exp) { exceptionSqlNull = exp; }
+            try { this.Database.QueryTable(null, tableName, values, dbTypes, parameters); } catch (Exception exp) { exceptionSqlNull = exp; }
             try { this.Database.QueryTable(sql, null, values, dbTypes, parameters); } catch (Exception exp) { exceptionTableNameNull = exp; }
-            try { this.Database.QueryTable(sql, "tableName", values, null, null); } catch (Exception exp) { exceptionValuesButOthers = exp; }
-            try { this.Database.QueryTable(sql, "tableName", null, dbTypes, null); } catch (Exception exp) { exceptionDbTypesButOthers = exp; }
-            try { this.Database.QueryTable(sql, "tableName", null, null, parameters); } catch (Exception exp) { exceptionDbParametersButOthers = exp; }
+            try { this.Database.QueryTable(sql, tableName, values, null, null); } catch (Exception exp) { exceptionValuesButOthers = exp; }
+            try { this.Database.QueryTable(sql, tableName, null, dbTypes, null); } catch (Exception exp) { exceptionDbTypesButOthers = exp; }
+            try { this.Database.QueryTable(sql, tableName, null, null, parameters); } catch (Exception exp) { exceptionDbParametersButOthers = exp; }
 
-            try { this.Database.QueryTable(sql, "tableName", valuesLess, dbTypes, parameters); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
-            try { this.Database.QueryTable(sql, "tableName", values, dbTypesLess, parameters); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
-            try { this.Database.QueryTable(sql, "tableName", values, dbTypes, parametersLess); } catch (Exception exp) { exceptionDbParametersLessButOthers = exp; }
+            try { this.Database.QueryTable(sql, tableName, valuesLess, dbTypes, parameters); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
+            try { this.Database.QueryTable(sql, tableName, values, dbTypesLess, parameters); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
+            try { this.Database.QueryTable(sql, tableName, values, dbTypes, parametersLess); } catch (Exception exp) { exceptionDbParametersLessButOthers = exp; }
 
             // Assert
             Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
@@ -81,11 +82,11 @@ namespace Lazy.Vinke.Tests.Database
         public virtual void QueryTable_DataAdapterFill_LazyDbType_Success()
         {
             // Arrange
-            String tableName = "QueryTable_DataAdapterFill";
+            String tableName = "TestsQueryTable";
             String columnsName = "Code, Elements, Active";
             String columnsParameter = "@Code, @Elements, @Active";
-            String sqlDelete = "delete from QueryTable_DataAdapterFill where Code in ('Array1','Array2')";
-            String sqlInsert = "insert into QueryTable_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlDelete = "delete from " + tableName + " where Code in ('Array1','Array2')";
+            String sqlInsert = "insert into " + tableName + " (" + columnsName + ") values (" + columnsParameter + ")";
             try { this.Database.Execute(sqlDelete, null); }
             catch { /* Just to be sure that the table will be empty */ }
 
@@ -93,7 +94,7 @@ namespace Lazy.Vinke.Tests.Database
             this.Database.Execute(sqlInsert, new Object[] { "Array2", new Byte[] { 32, 48 }, '0' });
 
             // Act
-            DataTable dataTable = this.Database.QueryTable("select * from QueryTable_DataAdapterFill", tableName, null);
+            DataTable dataTable = this.Database.QueryTable("select * from TestsQueryTable", tableName, null);
 
             // Assert
             Assert.AreEqual(dataTable.Rows.Count, 2);

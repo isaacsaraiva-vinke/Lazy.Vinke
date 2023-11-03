@@ -29,15 +29,16 @@ namespace Lazy.Vinke.Tests.Database
         public virtual void QueryRecord_Validations_LazyDbType_Exception()
         {
             // Arrange
-            String sql = "select * from QueryRecord_Validations_LazyDbType where id = @id";
+            String tableName = "TestsQueryRecord";
+            String sql = "select * from TestsQueryRecord where Id = @Id";
 
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             LazyDbType[] dbTypes = new LazyDbType[] { LazyDbType.Int32, LazyDbType.VarChar };
-            String[] parameters = new String[] { "id", "name" };
+            String[] parameters = new String[] { "Id", "Name" };
 
             Object[] valuesLess = new Object[] { 1 };
             LazyDbType[] dbTypesLess = new LazyDbType[] { LazyDbType.Int32 };
-            String[] parametersLess = new String[] { "id" };
+            String[] parametersLess = new String[] { "Id" };
 
             Exception exceptionConnection = null;
             Exception exceptionSqlNull = null;
@@ -52,19 +53,19 @@ namespace Lazy.Vinke.Tests.Database
             // Act
             this.Database.CloseConnection();
 
-            try { this.Database.QueryRecord(sql, "tableName", values, dbTypes, parameters); } catch (Exception exp) { exceptionConnection = exp; }
+            try { this.Database.QueryRecord(sql, tableName, values, dbTypes, parameters); } catch (Exception exp) { exceptionConnection = exp; }
 
             this.Database.OpenConnection();
 
-            try { this.Database.QueryRecord(null, "tableName", values, dbTypes, parameters); } catch (Exception exp) { exceptionSqlNull = exp; }
+            try { this.Database.QueryRecord(null, tableName, values, dbTypes, parameters); } catch (Exception exp) { exceptionSqlNull = exp; }
             try { this.Database.QueryRecord(sql, null, values, dbTypes, parameters); } catch (Exception exp) { exceptionTableNameNull = exp; }
-            try { this.Database.QueryRecord(sql, "tableName", values, null, null); } catch (Exception exp) { exceptionValuesButOthers = exp; }
-            try { this.Database.QueryRecord(sql, "tableName", null, dbTypes, null); } catch (Exception exp) { exceptionDbTypesButOthers = exp; }
-            try { this.Database.QueryRecord(sql, "tableName", null, null, parameters); } catch (Exception exp) { exceptionDbParametersButOthers = exp; }
+            try { this.Database.QueryRecord(sql, tableName, values, null, null); } catch (Exception exp) { exceptionValuesButOthers = exp; }
+            try { this.Database.QueryRecord(sql, tableName, null, dbTypes, null); } catch (Exception exp) { exceptionDbTypesButOthers = exp; }
+            try { this.Database.QueryRecord(sql, tableName, null, null, parameters); } catch (Exception exp) { exceptionDbParametersButOthers = exp; }
 
-            try { this.Database.QueryRecord(sql, "tableName", valuesLess, dbTypes, parameters); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
-            try { this.Database.QueryRecord(sql, "tableName", values, dbTypesLess, parameters); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
-            try { this.Database.QueryRecord(sql, "tableName", values, dbTypes, parametersLess); } catch (Exception exp) { exceptionDbParametersLessButOthers = exp; }
+            try { this.Database.QueryRecord(sql, tableName, valuesLess, dbTypes, parameters); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
+            try { this.Database.QueryRecord(sql, tableName, values, dbTypesLess, parameters); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
+            try { this.Database.QueryRecord(sql, tableName, values, dbTypes, parametersLess); } catch (Exception exp) { exceptionDbParametersLessButOthers = exp; }
 
             // Assert
             Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
@@ -81,28 +82,28 @@ namespace Lazy.Vinke.Tests.Database
         public virtual void QueryRecord_DataAdapterFill_LazyDbType_Success()
         {
             // Arrange
-            String tableName = "QueryRecord_DataAdapterFill";
+            String tableName = "TestsQueryRecord";
             String columnsName = "Id, Name, Birthdate";
             String columnsParameter = "@Id, @Name, @Birthdate";
-            String sqlDelete = "delete from QueryRecord_DataAdapterFill where Id in (1,2,3,4)";
-            String sqlInsert = "insert into QueryRecord_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlDelete = "delete from " + tableName + " where Id in (100,200,300,400)";
+            String sqlInsert = "insert into " + tableName + " (" + columnsName + ") values (" + columnsParameter + ")";
             try { this.Database.Execute(sqlDelete, null); }
             catch { /* Just to be sure that the table will be empty */ }
 
-            this.Database.Execute(sqlInsert, new Object[] { 1, "Lazy", new DateTime(1986, 9, 14) });
-            this.Database.Execute(sqlInsert, new Object[] { 2, "Vinke", DBNull.Value });
-            this.Database.Execute(sqlInsert, new Object[] { 3, "Tests", new DateTime(1988, 7, 24) });
-            this.Database.Execute(sqlInsert, new Object[] { 4, DBNull.Value, new DateTime(1989, 6, 29) });
+            this.Database.Execute(sqlInsert, new Object[] { 100, "Lazy", new DateTime(1986, 9, 14) });
+            this.Database.Execute(sqlInsert, new Object[] { 200, "Vinke", DBNull.Value });
+            this.Database.Execute(sqlInsert, new Object[] { 300, "Tests", new DateTime(1988, 7, 24) });
+            this.Database.Execute(sqlInsert, new Object[] { 400, DBNull.Value, new DateTime(1989, 6, 29) });
 
             // Act
-            DataRow dataRecord1 = this.Database.QueryRecord("select * from QueryRecord_DataAdapterFill where Id = @Id", tableName, new Object[] { 1 });
-            DataRow dataRecord2 = this.Database.QueryRecord("select Name, Birthdate from QueryRecord_DataAdapterFill where Name = @Name", String.Empty, new Object[] { "Vinke" });
-            DataRow dataRecord3 = this.Database.QueryRecord("select Birthdate from QueryRecord_DataAdapterFill where Id = @Id", tableName, new Object[] { 5 });
-            DataRow dataRecord4 = this.Database.QueryRecord("select Name, Birthdate from QueryRecord_DataAdapterFill where Name is null", String.Empty, null);
+            DataRow dataRecord1 = this.Database.QueryRecord("select * from TestsQueryRecord where Id = @Id", tableName, new Object[] { 100 });
+            DataRow dataRecord2 = this.Database.QueryRecord("select Name, Birthdate from TestsQueryRecord where Name = @Name", String.Empty, new Object[] { "Vinke" });
+            DataRow dataRecord3 = this.Database.QueryRecord("select Birthdate from TestsQueryRecord where Id = @Id", tableName, new Object[] { 250 });
+            DataRow dataRecord4 = this.Database.QueryRecord("select Name, Birthdate from TestsQueryRecord where Name is null", String.Empty, null);
 
             // Assert
             Assert.AreEqual(dataRecord1.Table.TableName, tableName);
-            Assert.AreEqual(Convert.ToInt16(dataRecord1["Id"]), (Int16)1);
+            Assert.AreEqual(Convert.ToInt16(dataRecord1["Id"]), (Int16)100);
             Assert.AreEqual(Convert.ToString(dataRecord1["Name"]), "Lazy");
             Assert.AreEqual(Convert.ToDateTime(dataRecord1["Birthdate"]), new DateTime(1986, 9, 14));
             Assert.AreEqual(dataRecord2.Table.TableName, String.Empty);

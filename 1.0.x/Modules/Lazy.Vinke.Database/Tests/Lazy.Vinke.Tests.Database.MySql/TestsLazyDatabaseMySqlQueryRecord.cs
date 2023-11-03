@@ -37,15 +37,16 @@ namespace Lazy.Vinke.Tests.Database.MySql
         public void QueryRecord_Validations_DbmsDbType_Exception()
         {
             // Arrange
-            String sql = "insert into QueryRecord_Validations_DbmsDbType (id, name) values (@id, @name)";
+            String tableName = "TestsQueryRecord";
+            String sql = "select * from TestsQueryRecord where Id = @Id";
 
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             MySqlDbType[] dbTypes = new MySqlDbType[] { MySqlDbType.Int32, MySqlDbType.VarChar };
-            String[] parameters = new String[] { "id", "name" };
+            String[] parameters = new String[] { "Id", "Name" };
 
             Object[] valuesLess = new Object[] { 1 };
             MySqlDbType[] dbTypesLess = new MySqlDbType[] { MySqlDbType.Int32 };
-            String[] parametersLess = new String[] { "id" };
+            String[] parametersLess = new String[] { "Id" };
 
             Exception exceptionConnection = null;
             Exception exceptionSqlNull = null;
@@ -62,19 +63,19 @@ namespace Lazy.Vinke.Tests.Database.MySql
             // Act
             databaseMySql.CloseConnection();
 
-            try { databaseMySql.QueryRecord(sql, "tableName", values, dbTypes, parameters); } catch (Exception exp) { exceptionConnection = exp; }
+            try { databaseMySql.QueryRecord(sql, tableName, values, dbTypes, parameters); } catch (Exception exp) { exceptionConnection = exp; }
 
             databaseMySql.OpenConnection();
 
-            try { databaseMySql.QueryRecord(null, "tableName", values, dbTypes, parameters); } catch (Exception exp) { exceptionSqlNull = exp; }
+            try { databaseMySql.QueryRecord(null, tableName, values, dbTypes, parameters); } catch (Exception exp) { exceptionSqlNull = exp; }
             try { databaseMySql.QueryRecord(sql, null, values, dbTypes, parameters); } catch (Exception exp) { exceptionTableNameNull = exp; }
-            try { databaseMySql.QueryRecord(sql, "tableName", values, null, null); } catch (Exception exp) { exceptionValuesButOthers = exp; }
-            try { databaseMySql.QueryRecord(sql, "tableName", null, dbTypes, null); } catch (Exception exp) { exceptionDbTypesButOthers = exp; }
-            try { databaseMySql.QueryRecord(sql, "tableName", null, null, parameters); } catch (Exception exp) { exceptionDbParametersButOthers = exp; }
+            try { databaseMySql.QueryRecord(sql, tableName, values, null, null); } catch (Exception exp) { exceptionValuesButOthers = exp; }
+            try { databaseMySql.QueryRecord(sql, tableName, null, dbTypes, null); } catch (Exception exp) { exceptionDbTypesButOthers = exp; }
+            try { databaseMySql.QueryRecord(sql, tableName, null, null, parameters); } catch (Exception exp) { exceptionDbParametersButOthers = exp; }
 
-            try { databaseMySql.QueryRecord(sql, "tableName", valuesLess, dbTypes, parameters); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
-            try { databaseMySql.QueryRecord(sql, "tableName", values, dbTypesLess, parameters); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
-            try { databaseMySql.QueryRecord(sql, "tableName", values, dbTypes, parametersLess); } catch (Exception exp) { exceptionDbParametersLessButOthers = exp; }
+            try { databaseMySql.QueryRecord(sql, tableName, valuesLess, dbTypes, parameters); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
+            try { databaseMySql.QueryRecord(sql, tableName, values, dbTypesLess, parameters); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
+            try { databaseMySql.QueryRecord(sql, tableName, values, dbTypes, parametersLess); } catch (Exception exp) { exceptionDbParametersLessButOthers = exp; }
 
             // Assert
             Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
@@ -92,34 +93,34 @@ namespace Lazy.Vinke.Tests.Database.MySql
         public virtual void QueryRecord_DataAdapterFill_DbmsDbType_Success()
         {
             // Arrange
-            String tableName = "QueryRecord_DataAdapterFill";
+            String tableName = "TestsQueryRecord";
             String columnsName = "Id, Name, Birthdate";
             String columnsParameter = "@Id, @Name, @Birthdate";
-            String sqlDelete = "delete from QueryRecord_DataAdapterFill where Id in (10,20,30,40)";
-            String sqlInsert = "insert into QueryRecord_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlDelete = "delete from " + tableName + " where Id in (500,600,700,800)";
+            String sqlInsert = "insert into " + tableName + " (" + columnsName + ") values (" + columnsParameter + ")";
             try { this.Database.Execute(sqlDelete, null); }
             catch { /* Just to be sure that the table will be empty */ }
 
             LazyDatabaseMySql databaseMySql = (LazyDatabaseMySql)this.Database;
 
-            databaseMySql.Execute(sqlInsert, new Object[] { 10, "MySqlLazy", new DateTime(1986, 9, 14) });
-            databaseMySql.Execute(sqlInsert, new Object[] { 20, "MySqlVinke", DBNull.Value });
-            databaseMySql.Execute(sqlInsert, new Object[] { 30, "MySqlTests", new DateTime(1988, 7, 24) });
-            databaseMySql.Execute(sqlInsert, new Object[] { 40, DBNull.Value, new DateTime(1989, 6, 29) });
+            databaseMySql.Execute(sqlInsert, new Object[] { 500, "MySql Lazy", new DateTime(1986, 9, 14) });
+            databaseMySql.Execute(sqlInsert, new Object[] { 600, "MySql Vinke", DBNull.Value });
+            databaseMySql.Execute(sqlInsert, new Object[] { 700, "MySql Tests", new DateTime(1988, 7, 24) });
+            databaseMySql.Execute(sqlInsert, new Object[] { 800, DBNull.Value, new DateTime(1989, 6, 29) });
 
             // Act
-            DataRow dataRecord1 = databaseMySql.QueryRecord("select * from QueryRecord_DataAdapterFill where Id = @Id", tableName, new Object[] { 10 }, new MySqlDbType[] { MySqlDbType.Int16 }, new String[] { "Id" });
-            DataRow dataRecord2 = databaseMySql.QueryRecord("select Name, Birthdate from QueryRecord_DataAdapterFill where Name = @Name", String.Empty, new Object[] { "MySqlVinke" }, new MySqlDbType[] { MySqlDbType.VarString }, new String[] { "Name" });
-            DataRow dataRecord3 = databaseMySql.QueryRecord("select Birthdate from QueryRecord_DataAdapterFill where Id = @Id", tableName, new Object[] { 50 }, new MySqlDbType[] { MySqlDbType.Int16 }, new String[] { "Id" });
-            DataRow dataRecord4 = databaseMySql.QueryRecord("select Name, Birthdate from QueryRecord_DataAdapterFill where Name is null and Id = @Id", String.Empty, new Object[] { 40 }, new MySqlDbType[] { MySqlDbType.Int16 }, new String[] { "Id" });
+            DataRow dataRecord1 = databaseMySql.QueryRecord("select * from TestsQueryRecord where Id = @Id", tableName, new Object[] { 500 }, new MySqlDbType[] { MySqlDbType.Int16 }, new String[] { "Id" });
+            DataRow dataRecord2 = databaseMySql.QueryRecord("select Name, Birthdate from TestsQueryRecord where Name = @Name", String.Empty, new Object[] { "MySql Vinke" }, new MySqlDbType[] { MySqlDbType.VarString }, new String[] { "Name" });
+            DataRow dataRecord3 = databaseMySql.QueryRecord("select Birthdate from TestsQueryRecord where Id = @Id", tableName, new Object[] { 650 }, new MySqlDbType[] { MySqlDbType.Int16 }, new String[] { "Id" });
+            DataRow dataRecord4 = databaseMySql.QueryRecord("select Name, Birthdate from TestsQueryRecord where Name is null and Id = @Id", String.Empty, new Object[] { 800 }, new MySqlDbType[] { MySqlDbType.Int16 }, new String[] { "Id" });
 
             // Assert
             Assert.AreEqual(dataRecord1.Table.TableName, tableName);
-            Assert.AreEqual(Convert.ToInt16(dataRecord1["Id"]), (Int16)10);
-            Assert.AreEqual(Convert.ToString(dataRecord1["Name"]), "MySqlLazy");
+            Assert.AreEqual(Convert.ToInt16(dataRecord1["Id"]), (Int16)500);
+            Assert.AreEqual(Convert.ToString(dataRecord1["Name"]), "MySql Lazy");
             Assert.AreEqual(Convert.ToDateTime(dataRecord1["Birthdate"]), new DateTime(1986, 9, 14));
             Assert.AreEqual(dataRecord2.Table.TableName, String.Empty);
-            Assert.AreEqual(Convert.ToString(dataRecord2["Name"]), "MySqlVinke");
+            Assert.AreEqual(Convert.ToString(dataRecord2["Name"]), "MySql Vinke");
             Assert.AreEqual(dataRecord2["Birthdate"], DBNull.Value);
             Assert.IsNull(dataRecord3);
             Assert.AreEqual(dataRecord4.Table.TableName, String.Empty);

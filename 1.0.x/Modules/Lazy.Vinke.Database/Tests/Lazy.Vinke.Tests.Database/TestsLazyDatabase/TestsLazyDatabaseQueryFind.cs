@@ -29,7 +29,7 @@ namespace Lazy.Vinke.Tests.Database
         public virtual void QueryFind_Validations_LazyDbType_Exception()
         {
             // Arrange
-            String sql = "select * from TestsQueryFind where Id = @Id";
+            String sql = "select 1 from TestsQueryFind where Id = @Id";
 
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             LazyDbType[] dbTypes = new LazyDbType[] { LazyDbType.Int32, LazyDbType.VarChar };
