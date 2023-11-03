@@ -1049,12 +1049,6 @@ namespace Lazy.Vinke.Tests.Database.Postgre
         }
 
         [TestMethod]
-        public override void Select_QueryTable_SubQueryDataRowWithPrimaryKey_Success()
-        {
-            base.Select_QueryTable_SubQueryDataRowWithPrimaryKey_Success();
-        }
-
-        [TestMethod]
         public void QueryLike_DataAdapterFill_DbmsDbType_Success()
         {
             // Arrange

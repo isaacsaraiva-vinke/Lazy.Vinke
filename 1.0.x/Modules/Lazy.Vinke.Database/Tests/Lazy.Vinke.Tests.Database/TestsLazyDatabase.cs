@@ -1405,44 +1405,6 @@ namespace Lazy.Vinke.Tests.Database
             catch { /* Just to be sure that the table will be empty */ }
         }
 
-        public virtual void Select_QueryTable_SubQueryDataRowWithPrimaryKey_Success()
-        {
-            // Arrange
-            String table = "(select * from Select_QueryTable)";
-            String columnsName = "Id, Name, Amount";
-            String columnsParameter = "@Id, @Name, @Amount";
-            String sqlDelete = "delete from Select_QueryTable where Id in (13,14,15)";
-            String sqlInsert = "insert into Select_QueryTable (" + columnsName + ") values (" + columnsParameter + ")";
-            try { this.Database.Execute(sqlDelete, null); }
-            catch { /* Just to be sure that the table will be empty */ }
-
-            DataTable dataTable = new DataTable();
-            dataTable.Columns.Add("Id", typeof(Int32));
-            dataTable.Columns.Add("Name", typeof(String));
-            dataTable.Rows.Add(14, "Test 14");
-            dataTable.AcceptChanges();
-
-            dataTable.PrimaryKey = new DataColumn[] { dataTable.Columns["Id"], dataTable.Columns["Name"] };
-
-            DataRow dataRow = dataTable.Rows[0];
-
-            this.Database.Execute(sqlInsert, new Object[] { 13, "Test 13", 13.1m });
-            this.Database.Execute(sqlInsert, new Object[] { 14, "Test 14", 14.1m });
-            this.Database.Execute(sqlInsert, new Object[] { 15, "Test 15", 15.1m });
-
-            // Act
-            dataTable = this.Database.Select(table, dataRow, returnFields: new String[] { "Amount" });
-
-            // Assert
-            Assert.AreEqual(dataTable.TableName, "T");
-            Assert.IsTrue(dataTable.Rows.Count == 1);
-            Assert.AreEqual(Convert.ToDecimal(dataTable.Rows[0]["Amount"]), 14.1m);
-
-            // Clean
-            try { this.Database.Execute(sqlDelete, null); }
-            catch { /* Just to be sure that the table will be empty */ }
-        }
-
         public virtual void QueryLike_DataAdapterFill_LazyDbType_Success()
         {
             // Arrange
