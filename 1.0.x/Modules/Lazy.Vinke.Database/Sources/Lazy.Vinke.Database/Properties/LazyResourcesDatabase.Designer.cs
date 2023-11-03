@@ -151,6 +151,15 @@ namespace Lazy.Vinke.Database.Properties {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The table name cannot contains white spaces!.
+        /// </summary>
+        public static string LazyDatabaseExceptionTableNameContainsWhiteSpace {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionTableNameContainsWhiteSpace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a The table name cannot be null!.
         /// </summary>
         public static string LazyDatabaseExceptionTableNameNull {
@@ -160,11 +169,11 @@ namespace Lazy.Vinke.Database.Properties {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a The table cannot be null or empty!.
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The table name cannot be null or empty!.
         /// </summary>
-        public static string LazyDatabaseExceptionTableNullOrEmpty {
+        public static string LazyDatabaseExceptionTableNameNullOrEmpty {
             get {
-                return ResourceManager.GetString("LazyDatabaseExceptionTableNullOrEmpty", resourceCulture);
+                return ResourceManager.GetString("LazyDatabaseExceptionTableNameNullOrEmpty", resourceCulture);
             }
         }
         
