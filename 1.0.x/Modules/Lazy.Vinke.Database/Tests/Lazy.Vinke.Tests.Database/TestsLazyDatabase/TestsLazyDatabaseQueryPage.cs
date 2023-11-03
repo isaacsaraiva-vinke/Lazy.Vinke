@@ -29,7 +29,8 @@ namespace Lazy.Vinke.Tests.Database
         public virtual void QueryPage_Validations_LazyDbType_Exception()
         {
             // Arrange
-            String sql = "select * from QueryPage_Validations_LazyDbType where id = @id";
+            String tableName = "TestsQueryPage";
+            String sql = "select * from TestsQueryPage where Id = @Id";
 
             LazyQueryPageData queryPageData = new LazyQueryPageData();
             LazyQueryPageData queryPageDataPageNumZero = new LazyQueryPageData() { PageNum = 0 };
@@ -38,11 +39,11 @@ namespace Lazy.Vinke.Tests.Database
 
             Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
             LazyDbType[] dbTypes = new LazyDbType[] { LazyDbType.Int32, LazyDbType.VarChar };
-            String[] parameters = new String[] { "id", "name" };
+            String[] parameters = new String[] { "Id", "Name" };
 
             Object[] valuesLess = new Object[] { 1 };
             LazyDbType[] dbTypesLess = new LazyDbType[] { LazyDbType.Int32 };
-            String[] parametersLess = new String[] { "id" };
+            String[] parametersLess = new String[] { "Id" };
 
             Exception exceptionConnection = null;
             Exception exceptionSqlNull = null;
@@ -61,23 +62,23 @@ namespace Lazy.Vinke.Tests.Database
             // Act
             this.Database.CloseConnection();
 
-            try { this.Database.QueryPage(sql, "tableName", queryPageData, values, dbTypes, parameters); } catch (Exception exp) { exceptionConnection = exp; }
+            try { this.Database.QueryPage(sql, tableName, queryPageData, values, dbTypes, parameters); } catch (Exception exp) { exceptionConnection = exp; }
 
             this.Database.OpenConnection();
 
-            try { this.Database.QueryPage(null, "tableName", queryPageData, values, dbTypes, parameters); } catch (Exception exp) { exceptionSqlNull = exp; }
+            try { this.Database.QueryPage(null, tableName, queryPageData, values, dbTypes, parameters); } catch (Exception exp) { exceptionSqlNull = exp; }
             try { this.Database.QueryPage(sql, null, queryPageData, values, dbTypes, parameters); } catch (Exception exp) { exceptionTableNameNull = exp; }
-            try { this.Database.QueryPage(sql, "tableName", null, values, dbTypes, parameters); } catch (Exception exp) { exceptionQueryPageDataNull = exp; }
-            try { this.Database.QueryPage(sql, "tableName", queryPageDataPageNumZero, values, dbTypes, parameters); } catch (Exception exp) { exceptionQueryPageDataPageNumZero = exp; }
-            try { this.Database.QueryPage(sql, "tableName", queryPageDataPageSizeZero, values, dbTypes, parameters); } catch (Exception exp) { exceptionQueryPageDataPageSizeZero = exp; }
-            try { this.Database.QueryPage(sql, "tableName", queryPageDataOrderByEmpty, values, dbTypes, parameters); } catch (Exception exp) { exceptionQueryPageDataOrderByEmpty = exp; }
-            try { this.Database.QueryPage(sql, "tableName", queryPageData, values, null, null); } catch (Exception exp) { exceptionValuesButOthers = exp; }
-            try { this.Database.QueryPage(sql, "tableName", queryPageData, null, dbTypes, null); } catch (Exception exp) { exceptionDbTypesButOthers = exp; }
-            try { this.Database.QueryPage(sql, "tableName", queryPageData, null, null, parameters); } catch (Exception exp) { exceptionDbParametersButOthers = exp; }
+            try { this.Database.QueryPage(sql, tableName, null, values, dbTypes, parameters); } catch (Exception exp) { exceptionQueryPageDataNull = exp; }
+            try { this.Database.QueryPage(sql, tableName, queryPageDataPageNumZero, values, dbTypes, parameters); } catch (Exception exp) { exceptionQueryPageDataPageNumZero = exp; }
+            try { this.Database.QueryPage(sql, tableName, queryPageDataPageSizeZero, values, dbTypes, parameters); } catch (Exception exp) { exceptionQueryPageDataPageSizeZero = exp; }
+            try { this.Database.QueryPage(sql, tableName, queryPageDataOrderByEmpty, values, dbTypes, parameters); } catch (Exception exp) { exceptionQueryPageDataOrderByEmpty = exp; }
+            try { this.Database.QueryPage(sql, tableName, queryPageData, values, null, null); } catch (Exception exp) { exceptionValuesButOthers = exp; }
+            try { this.Database.QueryPage(sql, tableName, queryPageData, null, dbTypes, null); } catch (Exception exp) { exceptionDbTypesButOthers = exp; }
+            try { this.Database.QueryPage(sql, tableName, queryPageData, null, null, parameters); } catch (Exception exp) { exceptionDbParametersButOthers = exp; }
 
-            try { this.Database.QueryPage(sql, "tableName", queryPageData, valuesLess, dbTypes, parameters); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
-            try { this.Database.QueryPage(sql, "tableName", queryPageData, values, dbTypesLess, parameters); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
-            try { this.Database.QueryPage(sql, "tableName", queryPageData, values, dbTypes, parametersLess); } catch (Exception exp) { exceptionDbParametersLessButOthers = exp; }
+            try { this.Database.QueryPage(sql, tableName, queryPageData, valuesLess, dbTypes, parameters); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
+            try { this.Database.QueryPage(sql, tableName, queryPageData, values, dbTypesLess, parameters); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
+            try { this.Database.QueryPage(sql, tableName, queryPageData, values, dbTypes, parametersLess); } catch (Exception exp) { exceptionDbParametersLessButOthers = exp; }
 
             // Assert
             Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
@@ -98,26 +99,26 @@ namespace Lazy.Vinke.Tests.Database
         public virtual void QueryPage_DataAdapterFill_LazyDbTypeLowerPage_Success()
         {
             // Arrange
-            String tableName = "QueryPage_DataAdapterFill";
+            String tableName = "TestsQueryPage";
             String columnsName = "Id, Name, Description";
             String columnsParameter = "@Id, @Name, @Description";
-            String sqlDelete = "delete from QueryPage_DataAdapterFill where Id between 11 and 21";
-            String sqlInsert = "insert into QueryPage_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sql = "select * from QueryPage_DataAdapterFill where Id between @LowId and @HighId and Name is not null and Description is not null";
-            try { this.Database.Execute(sqlDelete, null); }
+            String sqlDelete = "delete from " + tableName + " where Id between @LowId and @HighId";
+            String sqlInsert = "insert into " + tableName + " (" + columnsName + ") values (" + columnsParameter + ")";
+            String sql = "select * from TestsQueryPage where Id between @LowId and @HighId and Name is not null and Description is not null";
+            try { this.Database.Execute(sqlDelete, new Object[] { 100, 200 }); }
             catch { /* Just to be sure that the table will be empty */ }
 
-            this.Database.Execute(sqlInsert, new Object[] { 11, "Name 11", "Description 11" });
-            this.Database.Execute(sqlInsert, new Object[] { 12, "Name 12", "Description 12" });
-            this.Database.Execute(sqlInsert, new Object[] { 13, "Name 13", DBNull.Value });
-            this.Database.Execute(sqlInsert, new Object[] { 14, "Name 14", "Description 14" });
-            this.Database.Execute(sqlInsert, new Object[] { 15, "Name 15", "Description 15" });
-            this.Database.Execute(sqlInsert, new Object[] { 16, "Name 16", "Description 16" });
-            this.Database.Execute(sqlInsert, new Object[] { 17, DBNull.Value, "Description 17" });
-            this.Database.Execute(sqlInsert, new Object[] { 18, "Name 18", "Description 18" });
-            this.Database.Execute(sqlInsert, new Object[] { 19, "Name 19", "Description 19" });
-            this.Database.Execute(sqlInsert, new Object[] { 20, "Name 20", "Description 20" });
-            this.Database.Execute(sqlInsert, new Object[] { 21, "Name 21", "Description 21" });
+            this.Database.Execute(sqlInsert, new Object[] { 100, "Name 100", "Description 100" });
+            this.Database.Execute(sqlInsert, new Object[] { 110, "Name 110", "Description 110" });
+            this.Database.Execute(sqlInsert, new Object[] { 120, "Name 120", DBNull.Value });
+            this.Database.Execute(sqlInsert, new Object[] { 130, "Name 130", "Description 130" });
+            this.Database.Execute(sqlInsert, new Object[] { 140, "Name 140", "Description 140" });
+            this.Database.Execute(sqlInsert, new Object[] { 150, "Name 150", "Description 150" });
+            this.Database.Execute(sqlInsert, new Object[] { 160, DBNull.Value, "Description 160" });
+            this.Database.Execute(sqlInsert, new Object[] { 170, "Name 170", "Description 170" });
+            this.Database.Execute(sqlInsert, new Object[] { 180, "Name 180", "Description 180" });
+            this.Database.Execute(sqlInsert, new Object[] { 190, "Name 190", "Description 190" });
+            this.Database.Execute(sqlInsert, new Object[] { 200, "Name 200", "Description 200" });
 
             LazyQueryPageData queryPageData = new LazyQueryPageData();
             queryPageData.OrderBy = "Id";
@@ -125,15 +126,15 @@ namespace Lazy.Vinke.Tests.Database
             queryPageData.PageSize = 2;
 
             // Act
-            LazyQueryPageResult queryPageResult1 = this.Database.QueryPage(sql, tableName, queryPageData, new Object[] { 11, 21 });
+            LazyQueryPageResult queryPageResult1 = this.Database.QueryPage(sql, tableName, queryPageData, new Object[] { 100, 200 });
             queryPageData.PageNum = 2;
-            LazyQueryPageResult queryPageResult2 = this.Database.QueryPage(sql, tableName, queryPageData, new Object[] { 11, 21 });
+            LazyQueryPageResult queryPageResult2 = this.Database.QueryPage(sql, tableName, queryPageData, new Object[] { 100, 200 });
             queryPageData.PageNum = 3;
-            LazyQueryPageResult queryPageResult3 = this.Database.QueryPage(sql, tableName, queryPageData, new Object[] { 11, 21 });
+            LazyQueryPageResult queryPageResult3 = this.Database.QueryPage(sql, tableName, queryPageData, new Object[] { 100, 200 });
             queryPageData.PageNum = 4;
-            LazyQueryPageResult queryPageResult4 = this.Database.QueryPage(sql, tableName, queryPageData, new Object[] { 11, 21 });
+            LazyQueryPageResult queryPageResult4 = this.Database.QueryPage(sql, tableName, queryPageData, new Object[] { 100, 200 });
             queryPageData.PageNum = 5;
-            LazyQueryPageResult queryPageResult5 = this.Database.QueryPage(sql, tableName, queryPageData, new Object[] { 11, 21 });
+            LazyQueryPageResult queryPageResult5 = this.Database.QueryPage(sql, tableName, queryPageData, new Object[] { 100, 200 });
 
             // Assert
             Assert.AreEqual(queryPageResult1.PageNum, 1);
@@ -173,33 +174,33 @@ namespace Lazy.Vinke.Tests.Database
             Assert.AreEqual(queryPageResult5.HasNextPage, false);
 
             // Clean
-            try { this.Database.Execute(sqlDelete, null); }
+            try { this.Database.Execute(sqlDelete, new Object[] { 100, 200 }); }
             catch { /* Just to be sure that the table will be empty */ }
         }
 
         public virtual void QueryPage_DataAdapterFill_LazyDbTypeHigherPage_Success()
         {
             // Arrange
-            String tableName = "QueryPage_DataAdapterFill";
+            String tableName = "TestsQueryPage";
             String columnsName = "Id, Name, Description";
             String columnsParameter = "@Id, @Name, @Description";
-            String sqlDelete = "delete from QueryPage_DataAdapterFill where Id between 22 and 32";
-            String sqlInsert = "insert into QueryPage_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sql = "select * from QueryPage_DataAdapterFill where Id between @LowId and @HighId and Name is not null and Description is not null";
-            try { this.Database.Execute(sqlDelete, null); }
+            String sqlDelete = "delete from " + tableName + " where Id between @LowId and @HighId";
+            String sqlInsert = "insert into " + tableName + " (" + columnsName + ") values (" + columnsParameter + ")";
+            String sql = "select * from TestsQueryPage where Id between @LowId and @HighId and Name is not null and Description is not null";
+            try { this.Database.Execute(sqlDelete, new Object[] { 300, 400 }); }
             catch { /* Just to be sure that the table will be empty */ }
 
-            this.Database.Execute(sqlInsert, new Object[] { 22, "Name 22", "Description 22" });
-            this.Database.Execute(sqlInsert, new Object[] { 23, "Name 23", "Description 23" });
-            this.Database.Execute(sqlInsert, new Object[] { 24, "Name 24", DBNull.Value });
-            this.Database.Execute(sqlInsert, new Object[] { 25, "Name 25", "Description 25" });
-            this.Database.Execute(sqlInsert, new Object[] { 26, "Name 26", "Description 26" });
-            this.Database.Execute(sqlInsert, new Object[] { 27, "Name 27", "Description 27" });
-            this.Database.Execute(sqlInsert, new Object[] { 28, DBNull.Value, "Description 28" });
-            this.Database.Execute(sqlInsert, new Object[] { 29, "Name 29", "Description 29" });
-            this.Database.Execute(sqlInsert, new Object[] { 30, "Name 30", "Description 30" });
-            this.Database.Execute(sqlInsert, new Object[] { 31, "Name 31", "Description 31" });
-            this.Database.Execute(sqlInsert, new Object[] { 32, "Name 32", DBNull.Value });
+            this.Database.Execute(sqlInsert, new Object[] { 300, "Name 300", "Description 300" });
+            this.Database.Execute(sqlInsert, new Object[] { 310, "Name 310", "Description 310" });
+            this.Database.Execute(sqlInsert, new Object[] { 320, "Name 320", DBNull.Value });
+            this.Database.Execute(sqlInsert, new Object[] { 330, "Name 330", "Description 330" });
+            this.Database.Execute(sqlInsert, new Object[] { 340, "Name 340", "Description 340" });
+            this.Database.Execute(sqlInsert, new Object[] { 350, "Name 350", "Description 350" });
+            this.Database.Execute(sqlInsert, new Object[] { 360, DBNull.Value, "Description 360" });
+            this.Database.Execute(sqlInsert, new Object[] { 370, "Name 370", "Description 370" });
+            this.Database.Execute(sqlInsert, new Object[] { 380, "Name 380", "Description 380" });
+            this.Database.Execute(sqlInsert, new Object[] { 390, "Name 390", "Description 390" });
+            this.Database.Execute(sqlInsert, new Object[] { 400, "Name 400", DBNull.Value });
 
             LazyQueryPageData queryPageData = new LazyQueryPageData();
             queryPageData.OrderBy = "Id";
@@ -207,7 +208,7 @@ namespace Lazy.Vinke.Tests.Database
             queryPageData.PageSize = 50;
 
             // Act
-            LazyQueryPageResult queryPageResult1 = this.Database.QueryPage(sql, tableName, queryPageData, new Object[] { 22, 32 });
+            LazyQueryPageResult queryPageResult1 = this.Database.QueryPage(sql, tableName, queryPageData, new Object[] { 300, 400 });
 
             // Assert
             Assert.AreEqual(queryPageResult1.PageNum, 1);
@@ -219,20 +220,20 @@ namespace Lazy.Vinke.Tests.Database
             Assert.AreEqual(queryPageResult1.HasNextPage, false);
 
             // Clean
-            try { this.Database.Execute(sqlDelete, null); }
+            try { this.Database.Execute(sqlDelete, new Object[] { 300, 400 }); }
             catch { /* Just to be sure that the table will be empty */ }
         }
 
         public virtual void QueryPage_DataAdapterFill_LazyDbTypeOutOfRange_Success()
         {
             // Arrange
-            String tableName = "QueryPage_DataAdapterFill";
+            String tableName = "TestsQueryPage";
             String columnsName = "Id, Name, Description";
             String columnsParameter = "@Id, @Name, @Description";
-            String sqlDelete = "delete from QueryPage_DataAdapterFill where Id in (1,2)";
-            String sqlInsert = "insert into QueryPage_DataAdapterFill (" + columnsName + ") values (" + columnsParameter + ")";
-            String sql = "select * from QueryPage_DataAdapterFill where Id in (@Id1,@Id2)";
-            try { this.Database.Execute(sqlDelete, null); }
+            String sqlDelete = "delete from " + tableName + " where Id between @LowId and @HighId";
+            String sqlInsert = "insert into " + tableName + " (" + columnsName + ") values (" + columnsParameter + ")";
+            String sql = "select * from TestsQueryPage where Id between @LowId and @HighId";
+            try { this.Database.Execute(sqlDelete, new Object[] { 1, 2 }); }
             catch { /* Just to be sure that the table will be empty */ }
 
             this.Database.Execute(sqlInsert, new Object[] { 1, "Name 1", "Description 1" });
@@ -256,7 +257,7 @@ namespace Lazy.Vinke.Tests.Database
             Assert.AreEqual(queryPageResult.HasNextPage, false);
 
             // Clean
-            try { this.Database.Execute(sqlDelete, null); }
+            try { this.Database.Execute(sqlDelete, new Object[] { 1, 2 }); }
             catch { /* Just to be sure that the table will be empty */ }
         }
 

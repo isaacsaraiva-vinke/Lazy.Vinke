@@ -153,6 +153,15 @@ create table TestsQueryTable
     constraint Pk_TestsQueryTable primary key (Code)
 );
 
+-- drop table TestsQueryPage
+create table TestsQueryPage
+(
+	Id integer,
+    Name varchar(32),
+    Description varchar(256),
+    constraint Pk_TestsQueryPage primary key (Id)
+);
+
 -- drop table TestsSelectQueryTable
 create table TestsSelectQueryTable
 (
