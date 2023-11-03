@@ -293,60 +293,60 @@ namespace Lazy.Vinke.Database
         /// <summary>
         /// Select records from table filtering by data row primary key columns
         /// </summary>
-        /// <param name="tableName">The table name</param>
+        /// <param name="table">The table</param>
         /// <param name="dataRow">The data row to be used on the filter</param>
         /// <param name="dataRowState">The data row state to be considered</param>
         /// <param name="returnFields">The fields to be returned from table</param>
         /// <returns>The records found</returns>
-        public virtual DataTable Select(String tableName, DataRow dataRow, DataRowState dataRowState = DataRowState.Unchanged, String[] returnFields = null)
+        public virtual DataTable Select(String table, DataRow dataRow, DataRowState dataRowState = DataRowState.Unchanged, String[] returnFields = null)
         {
-            ValidateParameters(tableName, dataRow);
+            ValidateParameters(table, dataRow);
 
             (Object[] values, LazyDbType[] dbTypes, String[] fields) = Select(dataRow, dataRowState);
 
-            return Select(tableName, values, dbTypes, fields, returnFields);
+            return Select(table, values, dbTypes, fields, returnFields);
         }
 
         /// <summary>
         /// Select paged records from table filtering by data row primary key columns
         /// </summary>
-        /// <param name="tableName">The table name</param>
+        /// <param name="table">The table</param>
         /// <param name="queryPageData">The query page data</param>
         /// <param name="dataRow">The data row to be used on the filter</param>
         /// <param name="dataRowState">The data row state to be considered</param>
         /// <param name="returnFields">The fields to be returned from table</param>
         /// <returns>The paged records found</returns>
-        public virtual LazyQueryPageResult Select(String tableName, LazyQueryPageData queryPageData, DataRow dataRow, DataRowState dataRowState = DataRowState.Unchanged, String[] returnFields = null)
+        public virtual LazyQueryPageResult Select(String table, LazyQueryPageData queryPageData, DataRow dataRow, DataRowState dataRowState = DataRowState.Unchanged, String[] returnFields = null)
         {
-            ValidateParameters(tableName, dataRow);
+            ValidateParameters(table, dataRow);
 
             (Object[] values, LazyDbType[] dbTypes, String[] fields) = Select(dataRow, dataRowState);
 
-            return Select(tableName, queryPageData, values, dbTypes, fields, returnFields);
+            return Select(table, queryPageData, values, dbTypes, fields, returnFields);
         }
 
         /// <summary>
         /// Select records from table filtering by array collection
         /// </summary>
-        /// <param name="tableName">The table name</param>
+        /// <param name="table">The table</param>
         /// <param name="values">The values array</param>
         /// <param name="dbTypes">The types array</param>
         /// <param name="fields">The fields array</param>
         /// <param name="returnFields">The fields to be returned from table</param>
         /// <returns>The records found</returns>
-        public abstract DataTable Select(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] returnFields = null);
+        public abstract DataTable Select(String table, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] returnFields = null);
 
         /// <summary>
         /// Select paged records from table filtering by array collection
         /// </summary>
-        /// <param name="tableName">The table name</param>
+        /// <param name="table">The table</param>
         /// <param name="queryPageData">The query page data</param>
         /// <param name="values">The values array</param>
         /// <param name="dbTypes">The types array</param>
         /// <param name="fields">The fields array</param>
         /// <param name="returnFields">The fields to be returned from table</param>
         /// <returns>The paged records found</returns>
-        public abstract LazyQueryPageResult Select(String tableName, LazyQueryPageData queryPageData, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] returnFields = null);
+        public abstract LazyQueryPageResult Select(String table, LazyQueryPageData queryPageData, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] returnFields = null);
 
         /// <summary>
         /// Validate parameters
@@ -432,18 +432,15 @@ namespace Lazy.Vinke.Database
         /// <summary>
         /// Validate parameters
         /// </summary>
-        /// <param name="tableName">The table name</param>
+        /// <param name="table">The table</param>
         /// <param name="dataRow">The data row</param>
-        protected virtual void ValidateParameters(String tableName, DataRow dataRow)
+        protected virtual void ValidateParameters(String table, DataRow dataRow)
         {
             if (this.ConnectionState == ConnectionState.Closed)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
 
-            if (String.IsNullOrEmpty(tableName) == true)
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
-
-            if (tableName.Contains(" ") == true) /* Avoid sends subqueries as table name */
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+            if (String.IsNullOrWhiteSpace(table) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNullOrEmpty);
 
             if (dataRow == null)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionDataRowNull);
@@ -452,18 +449,17 @@ namespace Lazy.Vinke.Database
         /// <summary>
         /// Validate parameters
         /// </summary>
-        /// <param name="tableName">The table name</param>
-        /// <param name="dataRow">The data row</param>
-        protected virtual void ValidateParameters(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields)
+        /// <param name="table">The table</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        protected virtual void ValidateParameters(String table, Object[] values, LazyDbType[] dbTypes, String[] fields)
         {
             if (this.ConnectionState == ConnectionState.Closed)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
 
-            if (String.IsNullOrEmpty(tableName) == true)
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
-
-            if (tableName.Contains(" ") == true) /* Avoid sends subqueries as table name */
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+            if (String.IsNullOrWhiteSpace(table) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNullOrEmpty);
 
             if (values == null && (dbTypes != null || fields != null))
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);

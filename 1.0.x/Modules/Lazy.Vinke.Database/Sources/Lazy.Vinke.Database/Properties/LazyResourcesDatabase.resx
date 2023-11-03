@@ -147,14 +147,11 @@
   <data name="LazyDatabaseExceptionStatementNullOrEmpty" xml:space="preserve">
     <value>The sql statement or procedure name cannot be null or empty!</value>
   </data>
-  <data name="LazyDatabaseExceptionTableNameContainsWhiteSpace" xml:space="preserve">
-    <value>The table name cannot contains white spaces!</value>
-  </data>
   <data name="LazyDatabaseExceptionTableNameNull" xml:space="preserve">
     <value>The table name cannot be null!</value>
   </data>
-  <data name="LazyDatabaseExceptionTableNameNullOrEmpty" xml:space="preserve">
-    <value>The table name cannot be null or empty!</value>
+  <data name="LazyDatabaseExceptionTableNullOrEmpty" xml:space="preserve">
+    <value>The table cannot be null or empty!</value>
   </data>
   <data name="LazyDatabaseExceptionTransactionAlreadyOpen" xml:space="preserve">
     <value>The database transaction is already open!</value>
