@@ -468,7 +468,7 @@ namespace Lazy.Vinke.Database
             if (String.IsNullOrEmpty(tableName) == true)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
 
-            if (tableName.Contains(" ") == true) /* Avoid sends subqueries as table name */
+            if (tableName.Contains(" ") == true)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
 
             if (dataRow == null)
@@ -490,7 +490,7 @@ namespace Lazy.Vinke.Database
             if (String.IsNullOrEmpty(tableName) == true)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
 
-            if (tableName.Contains(" ") == true) /* Avoid sends subqueries as table name */
+            if (tableName.Contains(" ") == true)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
 
             if (values == null && (dbTypes != null || fields != null))
@@ -503,6 +503,37 @@ namespace Lazy.Vinke.Database
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
 
             if (values != null && dbTypes != null && fields != null && (values.Length != dbTypes.Length || values.Length != fields.Length))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+        }
+
+        /// <summary>
+        /// Validate parameters
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        protected virtual void ValidateParametersStatements(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields)
+        {
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (values == null || values.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesNullOrZeroLength);
+
+            if (dbTypes == null || dbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTypesNullOrZeroLength);
+
+            if (fields == null || fields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
+
+            if (values.Length != dbTypes.Length || values.Length != fields.Length)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
         }
 

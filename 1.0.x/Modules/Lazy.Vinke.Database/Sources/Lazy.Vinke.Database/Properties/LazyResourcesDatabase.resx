@@ -132,6 +132,9 @@
   <data name="LazyDatabaseExceptionDataRowNull" xml:space="preserve">
     <value>The data row cannot be null!</value>
   </data>
+  <data name="LazyDatabaseExceptionFieldsNullOrZeroLength" xml:space="preserve">
+    <value>The fields array cannot be null or zero length!</value>
+  </data>
   <data name="LazyDatabaseExceptionQueryPageDataNull" xml:space="preserve">
     <value>The query page data cannot be null!</value>
   </data>
@@ -161,6 +164,12 @@
   </data>
   <data name="LazyDatabaseExceptionTransactionNotOpen" xml:space="preserve">
     <value>The database transaction is not open!</value>
+  </data>
+  <data name="LazyDatabaseExceptionTypesNullOrZeroLength" xml:space="preserve">
+    <value>The types array cannot be null or zero length!</value>
+  </data>
+  <data name="LazyDatabaseExceptionValuesNullOrZeroLength" xml:space="preserve">
+    <value>The values array cannot be null or zero length!</value>
   </data>
   <data name="LazyDatabaseExceptionValuesTypesFieldsNotMatch" xml:space="preserve">
     <value>The values array, the types array and the fields array must have the same number of elements!</value>

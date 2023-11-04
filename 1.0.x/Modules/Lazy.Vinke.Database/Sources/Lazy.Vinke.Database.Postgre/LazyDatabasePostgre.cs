@@ -878,7 +878,7 @@ namespace Lazy.Vinke.Database.Postgre
         /// <returns>The number of affected records</returns>
         public override Int32 Insert(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields)
         {
-            ValidateParameters(tableName, values, dbTypes, fields);
+            ValidateParametersStatements(tableName, values, dbTypes, fields);
 
             String sql = InsertStatementFrom(tableName, fields);
 

@@ -106,6 +106,15 @@ namespace Lazy.Vinke.Database.Properties {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The fields array cannot be null or zero length!.
+        /// </summary>
+        public static string LazyDatabaseExceptionFieldsNullOrZeroLength {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionFieldsNullOrZeroLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a The query page data cannot be null!.
         /// </summary>
         public static string LazyDatabaseExceptionQueryPageDataNull {
@@ -192,6 +201,24 @@ namespace Lazy.Vinke.Database.Properties {
         public static string LazyDatabaseExceptionTransactionNotOpen {
             get {
                 return ResourceManager.GetString("LazyDatabaseExceptionTransactionNotOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The types array cannot be null or zero length!.
+        /// </summary>
+        public static string LazyDatabaseExceptionTypesNullOrZeroLength {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionTypesNullOrZeroLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The values array cannot be null or zero length!.
+        /// </summary>
+        public static string LazyDatabaseExceptionValuesNullOrZeroLength {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionValuesNullOrZeroLength", resourceCulture);
             }
         }
         
