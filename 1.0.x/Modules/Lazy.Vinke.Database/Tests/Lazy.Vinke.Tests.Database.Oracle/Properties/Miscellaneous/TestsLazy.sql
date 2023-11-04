@@ -68,6 +68,16 @@ create table TestsSelectQueryTable
     constraint Pk_TestsSelectQueryTable primary key (Id)
 );
 
+-- drop table TestsSelectQueryPage
+create table TestsSelectQueryPage
+(
+	IdMaster integer,
+    IdChild integer,
+    Name varchar2(32),
+    Amount number(13,4),
+    constraint Pk_TestsSelectQueryPage primary key (IdMaster,IdChild)
+);
+
 -- drop table TestsQueryValue
 create table TestsQueryValue
 (

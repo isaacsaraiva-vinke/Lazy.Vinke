@@ -34,9 +34,27 @@ namespace Lazy.Vinke.Tests.Database.Oracle
         }
 
         [TestMethod]
+        public override void Select_Validations_QueryTable_Exception()
+        {
+            base.Select_Validations_QueryTable_Exception();
+        }
+
+        [TestMethod]
+        public override void Select_Validations_QueryPage_Exception()
+        {
+            base.Select_Validations_QueryPage_Exception();
+        }
+
+        [TestMethod]
         public override void Select_QueryTable_DataRowWithPrimaryKey_Success()
         {
             base.Select_QueryTable_DataRowWithPrimaryKey_Success();
+        }
+
+        [TestMethod]
+        public override void Select_QueryPage_DataRowWithPrimaryKey_Success()
+        {
+            base.Select_QueryPage_DataRowWithPrimaryKey_Success();
         }
 
         [TestCleanup]
