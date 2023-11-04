@@ -836,13 +836,13 @@ namespace Lazy.Vinke.Database.Oracle
         /// <param name="values">The values array</param>
         /// <param name="dbTypes">The types array</param>
         /// <param name="fields">The fields array</param>
-        /// <param name="returnFields">The fields to be returned from table</param>
+        /// <param name="returnFields">The return fields array</param>
         /// <returns>The records found</returns>
         public override DataTable Select(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] returnFields = null)
         {
             ValidateParameters(tableName, values, dbTypes, fields);
 
-            String sql = Select(tableName, fields, returnFields);
+            String sql = SelectQueryFrom(tableName, fields, returnFields);
 
             return QueryTable(sql, tableName, values, dbTypes, fields);
         }
@@ -855,15 +855,32 @@ namespace Lazy.Vinke.Database.Oracle
         /// <param name="values">The values array</param>
         /// <param name="dbTypes">The types array</param>
         /// <param name="fields">The fields array</param>
-        /// <param name="returnFields">The fields to be returned from table</param>
+        /// <param name="returnFields">The return fields array</param>
         /// <returns>The paged records found</returns>
         public override LazyQueryPageResult Select(String tableName, LazyQueryPageData queryPageData, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] returnFields = null)
         {
             ValidateParameters(tableName, values, dbTypes, fields);
 
-            String sql = Select(tableName, fields, returnFields);
+            String sql = SelectQueryFrom(tableName, fields, returnFields);
 
             return QueryPage(sql, tableName, queryPageData, values, dbTypes, fields);
+        }
+
+        /// <summary>
+        /// Insert values array on table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <returns>The number of affected records</returns>
+        public override Int32 Insert(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields)
+        {
+            ValidateParameters(tableName, values, dbTypes, fields);
+
+            String sql = InsertStatementFrom(tableName, fields);
+
+            return Execute(sql, values, dbTypes, fields);
         }
 
         /// <summary>
@@ -915,13 +932,13 @@ namespace Lazy.Vinke.Database.Oracle
         }
 
         /// <summary>
-        /// Select sql query
+        /// Generate sql select query
         /// </summary>
         /// <param name="tableName">The table name</param>
         /// <param name="fields">The fields array</param>
-        /// <param name="returnFields">The fields to be returned from table</param>
-        /// <returns>The sql query</returns>
-        private String Select(String tableName, String[] fields, String[] returnFields)
+        /// <param name="returnFields">The return fields array</param>
+        /// <returns>The sql select query</returns>
+        private String SelectQueryFrom(String tableName, String[] fields, String[] returnFields)
         {
             String parameterString = String.Empty;
             String returnFieldString = String.Empty;
@@ -952,6 +969,35 @@ namespace Lazy.Vinke.Database.Oracle
                 returnFieldString = "*";
 
             return String.Format("select {0} from {1}{2}", returnFieldString, tableName, parameterString);
+        }
+
+        /// <summary>
+        /// Generate sql insert statement
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="fields">The fields array</param>
+        /// <returns>The sql insert statement</returns>
+        private String InsertStatementFrom(String tableName, String[] fields)
+        {
+            String fieldString = String.Empty;
+            String parameterString = String.Empty;
+
+            for (int index = 0; index < fields.Length; index++)
+            {
+                if (String.IsNullOrWhiteSpace(fields[index]) == false)
+                {
+                    fieldString += fields[index] + ",";
+                    parameterString += this.DbmsParameterChar + fields[index] + ",";
+                }
+            }
+
+            if (fieldString.EndsWith(",") == true)
+                fieldString = fieldString.Remove(fieldString.Length - 1, 1);
+
+            if (parameterString.EndsWith(",") == true)
+                parameterString = parameterString.Remove(parameterString.Length - 1, 1);
+
+            return String.Format("insert into {0} ({1}) values ({2})", tableName, fieldString, parameterString);
         }
 
         #endregion Methods
