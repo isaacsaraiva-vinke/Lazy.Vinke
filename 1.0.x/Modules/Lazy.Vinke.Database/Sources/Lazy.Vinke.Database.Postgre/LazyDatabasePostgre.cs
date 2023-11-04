@@ -166,9 +166,7 @@ namespace Lazy.Vinke.Database.Postgre
         /// <returns>The number of affected records</returns>
         public virtual Int32 Execute(String sql, Object[] values, NpgsqlDbType[] dbTypes, String[] parameters)
         {
-            ValidateParameters(sql);
-
-            ValidateParameters(values, dbTypes, parameters);
+            ValidateParameters(sql, values, dbTypes, parameters);
 
             this.sqlCommand.Parameters.Clear();
 
@@ -203,9 +201,7 @@ namespace Lazy.Vinke.Database.Postgre
         /// <returns>The number of affected records</returns>
         public override Int32 Execute(String sql, Object[] values, LazyDbType[] dbTypes, String[] parameters)
         {
-            ValidateParameters(sql);
-
-            ValidateParameters(values, dbTypes, parameters);
+            ValidateParameters(sql, values, dbTypes, parameters);
 
             this.sqlCommand.Parameters.Clear();
 
@@ -240,9 +236,7 @@ namespace Lazy.Vinke.Database.Postgre
         /// <param name="parameters">The stored procedure parameters names</param>
         public virtual void ExecuteProcedure(String name, Object[] values, NpgsqlDbType[] dbTypes, String[] parameters)
         {
-            ValidateParameters(name);
-
-            ValidateParameters(values, dbTypes, parameters);
+            ValidateParameters(name, values, dbTypes, parameters);
 
             this.sqlCommand.Parameters.Clear();
 
@@ -274,9 +268,7 @@ namespace Lazy.Vinke.Database.Postgre
         /// <param name="parameters">The stored procedure parameters names</param>
         public override void ExecuteProcedure(String name, Object[] values, LazyDbType[] dbTypes, String[] parameters)
         {
-            ValidateParameters(name);
-
-            ValidateParameters(values, dbTypes, parameters);
+            ValidateParameters(name, values, dbTypes, parameters);
 
             this.sqlCommand.Parameters.Clear();
 
@@ -322,9 +314,7 @@ namespace Lazy.Vinke.Database.Postgre
         /// <returns>The value found</returns>
         public virtual Object QueryValue(String sql, Object[] values, NpgsqlDbType[] dbTypes, String[] parameters)
         {
-            ValidateParameters(sql);
-
-            ValidateParameters(values, dbTypes, parameters);
+            ValidateParameters(sql, values, dbTypes, parameters);
 
             this.sqlCommand.Parameters.Clear();
 
@@ -366,9 +356,7 @@ namespace Lazy.Vinke.Database.Postgre
         /// <returns>The value found</returns>
         public override Object QueryValue(String sql, Object[] values, LazyDbType[] dbTypes, String[] parameters)
         {
-            ValidateParameters(sql);
-
-            ValidateParameters(values, dbTypes, parameters);
+            ValidateParameters(sql, values, dbTypes, parameters);
 
             this.sqlCommand.Parameters.Clear();
 
@@ -423,9 +411,7 @@ namespace Lazy.Vinke.Database.Postgre
         /// <returns>The record existance</returns>
         public virtual Boolean QueryFind(String sql, Object[] values, NpgsqlDbType[] dbTypes, String[] parameters)
         {
-            ValidateParameters(sql);
-
-            ValidateParameters(values, dbTypes, parameters);
+            ValidateParameters(sql, values, dbTypes, parameters);
 
             this.sqlCommand.Parameters.Clear();
 
@@ -464,9 +450,7 @@ namespace Lazy.Vinke.Database.Postgre
         /// <returns>The record existance</returns>
         public override Boolean QueryFind(String sql, Object[] values, LazyDbType[] dbTypes, String[] parameters)
         {
-            ValidateParameters(sql);
-
-            ValidateParameters(values, dbTypes, parameters);
+            ValidateParameters(sql, values, dbTypes, parameters);
 
             this.sqlCommand.Parameters.Clear();
 
@@ -520,9 +504,7 @@ namespace Lazy.Vinke.Database.Postgre
         /// <returns>The first record found</returns>
         public virtual DataRow QueryRecord(String sql, String tableName, Object[] values, NpgsqlDbType[] dbTypes, String[] parameters)
         {
-            ValidateParameters(sql, tableName);
-
-            ValidateParameters(values, dbTypes, parameters);
+            ValidateParameters(sql, tableName, values, dbTypes, parameters);
 
             this.sqlCommand.Parameters.Clear();
 
@@ -565,9 +547,7 @@ namespace Lazy.Vinke.Database.Postgre
         /// <returns>The first record found</returns>
         public override DataRow QueryRecord(String sql, String tableName, Object[] values, LazyDbType[] dbTypes, String[] parameters)
         {
-            ValidateParameters(sql, tableName);
-
-            ValidateParameters(values, dbTypes, parameters);
+            ValidateParameters(sql, tableName, values, dbTypes, parameters);
 
             this.sqlCommand.Parameters.Clear();
 
@@ -624,9 +604,7 @@ namespace Lazy.Vinke.Database.Postgre
         /// <returns>The records found</returns>
         public virtual DataTable QueryTable(String sql, String tableName, Object[] values, NpgsqlDbType[] dbTypes, String[] parameters)
         {
-            ValidateParameters(sql, tableName);
-
-            ValidateParameters(values, dbTypes, parameters);
+            ValidateParameters(sql, tableName, values, dbTypes, parameters);
 
             this.sqlCommand.Parameters.Clear();
 
@@ -666,9 +644,7 @@ namespace Lazy.Vinke.Database.Postgre
         /// <returns>The records found</returns>
         public override DataTable QueryTable(String sql, String tableName, Object[] values, LazyDbType[] dbTypes, String[] parameters)
         {
-            ValidateParameters(sql, tableName);
-
-            ValidateParameters(values, dbTypes, parameters);
+            ValidateParameters(sql, tableName, values, dbTypes, parameters);
 
             this.sqlCommand.Parameters.Clear();
 
@@ -724,9 +700,7 @@ namespace Lazy.Vinke.Database.Postgre
         /// <returns>The records found</returns>
         public virtual LazyQueryPageResult QueryPage(String sql, String tableName, LazyQueryPageData queryPageData, Object[] values, NpgsqlDbType[] dbTypes, String[] parameters)
         {
-            ValidateParameters(sql, tableName, queryPageData);
-
-            ValidateParameters(values, dbTypes, parameters);
+            ValidateParameters(sql, tableName, queryPageData, values, dbTypes, parameters);
 
             this.sqlCommand.Parameters.Clear();
 
@@ -783,9 +757,7 @@ namespace Lazy.Vinke.Database.Postgre
         /// <returns>The records found</returns>
         public override LazyQueryPageResult QueryPage(String sql, String tableName, LazyQueryPageData queryPageData, Object[] values, LazyDbType[] dbTypes, String[] parameters)
         {
-            ValidateParameters(sql, tableName, queryPageData);
-
-            ValidateParameters(values, dbTypes, parameters);
+            ValidateParameters(sql, tableName, queryPageData, values, dbTypes, parameters);
 
             this.sqlCommand.Parameters.Clear();
 
@@ -842,7 +814,30 @@ namespace Lazy.Vinke.Database.Postgre
         /// <returns>The records found</returns>
         public override DataTable Select(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] returnFields = null)
         {
-            ValidateParameters(tableName, values, dbTypes, fields);
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (values == null && (dbTypes != null || fields != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (dbTypes == null && (values != null || fields != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (fields == null && (values != null || dbTypes != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (values != null && dbTypes != null && fields != null && (values.Length != dbTypes.Length || values.Length != fields.Length))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            #endregion Validations
 
             String sql = SelectQueryFrom(tableName, fields, returnFields);
 
@@ -861,7 +856,30 @@ namespace Lazy.Vinke.Database.Postgre
         /// <returns>The paged records found</returns>
         public override LazyQueryPageResult Select(String tableName, LazyQueryPageData queryPageData, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] returnFields = null)
         {
-            ValidateParameters(tableName, values, dbTypes, fields);
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (values == null && (dbTypes != null || fields != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (dbTypes == null && (values != null || fields != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (fields == null && (values != null || dbTypes != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (values != null && dbTypes != null && fields != null && (values.Length != dbTypes.Length || values.Length != fields.Length))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            #endregion Validations
 
             String sql = SelectQueryFrom(tableName, fields, returnFields);
 
@@ -878,7 +896,30 @@ namespace Lazy.Vinke.Database.Postgre
         /// <returns>The number of affected records</returns>
         public override Int32 Insert(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields)
         {
-            ValidateParametersStatements(tableName, values, dbTypes, fields);
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (values == null || values.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesNullOrZeroLength);
+
+            if (dbTypes == null || dbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTypesNullOrZeroLength);
+
+            if (fields == null || fields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
+
+            if (values.Length != dbTypes.Length || values.Length != fields.Length)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            #endregion Validations
 
             String sql = InsertStatementFrom(tableName, fields);
 
@@ -888,11 +929,95 @@ namespace Lazy.Vinke.Database.Postgre
         /// <summary>
         /// Validate parameters
         /// </summary>
+        /// <param name="sql">The sql statement</param>
         /// <param name="values">The sql statement parameters values</param>
         /// <param name="dbTypes">The sql statement parameters types</param>
         /// <param name="parameters">The sql statement parameters names</param>
-        protected virtual void ValidateParameters(Object[] values, NpgsqlDbType[] dbTypes, String[] parameters)
+        protected virtual void ValidateParameters(String sql, Object[] values, NpgsqlDbType[] dbTypes, String[] parameters)
         {
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrWhiteSpace(sql) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionStatementNullOrEmpty);
+
+            if (values == null && (dbTypes != null || parameters != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (dbTypes == null && (values != null || parameters != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (parameters == null && (values != null || dbTypes != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (values != null && dbTypes != null && parameters != null && (values.Length != dbTypes.Length || values.Length != parameters.Length))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+        }
+
+        /// <summary>
+        /// Validate parameters
+        /// </summary>
+        /// <param name="sql">The sql statement</param>
+        /// <param name="tableName">The record table name</param>
+        /// <param name="values">The sql statement parameters values</param>
+        /// <param name="dbTypes">The sql statement parameters types</param>
+        /// <param name="parameters">The sql statement parameters names</param>
+        protected virtual void ValidateParameters(String sql, String tableName, Object[] values, NpgsqlDbType[] dbTypes, String[] parameters)
+        {
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrWhiteSpace(sql) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionStatementNullOrEmpty);
+
+            if (tableName == null)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNull);
+
+            if (values == null && (dbTypes != null || parameters != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (dbTypes == null && (values != null || parameters != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (parameters == null && (values != null || dbTypes != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (values != null && dbTypes != null && parameters != null && (values.Length != dbTypes.Length || values.Length != parameters.Length))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+        }
+
+        /// <summary>
+        /// Validate parameters
+        /// </summary>
+        /// <param name="sql">The sql statement</param>
+        /// <param name="tableName">The record table name</param>
+        /// <param name="queryPageData">The query page data</param>
+        /// <param name="values">The sql statement parameters values</param>
+        /// <param name="dbTypes">The sql statement parameters types</param>
+        /// <param name="parameters">The sql statement parameters names</param>
+        protected virtual void ValidateParameters(String sql, String tableName, LazyQueryPageData queryPageData, Object[] values, NpgsqlDbType[] dbTypes, String[] parameters)
+        {
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrWhiteSpace(sql) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionStatementNullOrEmpty);
+
+            if (tableName == null)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNull);
+
+            if (queryPageData == null)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionQueryPageDataNull);
+
+            if (queryPageData.PageNum < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionQueryPageDataPageNumLowerThanOne);
+
+            if (queryPageData.PageSize < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionQueryPageDataPageSizeLowerThanOne);
+
+            if (String.IsNullOrWhiteSpace(queryPageData.OrderBy) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionQueryPageDataOrderByNullOrEmpty);
+
             if (values == null && (dbTypes != null || parameters != null))
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
 

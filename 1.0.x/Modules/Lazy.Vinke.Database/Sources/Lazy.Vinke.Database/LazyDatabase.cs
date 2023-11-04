@@ -300,7 +300,21 @@ namespace Lazy.Vinke.Database
         /// <returns>The records found</returns>
         public virtual DataTable Select(String tableName, DataRow dataRow, DataRowState dataRowState = DataRowState.Unchanged, String[] returnFields = null)
         {
-            ValidateParameters(tableName, dataRow);
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (dataRow == null)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionDataRowNull);
+
+            #endregion Validations
 
             (Object[] values, LazyDbType[] dbTypes, String[] fields) = SelectFrom(dataRow, dataRowState);
 
@@ -318,7 +332,21 @@ namespace Lazy.Vinke.Database
         /// <returns>The paged records found</returns>
         public virtual LazyQueryPageResult Select(String tableName, LazyQueryPageData queryPageData, DataRow dataRow, DataRowState dataRowState = DataRowState.Unchanged, String[] returnFields = null)
         {
-            ValidateParameters(tableName, dataRow);
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (dataRow == null)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionDataRowNull);
+
+            #endregion Validations
 
             (Object[] values, LazyDbType[] dbTypes, String[] fields) = SelectFrom(dataRow, dataRowState);
 
@@ -357,7 +385,21 @@ namespace Lazy.Vinke.Database
         /// <returns>The number of affected records</returns>
         public virtual Int32 Insert(String tableName, DataRow dataRow, DataRowState dataRowState = DataRowState.Added)
         {
-            ValidateParameters(tableName, dataRow);
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (dataRow == null)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionDataRowNull);
+
+            #endregion Validations
 
             (Object[] values, LazyDbType[] dbTypes, String[] fields) = InsertFrom(dataRow, dataRowState);
 
@@ -378,13 +420,28 @@ namespace Lazy.Vinke.Database
         /// Validate parameters
         /// </summary>
         /// <param name="sql">The sql statement</param>
-        protected virtual void ValidateParameters(String sql)
+        /// <param name="values">The sql statement parameters values</param>
+        /// <param name="dbTypes">The sql statement parameters types</param>
+        /// <param name="parameters">The sql statement parameters names</param>
+        protected virtual void ValidateParameters(String sql, Object[] values, LazyDbType[] dbTypes, String[] parameters)
         {
             if (this.ConnectionState == ConnectionState.Closed)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
 
             if (String.IsNullOrWhiteSpace(sql) == true)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionStatementNullOrEmpty);
+
+            if (values == null && (dbTypes != null || parameters != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (dbTypes == null && (values != null || parameters != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (parameters == null && (values != null || dbTypes != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (values != null && dbTypes != null && parameters != null && (values.Length != dbTypes.Length || values.Length != parameters.Length))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
         }
 
         /// <summary>
@@ -392,7 +449,10 @@ namespace Lazy.Vinke.Database
         /// </summary>
         /// <param name="sql">The sql statement</param>
         /// <param name="tableName">The record table name</param>
-        protected virtual void ValidateParameters(String sql, String tableName)
+        /// <param name="values">The sql statement parameters values</param>
+        /// <param name="dbTypes">The sql statement parameters types</param>
+        /// <param name="parameters">The sql statement parameters names</param>
+        protected virtual void ValidateParameters(String sql, String tableName, Object[] values, LazyDbType[] dbTypes, String[] parameters)
         {
             if (this.ConnectionState == ConnectionState.Closed)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
@@ -402,6 +462,18 @@ namespace Lazy.Vinke.Database
 
             if (tableName == null)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNull);
+
+            if (values == null && (dbTypes != null || parameters != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (dbTypes == null && (values != null || parameters != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (parameters == null && (values != null || dbTypes != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (values != null && dbTypes != null && parameters != null && (values.Length != dbTypes.Length || values.Length != parameters.Length))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
         }
 
         /// <summary>
@@ -410,7 +482,10 @@ namespace Lazy.Vinke.Database
         /// <param name="sql">The sql statement</param>
         /// <param name="tableName">The record table name</param>
         /// <param name="queryPageData">The query page data</param>
-        protected virtual void ValidateParameters(String sql, String tableName, LazyQueryPageData queryPageData)
+        /// <param name="values">The sql statement parameters values</param>
+        /// <param name="dbTypes">The sql statement parameters types</param>
+        /// <param name="parameters">The sql statement parameters names</param>
+        protected virtual void ValidateParameters(String sql, String tableName, LazyQueryPageData queryPageData, Object[] values, LazyDbType[] dbTypes, String[] parameters)
         {
             if (this.ConnectionState == ConnectionState.Closed)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
@@ -432,16 +507,7 @@ namespace Lazy.Vinke.Database
 
             if (String.IsNullOrWhiteSpace(queryPageData.OrderBy) == true)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionQueryPageDataOrderByNullOrEmpty);
-        }
 
-        /// <summary>
-        /// Validate parameters
-        /// </summary>
-        /// <param name="values">The sql statement parameters values</param>
-        /// <param name="dbTypes">The sql statement parameters types</param>
-        /// <param name="parameters">The sql statement parameters names</param>
-        protected virtual void ValidateParameters(Object[] values, LazyDbType[] dbTypes, String[] parameters)
-        {
             if (values == null && (dbTypes != null || parameters != null))
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
 
@@ -453,88 +519,6 @@ namespace Lazy.Vinke.Database
 
             if (values != null && dbTypes != null && parameters != null && (values.Length != dbTypes.Length || values.Length != parameters.Length))
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
-        }
-
-        /// <summary>
-        /// Validate parameters
-        /// </summary>
-        /// <param name="tableName">The table name</param>
-        /// <param name="dataRow">The data row</param>
-        protected virtual void ValidateParameters(String tableName, DataRow dataRow)
-        {
-            if (this.ConnectionState == ConnectionState.Closed)
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
-
-            if (String.IsNullOrEmpty(tableName) == true)
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
-
-            if (tableName.Contains(" ") == true)
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
-
-            if (dataRow == null)
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionDataRowNull);
-        }
-
-        /// <summary>
-        /// Validate parameters
-        /// </summary>
-        /// <param name="tableName">The table name</param>
-        /// <param name="values">The values array</param>
-        /// <param name="dbTypes">The types array</param>
-        /// <param name="fields">The fields array</param>
-        protected virtual void ValidateParameters(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields)
-        {
-            if (this.ConnectionState == ConnectionState.Closed)
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
-
-            if (String.IsNullOrEmpty(tableName) == true)
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
-
-            if (tableName.Contains(" ") == true)
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
-
-            if (values == null && (dbTypes != null || fields != null))
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
-
-            if (dbTypes == null && (values != null || fields != null))
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
-
-            if (fields == null && (values != null || dbTypes != null))
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
-
-            if (values != null && dbTypes != null && fields != null && (values.Length != dbTypes.Length || values.Length != fields.Length))
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
-        }
-
-        /// <summary>
-        /// Validate parameters
-        /// </summary>
-        /// <param name="tableName">The table name</param>
-        /// <param name="values">The values array</param>
-        /// <param name="dbTypes">The types array</param>
-        /// <param name="fields">The fields array</param>
-        protected virtual void ValidateParametersStatements(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields)
-        {
-            if (this.ConnectionState == ConnectionState.Closed)
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
-
-            if (String.IsNullOrEmpty(tableName) == true)
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
-
-            if (tableName.Contains(" ") == true)
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
-
-            if (values == null || values.Length < 1)
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesNullOrZeroLength);
-
-            if (dbTypes == null || dbTypes.Length < 1)
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTypesNullOrZeroLength);
-
-            if (fields == null || fields.Length < 1)
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
-
-            if (values.Length != dbTypes.Length || values.Length != fields.Length)
-                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
         }
 
         /// <summary>
