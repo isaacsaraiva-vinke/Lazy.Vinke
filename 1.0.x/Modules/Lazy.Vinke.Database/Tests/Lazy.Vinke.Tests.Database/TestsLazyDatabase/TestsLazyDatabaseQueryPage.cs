@@ -120,12 +120,10 @@ namespace Lazy.Vinke.Tests.Database
             this.Database.Execute(sqlInsert, new Object[] { 190, "Name 190", "Description 190" });
             this.Database.Execute(sqlInsert, new Object[] { 200, "Name 200", "Description 200" });
 
-            LazyQueryPageData queryPageData = new LazyQueryPageData();
-            queryPageData.OrderBy = "Id";
-            queryPageData.PageNum = 1;
-            queryPageData.PageSize = 2;
+            LazyQueryPageData queryPageData = new LazyQueryPageData() { PageSize = 2, OrderBy = "Id" };
 
             // Act
+            queryPageData.PageNum = 1;
             LazyQueryPageResult queryPageResult1 = this.Database.QueryPage(sql, tableName, queryPageData, new Object[] { 100, 200 });
             queryPageData.PageNum = 2;
             LazyQueryPageResult queryPageResult2 = this.Database.QueryPage(sql, tableName, queryPageData, new Object[] { 100, 200 });
@@ -202,12 +200,10 @@ namespace Lazy.Vinke.Tests.Database
             this.Database.Execute(sqlInsert, new Object[] { 390, "Name 390", "Description 390" });
             this.Database.Execute(sqlInsert, new Object[] { 400, "Name 400", DBNull.Value });
 
-            LazyQueryPageData queryPageData = new LazyQueryPageData();
-            queryPageData.OrderBy = "Id";
-            queryPageData.PageNum = 1;
-            queryPageData.PageSize = 50;
+            LazyQueryPageData queryPageData = new LazyQueryPageData() { PageSize = 50, OrderBy = "Id" };
 
             // Act
+            queryPageData.PageNum = 1;
             LazyQueryPageResult queryPageResult1 = this.Database.QueryPage(sql, tableName, queryPageData, new Object[] { 300, 400 });
 
             // Assert
@@ -239,12 +235,10 @@ namespace Lazy.Vinke.Tests.Database
             this.Database.Execute(sqlInsert, new Object[] { 1, "Name 1", "Description 1" });
             this.Database.Execute(sqlInsert, new Object[] { 2, "Name 2", "Description 2" });
 
-            LazyQueryPageData queryPageData = new LazyQueryPageData();
-            queryPageData.OrderBy = "Id";
-            queryPageData.PageNum = 2;
-            queryPageData.PageSize = 2;
+            LazyQueryPageData queryPageData = new LazyQueryPageData() { PageSize = 2, OrderBy = "Id" };
 
             // Act
+            queryPageData.PageNum = 2;
             LazyQueryPageResult queryPageResult = this.Database.QueryPage(sql, tableName, queryPageData, new Object[] { 1, 2 });
 
             // Assert

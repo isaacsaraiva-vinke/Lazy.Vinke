@@ -131,14 +131,12 @@ namespace Lazy.Vinke.Tests.Database.MySql
             this.Database.Execute(sqlInsert, new Object[] { 590, "Name 590", "Description 590" });
             this.Database.Execute(sqlInsert, new Object[] { 600, "Name 600", "Description 600" });
 
-            LazyQueryPageData queryPageData = new LazyQueryPageData();
-            queryPageData.OrderBy = "Id";
-            queryPageData.PageNum = 1;
-            queryPageData.PageSize = 3;
+            LazyQueryPageData queryPageData = new LazyQueryPageData() { PageSize = 3, OrderBy = "Id" };
 
             LazyDatabaseMySql databaseMySql = (LazyDatabaseMySql)this.Database;
 
             // Act
+            queryPageData.PageNum = 1;
             LazyQueryPageResult queryPageResult1 = databaseMySql.QueryPage(sql, tableName, queryPageData, new Object[] { 500, 600 }, new MySqlDbType[] { MySqlDbType.Int32, MySqlDbType.Int32 }, new String[] { "LowId", "HighId" });
             queryPageData.PageNum = 2;
             LazyQueryPageResult queryPageResult2 = databaseMySql.QueryPage(sql, tableName, queryPageData, new Object[] { 500, 600 }, new MySqlDbType[] { MySqlDbType.Int32, MySqlDbType.Int32 }, new String[] { "LowId", "HighId" });
@@ -198,14 +196,12 @@ namespace Lazy.Vinke.Tests.Database.MySql
             this.Database.Execute(sqlInsert, new Object[] { 790, "Name 790", "Description 790" });
             this.Database.Execute(sqlInsert, new Object[] { 800, "Name 800", "Description 800" });
 
-            LazyQueryPageData queryPageData = new LazyQueryPageData();
-            queryPageData.OrderBy = "Id";
-            queryPageData.PageNum = 1;
-            queryPageData.PageSize = 50;
+            LazyQueryPageData queryPageData = new LazyQueryPageData() { PageSize = 50, OrderBy = "Id" };
 
             LazyDatabaseMySql databaseMySql = (LazyDatabaseMySql)this.Database;
 
             // Act
+            queryPageData.PageNum = 1;
             LazyQueryPageResult queryPageResult1 = databaseMySql.QueryPage(sql, tableName, queryPageData, new Object[] { 700, 800 }, new MySqlDbType[] { MySqlDbType.Int32, MySqlDbType.Int32 }, new String[] { "LowId", "HighId" });
 
             // Assert
@@ -238,14 +234,12 @@ namespace Lazy.Vinke.Tests.Database.MySql
             this.Database.Execute(sqlInsert, new Object[] { 3, "Name 3", "Description 3" });
             this.Database.Execute(sqlInsert, new Object[] { 4, "Name 4", "Description 4" });
 
-            LazyQueryPageData queryPageData = new LazyQueryPageData();
-            queryPageData.OrderBy = "Id";
-            queryPageData.PageNum = 2;
-            queryPageData.PageSize = 2;
+            LazyQueryPageData queryPageData = new LazyQueryPageData() { PageSize = 2, OrderBy = "Id" };
 
             LazyDatabaseMySql databaseMySql = (LazyDatabaseMySql)this.Database;
 
             // Act
+            queryPageData.PageNum = 2;
             LazyQueryPageResult queryPageResult = databaseMySql.QueryPage(sql, tableName, queryPageData, new Object[] { 3, 4 }, new MySqlDbType[] { MySqlDbType.Int32, MySqlDbType.Int32 }, new String[] { "LowId", "HighId" });
 
             // Assert
