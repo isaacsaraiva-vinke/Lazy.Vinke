@@ -26,6 +26,94 @@ namespace Lazy.Vinke.Tests.Database
             this.Database.OpenConnection();
         }
 
+        public virtual void Insert_Validations_DataRow_Exception()
+        {
+            // Arrange
+            String tableName = "TestsInsert";
+            String subQuery = "(select * from TestsInsert)";
+
+            DataTable dataTable = new DataTable(tableName);
+            dataTable.Columns.Add("Id", typeof(Int32));
+            dataTable.Rows.Add(1);
+
+            DataRow dataRow = dataTable.Rows[0];
+
+            Exception exceptionConnection = null;
+            Exception exceptionTableNameNull = null;
+            Exception exceptionSubQueryAsTableName = null;
+            Exception exceptionDataRowNull = null;
+
+            // Act
+            this.Database.CloseConnection();
+
+            try { this.Database.Insert(tableName, dataRow); } catch (Exception exp) { exceptionConnection = exp; }
+
+            this.Database.OpenConnection();
+
+            try { this.Database.Insert(null, dataRow); } catch (Exception exp) { exceptionTableNameNull = exp; }
+            try { this.Database.Insert(subQuery, dataRow); } catch (Exception exp) { exceptionSubQueryAsTableName = exp; }
+            try { this.Database.Insert(tableName, null); } catch (Exception exp) { exceptionDataRowNull = exp; }
+
+            // Assert
+            Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+            Assert.AreEqual(exceptionTableNameNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+            Assert.AreEqual(exceptionSubQueryAsTableName.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+            Assert.AreEqual(exceptionDataRowNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionDataRowNull);
+        }
+
+        public virtual void Insert_Validations_Arrays_Exception()
+        {
+            // Arrange
+            String tableName = "TestsInsert";
+            String subQuery = "(select * from TestsInsert)";
+
+            Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
+            LazyDbType[] dbTypes = new LazyDbType[] { LazyDbType.Int32, LazyDbType.VarChar };
+            String[] fields = new String[] { "Id", "Name" };
+
+            Object[] valuesLess = new Object[] { 1 };
+            LazyDbType[] dbTypesLess = new LazyDbType[] { LazyDbType.Decimal };
+            String[] fieldsLess = new String[] { "Amount" };
+
+            Exception exceptionConnection = null;
+            Exception exceptionTableNameNull = null;
+            Exception exceptionSubQueryAsTableName = null;
+            Exception exceptionValuesNullButOthers = null;
+            Exception exceptionDbTypesNullButOthers = null;
+            Exception exceptionDbFieldsNullButOthers = null;
+            Exception exceptionValuesLessButOthers = null;
+            Exception exceptionDbTypesLessButOthers = null;
+            Exception exceptionDbFieldsLessButOthers = null;
+
+            // Act
+            this.Database.CloseConnection();
+
+            try { this.Database.Insert(tableName, values, dbTypes, fields); } catch (Exception exp) { exceptionConnection = exp; }
+
+            this.Database.OpenConnection();
+
+            try { this.Database.Insert(null, values, dbTypes, fields); } catch (Exception exp) { exceptionTableNameNull = exp; }
+            try { this.Database.Insert(subQuery, values, dbTypes, fields); } catch (Exception exp) { exceptionSubQueryAsTableName = exp; }
+            try { this.Database.Insert(tableName, null, dbTypes, fields); } catch (Exception exp) { exceptionValuesNullButOthers = exp; }
+            try { this.Database.Insert(tableName, values, null, fields); } catch (Exception exp) { exceptionDbTypesNullButOthers = exp; }
+            try { this.Database.Insert(tableName, values, dbTypes, null); } catch (Exception exp) { exceptionDbFieldsNullButOthers = exp; }
+
+            try { this.Database.Insert(tableName, valuesLess, dbTypes, fields); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
+            try { this.Database.Insert(tableName, values, dbTypesLess, fields); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
+            try { this.Database.Insert(tableName, values, dbTypes, fieldsLess); } catch (Exception exp) { exceptionDbFieldsLessButOthers = exp; }
+
+            // Assert
+            Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+            Assert.AreEqual(exceptionTableNameNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+            Assert.AreEqual(exceptionSubQueryAsTableName.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+            Assert.AreEqual(exceptionValuesNullButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesNullOrZeroLength);
+            Assert.AreEqual(exceptionDbTypesNullButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionTypesNullOrZeroLength);
+            Assert.AreEqual(exceptionDbFieldsNullButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
+            Assert.AreEqual(exceptionValuesLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+            Assert.AreEqual(exceptionDbTypesLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+            Assert.AreEqual(exceptionDbFieldsLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+        }
+
         public virtual void Insert_DataRow_Added_Success()
         {
             // Arrange
@@ -37,11 +125,14 @@ namespace Lazy.Vinke.Tests.Database
 
             DataTable dataTable = new DataTable();
             dataTable.Columns.Add("Id", typeof(Int32));
-            dataTable.Columns.Add("Name", typeof(String));
-            dataTable.Columns.Add("Amount", typeof(Decimal));
-            dataTable.Rows.Add(1000, "Item 1000", 1000.1m);
-            dataTable.Rows.Add(2000, "Item 2000", 2000.1m);
-            dataTable.Rows.Add(3000, "Item 3000", 3000.1m);
+            dataTable.Columns.Add("ColumnVarChar", typeof(String));
+            dataTable.Columns.Add("ColumnDecimal", typeof(Decimal));
+            dataTable.Columns.Add("ColumnDateTime", typeof(DateTime));
+            dataTable.Columns.Add("ColumnByte", typeof(Byte));
+            dataTable.Columns.Add("ColumnChar", typeof(Char));
+            dataTable.Rows.Add(1000, "Item 1000", 1000.1m, new DateTime(2023, 11, 04, 12, 05, 30), 2, '1');
+            dataTable.Rows.Add(2000, "Item 2000", 2000.1m, new DateTime(2023, 11, 04, 12, 05, 30), 4, '0');
+            dataTable.Rows.Add(3000, "Item 3000", 3000.1m, new DateTime(2023, 11, 04, 12, 05, 30), 8, '1');
 
             // Act
             rowsAffected += this.Database.Insert(tableName, dataTable.Rows[0]);

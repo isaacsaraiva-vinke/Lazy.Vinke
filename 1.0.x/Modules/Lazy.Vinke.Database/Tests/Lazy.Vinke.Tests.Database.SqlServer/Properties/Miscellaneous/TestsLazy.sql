@@ -99,8 +99,11 @@ create table TestsSelectQueryPage
 create table TestsInsert
 (
 	Id integer,
-    Name varchar(32),
-    Amount Decimal(13,4),
+    ColumnVarChar varchar(32),
+    ColumnDecimal Decimal(13,4),
+	ColumnDateTime datetime,
+	ColumnByte smallint,
+	ColumnChar char(1),
     constraint Pk_TestsInsert primary key (Id)
 );
 

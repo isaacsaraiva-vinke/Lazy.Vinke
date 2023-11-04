@@ -34,15 +34,27 @@ namespace Lazy.Vinke.Tests.Database.Postgre
         }
 
         [TestMethod]
-        public override void Select_Validations_QueryTable_Exception()
+        public override void Select_Validations_QueryTableDataRow_Exception()
         {
-            base.Select_Validations_QueryTable_Exception();
+            base.Select_Validations_QueryTableDataRow_Exception();
         }
 
         [TestMethod]
-        public override void Select_Validations_QueryPage_Exception()
+        public override void Select_Validations_QueryTableArray_Exception()
         {
-            base.Select_Validations_QueryPage_Exception();
+            base.Select_Validations_QueryTableArray_Exception();
+        }
+
+        [TestMethod]
+        public override void Select_Validations_QueryPageDataRow_Exception()
+        {
+            base.Select_Validations_QueryPageDataRow_Exception();
+        }
+
+        [TestMethod]
+        public override void Select_Validations_QueryPageArray_Exception()
+        {
+            base.Select_Validations_QueryPageArray_Exception();
         }
 
         [TestMethod]

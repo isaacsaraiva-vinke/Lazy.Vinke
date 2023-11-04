@@ -26,7 +26,42 @@ namespace Lazy.Vinke.Tests.Database
             this.Database.OpenConnection();
         }
 
-        public virtual void Select_Validations_QueryTable_Exception()
+        public virtual void Select_Validations_QueryTableDataRow_Exception()
+        {
+            // Arrange
+            String tableName = "TestsSelectQueryTable";
+            String subQuery = "(select * from TestsSelectQueryTable)";
+
+            DataTable dataTable = new DataTable(tableName);
+            dataTable.Columns.Add("Id", typeof(Int32));
+            dataTable.Rows.Add(1);
+
+            DataRow dataRow = dataTable.Rows[0];
+
+            Exception exceptionConnection = null;
+            Exception exceptionTableNameNull = null;
+            Exception exceptionSubQueryAsTableName = null;
+            Exception exceptionDataRowNull = null;
+
+            // Act
+            this.Database.CloseConnection();
+
+            try { this.Database.Select(tableName, dataRow); } catch (Exception exp) { exceptionConnection = exp; }
+
+            this.Database.OpenConnection();
+
+            try { this.Database.Select(null, dataRow); } catch (Exception exp) { exceptionTableNameNull = exp; }
+            try { this.Database.Select(subQuery, dataRow); } catch (Exception exp) { exceptionSubQueryAsTableName = exp; }
+            try { this.Database.Select(tableName, null); } catch (Exception exp) { exceptionDataRowNull = exp; }
+
+            // Assert
+            Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+            Assert.AreEqual(exceptionTableNameNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+            Assert.AreEqual(exceptionSubQueryAsTableName.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+            Assert.AreEqual(exceptionDataRowNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionDataRowNull);
+        }
+
+        public virtual void Select_Validations_QueryTableArray_Exception()
         {
             // Arrange
             String tableName = "TestsSelectQueryTable";
@@ -79,7 +114,42 @@ namespace Lazy.Vinke.Tests.Database
             Assert.AreEqual(exceptionDbFieldsLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
         }
 
-        public virtual void Select_Validations_QueryPage_Exception()
+        public virtual void Select_Validations_QueryPageDataRow_Exception()
+        {
+            // Arrange
+            String tableName = "TestsSelectQueryPage";
+            String subQuery = "(select * from TestsSelectQueryPage)";
+
+            DataTable dataTable = new DataTable(tableName);
+            dataTable.Columns.Add("Id", typeof(Int32));
+            dataTable.Rows.Add(1);
+
+            DataRow dataRow = dataTable.Rows[0];
+
+            Exception exceptionConnection = null;
+            Exception exceptionTableNameNull = null;
+            Exception exceptionSubQueryAsTableName = null;
+            Exception exceptionDataRowNull = null;
+
+            // Act
+            this.Database.CloseConnection();
+
+            try { this.Database.Select(tableName, dataRow); } catch (Exception exp) { exceptionConnection = exp; }
+
+            this.Database.OpenConnection();
+
+            try { this.Database.Select(null, dataRow); } catch (Exception exp) { exceptionTableNameNull = exp; }
+            try { this.Database.Select(subQuery, dataRow); } catch (Exception exp) { exceptionSubQueryAsTableName = exp; }
+            try { this.Database.Select(tableName, null); } catch (Exception exp) { exceptionDataRowNull = exp; }
+
+            // Assert
+            Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+            Assert.AreEqual(exceptionTableNameNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+            Assert.AreEqual(exceptionSubQueryAsTableName.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+            Assert.AreEqual(exceptionDataRowNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionDataRowNull);
+        }
+
+        public virtual void Select_Validations_QueryPageArray_Exception()
         {
             // Arrange
             String tableName = "TestsSelectQueryPage";
