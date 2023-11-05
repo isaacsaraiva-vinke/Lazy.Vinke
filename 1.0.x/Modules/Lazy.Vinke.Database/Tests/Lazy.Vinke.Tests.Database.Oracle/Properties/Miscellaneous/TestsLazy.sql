@@ -110,6 +110,15 @@ create table TestsUpdateOnlyKeys
     constraint Pk_TestsUpdateOnlyKeys primary key (IdMaster,IdChild)
 );
 
+-- drop table TestsDelete
+create table TestsDelete
+(
+	Id integer,
+    Name varchar2(32),
+    Description varchar2(256),
+    constraint Pk_TestsDelete primary key (Id)
+);
+
 -- drop table TestsQueryValue
 create table TestsQueryValue
 (
