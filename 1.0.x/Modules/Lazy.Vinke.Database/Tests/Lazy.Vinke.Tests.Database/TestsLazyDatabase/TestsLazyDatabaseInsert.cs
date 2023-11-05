@@ -32,16 +32,21 @@ namespace Lazy.Vinke.Tests.Database
             String tableName = "TestsInsert";
             String subQuery = "(select * from TestsInsert)";
 
+            DataTable dataTableNoColumns = new DataTable(tableName);
+            dataTableNoColumns.Rows.Add(dataTableNoColumns.NewRow());
+
             DataTable dataTable = new DataTable(tableName);
             dataTable.Columns.Add("Id", typeof(Int32));
             dataTable.Rows.Add(1);
 
+            DataRow dataRowNoColumns = dataTableNoColumns.Rows[0];
             DataRow dataRow = dataTable.Rows[0];
 
             Exception exceptionConnection = null;
             Exception exceptionTableNameNull = null;
             Exception exceptionSubQueryAsTableName = null;
             Exception exceptionDataRowNull = null;
+            Exception exceptionDataRowNoColumns = null;
 
             // Act
             this.Database.CloseConnection();
@@ -53,12 +58,14 @@ namespace Lazy.Vinke.Tests.Database
             try { this.Database.Insert(null, dataRow); } catch (Exception exp) { exceptionTableNameNull = exp; }
             try { this.Database.Insert(subQuery, dataRow); } catch (Exception exp) { exceptionSubQueryAsTableName = exp; }
             try { this.Database.Insert(tableName, null); } catch (Exception exp) { exceptionDataRowNull = exp; }
+            try { this.Database.Insert(tableName, dataRowNoColumns); } catch (Exception exp) { exceptionDataRowNoColumns = exp; }
 
             // Assert
             Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
             Assert.AreEqual(exceptionTableNameNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
             Assert.AreEqual(exceptionSubQueryAsTableName.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
             Assert.AreEqual(exceptionDataRowNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionDataRowNull);
+            Assert.AreEqual(exceptionDataRowNoColumns.Message, LazyResourcesDatabase.LazyDatabaseExceptionDataRowColumnsMissing);
         }
 
         public virtual void Insert_Validations_Arrays_Exception()
@@ -80,10 +87,10 @@ namespace Lazy.Vinke.Tests.Database
             Exception exceptionSubQueryAsTableName = null;
             Exception exceptionValuesNullButOthers = null;
             Exception exceptionDbTypesNullButOthers = null;
-            Exception exceptionDbFieldsNullButOthers = null;
+            Exception exceptionFieldsNullButOthers = null;
             Exception exceptionValuesLessButOthers = null;
             Exception exceptionDbTypesLessButOthers = null;
-            Exception exceptionDbFieldsLessButOthers = null;
+            Exception exceptionFieldsLessButOthers = null;
 
             // Act
             this.Database.CloseConnection();
@@ -96,11 +103,11 @@ namespace Lazy.Vinke.Tests.Database
             try { this.Database.Insert(subQuery, values, dbTypes, fields); } catch (Exception exp) { exceptionSubQueryAsTableName = exp; }
             try { this.Database.Insert(tableName, null, dbTypes, fields); } catch (Exception exp) { exceptionValuesNullButOthers = exp; }
             try { this.Database.Insert(tableName, values, null, fields); } catch (Exception exp) { exceptionDbTypesNullButOthers = exp; }
-            try { this.Database.Insert(tableName, values, dbTypes, null); } catch (Exception exp) { exceptionDbFieldsNullButOthers = exp; }
+            try { this.Database.Insert(tableName, values, dbTypes, null); } catch (Exception exp) { exceptionFieldsNullButOthers = exp; }
 
             try { this.Database.Insert(tableName, valuesLess, dbTypes, fields); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
             try { this.Database.Insert(tableName, values, dbTypesLess, fields); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
-            try { this.Database.Insert(tableName, values, dbTypes, fieldsLess); } catch (Exception exp) { exceptionDbFieldsLessButOthers = exp; }
+            try { this.Database.Insert(tableName, values, dbTypes, fieldsLess); } catch (Exception exp) { exceptionFieldsLessButOthers = exp; }
 
             // Assert
             Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
@@ -108,10 +115,10 @@ namespace Lazy.Vinke.Tests.Database
             Assert.AreEqual(exceptionSubQueryAsTableName.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
             Assert.AreEqual(exceptionValuesNullButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesNullOrZeroLength);
             Assert.AreEqual(exceptionDbTypesNullButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionTypesNullOrZeroLength);
-            Assert.AreEqual(exceptionDbFieldsNullButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
+            Assert.AreEqual(exceptionFieldsNullButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
             Assert.AreEqual(exceptionValuesLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
             Assert.AreEqual(exceptionDbTypesLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
-            Assert.AreEqual(exceptionDbFieldsLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+            Assert.AreEqual(exceptionFieldsLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
         }
 
         public virtual void Insert_DataRow_Added_Success()

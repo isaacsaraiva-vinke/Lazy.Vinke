@@ -34,6 +34,18 @@ namespace Lazy.Vinke.Tests.Database.SqlServer
         }
 
         [TestMethod]
+        public override void Update_Validations_DataRow_Exception()
+        {
+            base.Update_Validations_DataRow_Exception();
+        }
+
+        [TestMethod]
+        public override void Update_Validations_Arrays_Exception()
+        {
+            base.Update_Validations_Arrays_Exception();
+        }
+
+        [TestMethod]
         public override void Update_DataRow_Modified_Success()
         {
             base.Update_DataRow_Modified_Success();
