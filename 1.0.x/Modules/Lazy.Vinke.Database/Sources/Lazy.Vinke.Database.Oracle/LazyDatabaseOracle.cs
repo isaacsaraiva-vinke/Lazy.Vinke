@@ -9,6 +9,7 @@
 using System;
 using System.IO;
 using System.Data;
+using System.Linq;
 using System.Collections.Generic;
 
 using Oracle.ManagedDataAccess.Client;
@@ -925,6 +926,67 @@ namespace Lazy.Vinke.Database.Oracle
         }
 
         /// <summary>
+        /// Update values array on table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="keyValues">The key values array</param>
+        /// <param name="keyDbTypes">The key types array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The number of affected records</returns>
+        public override Int32 Update(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields, Object[] keyValues, LazyDbType[] keyDbTypes, String[] keyFields)
+        {
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (values == null || values.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesNullOrZeroLength);
+
+            if (dbTypes == null || dbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTypesNullOrZeroLength);
+
+            if (fields == null || fields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
+
+            if (values.Length != dbTypes.Length || values.Length != fields.Length)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (keyValues == null || keyValues.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesNullOrZeroLength);
+
+            if (keyDbTypes == null || keyDbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTypesNullOrZeroLength);
+
+            if (keyFields == null || keyFields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
+
+            if (keyValues.Length != keyDbTypes.Length || keyValues.Length != keyFields.Length)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            #endregion Validations
+
+            String sql = UpdateStatementFrom(tableName, fields, keyFields);
+
+            keyFields = keyFields.Select(x => { return "key" + x; }).ToArray();
+
+            Object[] mergedValues = values.Concat(keyValues).ToArray();
+            LazyDbType[] mergedDbTypes = dbTypes.Concat(keyDbTypes).ToArray();
+            String[] mergedFields = fields.Concat(keyFields).ToArray();
+
+            return Execute(sql, mergedValues, mergedDbTypes, mergedFields);
+        }
+
+        /// <summary>
         /// Validate parameters
         /// </summary>
         /// <param name="sql">The sql statement</param>
@@ -1123,6 +1185,37 @@ namespace Lazy.Vinke.Database.Oracle
                 parameterString = parameterString.Remove(parameterString.Length - 1, 1);
 
             return String.Format("insert into {0} ({1}) values ({2})", tableName, fieldString, parameterString);
+        }
+
+        /// <summary>
+        /// Generate sql update statement
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The sql update statement</returns>
+        private String UpdateStatementFrom(String tableName, String[] fields, String[] keyFields)
+        {
+            String fieldString = String.Empty;
+            String keyFieldString = String.Empty;
+
+            for (int index = 0; index < fields.Length; index++)
+            {
+                if (String.IsNullOrWhiteSpace(fields[index]) == false)
+                    fieldString += fields[index] + " = " + this.DbmsParameterChar + fields[index] + ",";
+            }
+            if (fieldString.EndsWith(",") == true)
+                fieldString = fieldString.Remove(fieldString.Length - 1, 1);
+
+            for (int index = 0; index < keyFields.Length; index++)
+            {
+                if (String.IsNullOrWhiteSpace(keyFields[index]) == false)
+                    keyFieldString += keyFields[index] + " = " + this.DbmsParameterChar + "key" + keyFields[index] + ",";
+            }
+            if (keyFieldString.EndsWith(",") == true)
+                keyFieldString = keyFieldString.Remove(keyFieldString.Length - 1, 1);
+
+            return String.Format("update {0} set {1} where {2}", tableName, fieldString, keyFieldString);
         }
 
         #endregion Methods

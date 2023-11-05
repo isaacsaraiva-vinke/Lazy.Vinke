@@ -399,6 +399,9 @@ namespace Lazy.Vinke.Database
             if (dataRow == null)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionDataRowNull);
 
+            if (dataRow.Table.Columns == null || dataRow.Table.Columns.Count == 0)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionDataRowColumnsMissing);
+
             #endregion Validations
 
             (Object[] values, LazyDbType[] dbTypes, String[] fields) = InsertFrom(dataRow, dataRowState);
@@ -415,6 +418,55 @@ namespace Lazy.Vinke.Database
         /// <param name="fields">The fields array</param>
         /// <returns>The number of affected records</returns>
         public abstract Int32 Insert(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields);
+
+        /// <summary>
+        /// Update data row on table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="dataRow">The data row</param>
+        /// <param name="dataRowState">The data row state to be considered</param>
+        /// <returns>The number of affected records</returns>
+        public virtual Int32 Update(String tableName, DataRow dataRow, DataRowState dataRowState = DataRowState.Modified)
+        {
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (dataRow == null)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionDataRowNull);
+
+            if (dataRow.Table.Columns == null || dataRow.Table.Columns.Count == 0)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionDataRowColumnsMissing);
+
+            if (dataRow.Table.PrimaryKey == null || dataRow.Table.PrimaryKey.Length == 0)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionDataRowPrimaryKeyColumnsMissing);
+
+            #endregion Validations
+
+            (Object[] values, LazyDbType[] dbTypes, String[] fields, Object[] keyValues, LazyDbType[] keyDbTypes, String[] keyFields) = UpdateFrom(dataRow, dataRowState);
+
+            return Update(tableName, values, dbTypes, fields, keyValues, keyDbTypes, keyFields);
+        }
+
+        /// <summary>
+        /// Update values array on table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="keyValues">The key values array</param>
+        /// <param name="keyDbTypes">The key types array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The number of affected records</returns>
+        public abstract Int32 Update(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields, Object[] keyValues, LazyDbType[] keyDbTypes, String[] keyFields);
 
         /// <summary>
         /// Validate parameters
@@ -604,23 +656,66 @@ namespace Lazy.Vinke.Database
 
             if (dataRowState.HasFlag(dataRow.RowState) == true)
             {
-                if (dataRow.Table.Columns != null && dataRow.Table.Columns.Count > 0)
-                {
-                    values = new Object[dataRow.Table.Columns.Count];
-                    dbTypes = new LazyDbType[dataRow.Table.Columns.Count];
-                    fields = new String[dataRow.Table.Columns.Count];
+                values = new Object[dataRow.Table.Columns.Count];
+                dbTypes = new LazyDbType[dataRow.Table.Columns.Count];
+                fields = new String[dataRow.Table.Columns.Count];
 
-                    for (int index = 0; index < dataRow.Table.Columns.Count; index++)
-                    {
-                        String columnName = dataRow.Table.Columns[index].ColumnName;
-                        values[index] = (dataRowState == DataRowState.Deleted) ? dataRow[columnName, DataRowVersion.Original] : dataRow[columnName];
-                        dbTypes[index] = LazyDatabaseType.FromSystemType(dataRow.Table.Columns[columnName].DataType);
-                        fields[index] = columnName;
-                    }
+                for (int index = 0; index < dataRow.Table.Columns.Count; index++)
+                {
+                    String columnName = dataRow.Table.Columns[index].ColumnName;
+                    values[index] = (dataRowState == DataRowState.Deleted) ? dataRow[columnName, DataRowVersion.Original] : dataRow[columnName];
+                    dbTypes[index] = LazyDatabaseType.FromSystemType(dataRow.Table.Columns[columnName].DataType);
+                    fields[index] = columnName;
                 }
             }
 
             return (values, dbTypes, fields);
+        }
+
+        /// <summary>
+        /// Generate arrays collection from data row
+        /// </summary>
+        /// <param name="dataRow">The data row</param>
+        /// <param name="dataRowState">The data row state</param>
+        /// <returns>The arrays collection</returns>
+        private (Object[], LazyDbType[], String[], Object[], LazyDbType[], String[]) UpdateFrom(DataRow dataRow, DataRowState dataRowState)
+        {
+            Object[] values = null;
+            LazyDbType[] dbTypes = null;
+            String[] fields = null;
+
+            Object[] keyValues = null;
+            LazyDbType[] keyDbTypes = null;
+            String[] keyFields = null;
+
+            if (dataRowState.HasFlag(dataRow.RowState) == true)
+            {
+                values = new Object[dataRow.Table.Columns.Count];
+                dbTypes = new LazyDbType[dataRow.Table.Columns.Count];
+                fields = new String[dataRow.Table.Columns.Count];
+
+                for (int index = 0; index < dataRow.Table.Columns.Count; index++)
+                {
+                    String columnName = dataRow.Table.Columns[index].ColumnName;
+                    values[index] = (dataRowState == DataRowState.Modified || dataRowState == DataRowState.Deleted) ? dataRow[columnName, DataRowVersion.Original] : dataRow[columnName];
+                    dbTypes[index] = LazyDatabaseType.FromSystemType(dataRow.Table.Columns[columnName].DataType);
+                    fields[index] = columnName;
+                }
+
+                keyValues = new Object[dataRow.Table.PrimaryKey.Length];
+                keyDbTypes = new LazyDbType[dataRow.Table.PrimaryKey.Length];
+                keyFields = new String[dataRow.Table.PrimaryKey.Length];
+
+                for (int index = 0; index < dataRow.Table.PrimaryKey.Length; index++)
+                {
+                    String columnName = dataRow.Table.PrimaryKey[index].ColumnName;
+                    keyValues[index] = (dataRowState == DataRowState.Modified || dataRowState == DataRowState.Deleted) ? dataRow[columnName, DataRowVersion.Original] : dataRow[columnName];
+                    keyDbTypes[index] = LazyDatabaseType.FromSystemType(dataRow.Table.Columns[columnName].DataType);
+                    keyFields[index] = columnName;
+                }
+            }
+
+            return (values, dbTypes, fields, keyValues, keyDbTypes, keyFields);
         }
 
         #endregion Methods

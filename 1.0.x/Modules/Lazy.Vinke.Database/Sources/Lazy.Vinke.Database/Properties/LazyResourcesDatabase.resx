@@ -129,8 +129,14 @@
   <data name="LazyDatabaseExceptionConnectionStringNullOrEmpty" xml:space="preserve">
     <value>The database connection string cannot be null or empty!</value>
   </data>
+  <data name="LazyDatabaseExceptionDataRowColumnsMissing" xml:space="preserve">
+    <value>The data row must have at least one column!</value>
+  </data>
   <data name="LazyDatabaseExceptionDataRowNull" xml:space="preserve">
     <value>The data row cannot be null!</value>
+  </data>
+  <data name="LazyDatabaseExceptionDataRowPrimaryKeyColumnsMissing" xml:space="preserve">
+    <value>The data row must have at least one primary key column!</value>
   </data>
   <data name="LazyDatabaseExceptionFieldsNullOrZeroLength" xml:space="preserve">
     <value>The fields array cannot be null or zero length!</value>

@@ -97,11 +97,29 @@ namespace Lazy.Vinke.Database.Properties {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The data row must have at least one column!.
+        /// </summary>
+        public static string LazyDatabaseExceptionDataRowColumnsMissing {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionDataRowColumnsMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a The data row cannot be null!.
         /// </summary>
         public static string LazyDatabaseExceptionDataRowNull {
             get {
                 return ResourceManager.GetString("LazyDatabaseExceptionDataRowNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The data row must have at least one primary key column!.
+        /// </summary>
+        public static string LazyDatabaseExceptionDataRowPrimaryKeyColumnsMissing {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionDataRowPrimaryKeyColumnsMissing", resourceCulture);
             }
         }
         
