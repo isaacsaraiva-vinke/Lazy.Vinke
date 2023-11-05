@@ -76,6 +76,44 @@ namespace Lazy.Vinke.Tests.Database
             catch { /* Just to be sure that the table will be empty */ }
         }
 
+        public virtual void Update_DataRow_ModifiedOnlyKeys_Success()
+        {
+            // Arrange
+            Int32 rowsAffected = 0;
+            String tableName = "TestsUpdateOnlyKeys";
+            String sqlDelete = "delete from " + tableName + " where IdMaster between 1000 and 3000";
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("IdMaster", typeof(Int32));
+            dataTable.Columns.Add("IdChild", typeof(Int32));
+            dataTable.PrimaryKey = new DataColumn[] { dataTable.Columns["IdMaster"], dataTable.Columns["IdChild"] };
+            dataTable.Rows.Add(1000, 100);
+            dataTable.Rows.Add(2000, 200);
+
+            this.Database.Insert(tableName, dataTable.Rows[0]);
+            this.Database.Insert(tableName, dataTable.Rows[1]);
+
+            dataTable.AcceptChanges();
+
+            dataTable.Rows[0]["IdMaster"] = 1001;
+            dataTable.Rows[0]["IdChild"] = 101;
+            dataTable.Rows[1]["IdMaster"] = 2002;
+            dataTable.Rows[1]["IdChild"] = 202;
+
+            // Act
+            rowsAffected += this.Database.Update(tableName, dataTable.Rows[0]);
+            rowsAffected += this.Database.Update(tableName, dataTable.Rows[1]);
+
+            // Assert
+            Assert.AreEqual(rowsAffected, 2);
+
+            // Clean
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+        }
+
         public virtual void TestCleanup_CloseConnection_Single_Success()
         {
             /* Some tests may crash because connection state will be already closed */

@@ -39,6 +39,12 @@ namespace Lazy.Vinke.Tests.Database.Postgre
             base.Update_DataRow_Modified_Success();
         }
 
+        [TestMethod]
+        public override void Update_DataRow_ModifiedOnlyKeys_Success()
+        {
+            base.Update_DataRow_ModifiedOnlyKeys_Success();
+        }
+
         [TestCleanup]
         public override void TestCleanup_CloseConnection_Single_Success()
         {

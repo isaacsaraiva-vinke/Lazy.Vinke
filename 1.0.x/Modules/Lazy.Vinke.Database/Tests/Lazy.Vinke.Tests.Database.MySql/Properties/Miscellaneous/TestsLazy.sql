@@ -105,6 +105,14 @@ create table TestsUpdate
     constraint Pk_TestsUpdate primary key (Id)
 );
 
+-- drop table TestsUpdateOnlyKeys
+create table TestsUpdateOnlyKeys
+(
+	IdMaster integer,
+    IdChild integer,
+    constraint Pk_TestsUpdateOnlyKeys primary key (IdMaster,IdChild)
+);
+
 -- drop table TestsQueryValue
 create table TestsQueryValue
 (
