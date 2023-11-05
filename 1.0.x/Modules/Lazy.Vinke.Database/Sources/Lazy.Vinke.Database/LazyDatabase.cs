@@ -697,7 +697,7 @@ namespace Lazy.Vinke.Database
                 for (int index = 0; index < dataRow.Table.Columns.Count; index++)
                 {
                     String columnName = dataRow.Table.Columns[index].ColumnName;
-                    values[index] = (dataRowState == DataRowState.Modified || dataRowState == DataRowState.Deleted) ? dataRow[columnName, DataRowVersion.Original] : dataRow[columnName];
+                    values[index] = (dataRowState == DataRowState.Deleted) ? dataRow[columnName, DataRowVersion.Original] : dataRow[columnName];
                     dbTypes[index] = LazyDatabaseType.FromSystemType(dataRow.Table.Columns[columnName].DataType);
                     fields[index] = columnName;
                 }
