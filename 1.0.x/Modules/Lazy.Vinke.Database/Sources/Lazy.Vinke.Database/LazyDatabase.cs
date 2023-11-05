@@ -469,6 +469,52 @@ namespace Lazy.Vinke.Database
         public abstract Int32 Update(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields, Object[] keyValues, LazyDbType[] keyDbTypes, String[] keyFields);
 
         /// <summary>
+        /// Delete data row from table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="dataRow">The data row</param>
+        /// <param name="dataRowState">The data row state to be considered</param>
+        /// <returns>The number of affected records</returns>
+        public virtual Int32 Delete(String tableName, DataRow dataRow, DataRowState dataRowState = DataRowState.Deleted)
+        {
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (dataRow == null)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionDataRowNull);
+
+            if (dataRow.Table.Columns == null || dataRow.Table.Columns.Count == 0)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionDataRowColumnsMissing);
+
+            if (dataRow.Table.PrimaryKey == null || dataRow.Table.PrimaryKey.Length == 0)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionDataRowPrimaryKeyColumnsMissing);
+
+            #endregion Validations
+
+            (Object[] keyValues, LazyDbType[] keyDbTypes, String[] keyFields) = DeleteFrom(dataRow, dataRowState);
+
+            return Delete(tableName, keyValues, keyDbTypes, keyFields);
+        }
+
+        /// <summary>
+        /// Delete values array from table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="keyValues">The key values array</param>
+        /// <param name="keyDbTypes">The key types array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The number of affected records</returns>
+        public abstract Int32 Delete(String tableName, Object[] keyValues, LazyDbType[] keyDbTypes, String[] keyFields);
+
+        /// <summary>
         /// Validate parameters
         /// </summary>
         /// <param name="sql">The sql statement</param>
@@ -716,6 +762,36 @@ namespace Lazy.Vinke.Database
             }
 
             return (values, dbTypes, fields, keyValues, keyDbTypes, keyFields);
+        }
+
+        /// <summary>
+        /// Generate arrays collection from data row
+        /// </summary>
+        /// <param name="dataRow">The data row</param>
+        /// <param name="dataRowState">The data row state</param>
+        /// <returns>The arrays collection</returns>
+        private (Object[], LazyDbType[], String[]) DeleteFrom(DataRow dataRow, DataRowState dataRowState)
+        {
+            Object[] keyValues = null;
+            LazyDbType[] keyDbTypes = null;
+            String[] keyFields = null;
+
+            if (dataRowState.HasFlag(dataRow.RowState) == true)
+            {
+                keyValues = new Object[dataRow.Table.PrimaryKey.Length];
+                keyDbTypes = new LazyDbType[dataRow.Table.PrimaryKey.Length];
+                keyFields = new String[dataRow.Table.PrimaryKey.Length];
+
+                for (int index = 0; index < dataRow.Table.PrimaryKey.Length; index++)
+                {
+                    String columnName = dataRow.Table.PrimaryKey[index].ColumnName;
+                    keyValues[index] = (dataRowState == DataRowState.Modified || dataRowState == DataRowState.Deleted) ? dataRow[columnName, DataRowVersion.Original] : dataRow[columnName];
+                    keyDbTypes[index] = LazyDatabaseType.FromSystemType(dataRow.Table.Columns[columnName].DataType);
+                    keyFields[index] = columnName;
+                }
+            }
+
+            return (keyValues, keyDbTypes, keyFields);
         }
 
         #endregion Methods

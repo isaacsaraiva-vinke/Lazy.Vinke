@@ -989,6 +989,46 @@ namespace Lazy.Vinke.Database.Postgre
         }
 
         /// <summary>
+        /// Delete values array from table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="keyValues">The key values array</param>
+        /// <param name="keyDbTypes">The key types array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The number of affected records</returns>
+        public override Int32 Delete(String tableName, Object[] keyValues, LazyDbType[] keyDbTypes, String[] keyFields)
+        {
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (keyValues == null || keyValues.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyValuesNullOrZeroLength);
+
+            if (keyDbTypes == null || keyDbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyTypesNullOrZeroLength);
+
+            if (keyFields == null || keyFields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyFieldsNullOrZeroLength);
+
+            if (keyValues.Length != keyDbTypes.Length || keyValues.Length != keyFields.Length)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyValuesTypesFieldsNotMatch);
+
+            #endregion Validations
+
+            String sql = DeleteStatementFrom(tableName, keyFields);
+
+            return Execute(sql, keyValues, keyDbTypes, keyFields);
+        }
+
+        /// <summary>
         /// Validate parameters
         /// </summary>
         /// <param name="sql">The sql statement</param>
@@ -1218,6 +1258,28 @@ namespace Lazy.Vinke.Database.Postgre
                 keyFieldString = keyFieldString.Remove(keyFieldString.Length - 5, 5);
 
             return String.Format("update {0} set {1} where {2}", tableName, fieldString, keyFieldString);
+        }
+
+        /// <summary>
+        /// Generate sql delete statement
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The sql delete statement</returns>
+        private String DeleteStatementFrom(String tableName, String[] keyFields)
+        {
+            String keyFieldString = String.Empty;
+
+            for (int index = 0; index < keyFields.Length; index++)
+            {
+                if (String.IsNullOrWhiteSpace(keyFields[index]) == false)
+                    keyFieldString += keyFields[index] + " = " + this.DbmsParameterChar + keyFields[index] + " and ";
+            }
+            if (keyFieldString.EndsWith(" and ") == true)
+                keyFieldString = keyFieldString.Remove(keyFieldString.Length - 5, 5);
+
+            return String.Format("delete from {0} where {1}", tableName, keyFieldString);
         }
 
         #endregion Methods
