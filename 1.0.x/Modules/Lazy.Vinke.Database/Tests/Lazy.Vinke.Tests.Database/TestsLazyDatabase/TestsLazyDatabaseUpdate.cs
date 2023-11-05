@@ -31,7 +31,7 @@ namespace Lazy.Vinke.Tests.Database
             // Arrange
             Int32 rowsAffected = 0;
             String tableName = "TestsUpdate";
-            String sqlDelete = "delete from " + tableName + " where Id in (1000,2000)";
+            String sqlDelete = "delete from " + tableName + " where Id between 1000 and 3000";
             try { this.Database.Execute(sqlDelete, null); }
             catch { /* Just to be sure that the table will be empty */ }
 
@@ -51,11 +51,13 @@ namespace Lazy.Vinke.Tests.Database
 
             dataTable.AcceptChanges();
 
+            dataTable.Rows[0]["Id"] = 1001;
             dataTable.Rows[0]["ColumnVarChar"] = "Modified 1000";
             dataTable.Rows[0]["ColumnDecimal"] = 1001.01m;
             dataTable.Rows[0]["ColumnDateTime"] = new DateTime(2023, 11, 04, 22, 55, 30);
             dataTable.Rows[0]["ColumnByte"] = 16;
             dataTable.Rows[0]["ColumnChar"] = '0';
+            dataTable.Rows[1]["Id"] = 2002;
             dataTable.Rows[1]["ColumnVarChar"] = "Modified 2000";
             dataTable.Rows[1]["ColumnDecimal"] = 2002.02m;
             dataTable.Rows[1]["ColumnDateTime"] = new DateTime(2023, 11, 04, 22, 55, 30);
