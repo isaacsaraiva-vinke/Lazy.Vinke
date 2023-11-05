@@ -133,6 +133,42 @@ namespace Lazy.Vinke.Database.Properties {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The key fields array cannot be null or zero length!.
+        /// </summary>
+        public static string LazyDatabaseExceptionKeyFieldsNullOrZeroLength {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionKeyFieldsNullOrZeroLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The key types array cannot be null or zero length!.
+        /// </summary>
+        public static string LazyDatabaseExceptionKeyTypesNullOrZeroLength {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionKeyTypesNullOrZeroLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The key values array cannot be null or zero length!.
+        /// </summary>
+        public static string LazyDatabaseExceptionKeyValuesNullOrZeroLength {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionKeyValuesNullOrZeroLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The key values array, the key types array and the key fields array must have the same number of elements!.
+        /// </summary>
+        public static string LazyDatabaseExceptionKeyValuesTypesFieldsNotMatch {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionKeyValuesTypesFieldsNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a The query page data cannot be null!.
         /// </summary>
         public static string LazyDatabaseExceptionQueryPageDataNull {
