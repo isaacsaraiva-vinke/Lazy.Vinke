@@ -198,7 +198,7 @@ namespace Lazy.Vinke.Tests.Database.MySql
             Assert.AreEqual(dbTypeDouble, MySqlDbType.Double);
             Assert.AreEqual(dbTypeDecimal, MySqlDbType.Decimal);
             Assert.AreEqual(dbTypeDateTime, MySqlDbType.DateTime);
-            Assert.AreEqual(dbTypeVarUByte, MySqlDbType.Blob);
+            Assert.AreEqual(dbTypeVarUByte, MySqlDbType.LongBlob);
         }
 
         [TestCleanup]

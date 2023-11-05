@@ -97,6 +97,18 @@ create table TestsInsert
     constraint Pk_TestsInsert primary key (Id)
 );
 
+-- drop table TestsUpdate
+create table TestsUpdate
+(
+	Id integer,
+    ColumnVarChar varchar(32),
+    ColumnDecimal numeric(13,4),
+	ColumnDateTime timestamp,
+	ColumnByte smallint,
+	ColumnChar char(1),
+    constraint Pk_TestsUpdate primary key (Id)
+);
+
 -- drop table TestsQueryValue
 create table TestsQueryValue
 (

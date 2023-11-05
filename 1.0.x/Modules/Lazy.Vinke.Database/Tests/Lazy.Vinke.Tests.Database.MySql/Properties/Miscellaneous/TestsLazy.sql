@@ -48,7 +48,7 @@ create table TestsQueryRecord
 create table TestsQueryTable
 (
 	Code varchar(8),
-    Elements blob,
+    Elements longblob,
     Active char(1),
     constraint Pk_TestsQueryTable primary key (Code)
 );
@@ -93,6 +93,18 @@ create table TestsInsert
     constraint Pk_TestsInsert primary key (Id)
 );
 
+-- drop table TestsUpdate
+create table TestsUpdate
+(
+	Id integer,
+    ColumnVarChar varchar(32),
+    ColumnDecimal Decimal(13,4),
+    ColumnDateTime datetime,
+    ColumnByte tinyint,
+    ColumnChar char(1),
+    constraint Pk_TestsUpdate primary key (Id)
+);
+
 -- drop table TestsQueryValue
 create table TestsQueryValue
 (
@@ -133,9 +145,9 @@ create table TestsQueryValue
     ColumnDateTime1 datetime,
     ColumnDateTime2 datetime,
     ColumnDateTimeNull datetime,
-    ColumnVarUByte1 blob,
-    ColumnVarUByte2 blob,
-    ColumnVarUByteNull blob,
+    ColumnVarUByte1 longblob,
+    ColumnVarUByte2 longblob,
+    ColumnVarUByteNull longblob,
 	constraint Pk_TestsQueryValue primary key (TestCode)
 );
 
