@@ -1212,10 +1212,10 @@ namespace Lazy.Vinke.Database.Postgre
             for (int index = 0; index < keyFields.Length; index++)
             {
                 if (String.IsNullOrWhiteSpace(keyFields[index]) == false)
-                    keyFieldString += keyFields[index] + " = " + this.DbmsParameterChar + "key" + keyFields[index] + ",";
+                    keyFieldString += keyFields[index] + " = " + this.DbmsParameterChar + "key" + keyFields[index] + " and ";
             }
-            if (keyFieldString.EndsWith(",") == true)
-                keyFieldString = keyFieldString.Remove(keyFieldString.Length - 1, 1);
+            if (keyFieldString.EndsWith(" and ") == true)
+                keyFieldString = keyFieldString.Remove(keyFieldString.Length - 5, 5);
 
             return String.Format("update {0} set {1} where {2}", tableName, fieldString, keyFieldString);
         }
