@@ -61,11 +61,11 @@ namespace Lazy.Vinke.Tests.Database
             rowsAffected += this.Database.Indate(tableName, dataTable.Rows[4]);
 
             // Assert
-            //Assert.AreEqual(rowsAffected, 3);
+            Assert.AreEqual(rowsAffected, 3);
 
             // Clean
-            //try { this.Database.Execute(sqlDelete, null); }
-            //catch { /* Just to be sure that the table will be empty */ }
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
         }
 
         public virtual void TestCleanup_CloseConnection_Single_Success()
