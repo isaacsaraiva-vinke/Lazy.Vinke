@@ -1334,7 +1334,7 @@ namespace Lazy.Vinke.Database.Oracle
             if (mergeJoinString.EndsWith(" and ") == true)
                 mergeJoinString = mergeJoinString.Remove(mergeJoinString.Length - 5, 5);
 
-            return String.Format("merge into (select T.rowid rId, T.* from {0} T) D using(select T.rowid rId, U.* from (select {1} from dual) U left join {2} T on ({3})) S on (D.rId = S.rId) when not matched then insert ({4}) values ({5}) when matched then update set {6}",
+            return String.Format("merge into (select M.rowid rId, M.* from {0} M) D using(select T.rowid rId from (select {1} from dual) U left join {2} T on ({3})) S on (D.rId = S.rId) when not matched then insert ({4}) values ({5}) when matched then update set {6}",
                 tableName, mergeSelectString, tableName, mergeJoinString, mergeInsertFieldsString, mergeInsertValuesString, mergeUpdateSetString);
         }
 
