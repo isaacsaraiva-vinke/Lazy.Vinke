@@ -1048,6 +1048,70 @@ namespace Lazy.Vinke.Database.Oracle
         }
 
         /// <summary>
+        /// Update or insert values array on table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="keyValues">The key values array</param>
+        /// <param name="keyDbTypes">The key types array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The number of affected records</returns>
+        public override Int32 Upsert(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields, Object[] keyValues, LazyDbType[] keyDbTypes, String[] keyFields)
+        {
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (values == null || values.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesNullOrZeroLength);
+
+            if (dbTypes == null || dbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTypesNullOrZeroLength);
+
+            if (fields == null || fields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
+
+            if (values.Length != dbTypes.Length || values.Length != fields.Length)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (keyValues == null || keyValues.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyValuesNullOrZeroLength);
+
+            if (keyDbTypes == null || keyDbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyTypesNullOrZeroLength);
+
+            if (keyFields == null || keyFields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyFieldsNullOrZeroLength);
+
+            if (keyValues.Length != keyDbTypes.Length || keyValues.Length != keyFields.Length)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyValuesTypesFieldsNotMatch);
+
+            if (keyFields.All(key => fields.Contains(key)) == false)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyFieldsNotPresentInFields);
+
+            #endregion Validations
+
+            String sql = UpsertStatementFrom(tableName, fields, keyFields);
+
+            keyFields = keyFields.Select(x => { return "key" + x; }).ToArray();
+
+            Object[] mergedValues = values.Concat(keyValues).ToArray();
+            LazyDbType[] mergedDbTypes = dbTypes.Concat(keyDbTypes).ToArray();
+            String[] mergedFields = fields.Concat(keyFields).ToArray();
+
+            return Execute(sql, mergedValues, mergedDbTypes, mergedFields);
+        }
+
+        /// <summary>
         /// Delete values array from table
         /// </summary>
         /// <param name="tableName">The table name</param>
@@ -1370,6 +1434,59 @@ namespace Lazy.Vinke.Database.Oracle
                 keyFieldString = keyFieldString.Remove(keyFieldString.Length - 5, 5);
 
             return String.Format("update {0} set {1} where {2}", tableName, fieldString, keyFieldString);
+        }
+
+        /// <summary>
+        /// Generate sql upsert statement
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The sql upsert statement</returns>
+        private String UpsertStatementFrom(String tableName, String[] fields, String[] keyFields)
+        {
+            String mergeInsertFieldsString = String.Empty;
+            String mergeInsertValuesString = String.Empty;
+            String mergeUpdateSetString = String.Empty;
+            String mergeSelectString = String.Empty;
+            String mergeJoinString = String.Empty;
+
+            for (int index = 0; index < fields.Length; index++)
+            {
+                if (String.IsNullOrWhiteSpace(fields[index]) == false)
+                {
+                    mergeInsertFieldsString += fields[index] + ",";
+                    mergeInsertValuesString += this.DbmsParameterChar + fields[index] + ",";
+                    mergeUpdateSetString += "D." + fields[index] + " = " + this.DbmsParameterChar + fields[index] + ",";
+                }
+            }
+
+            if (mergeInsertFieldsString.EndsWith(",") == true)
+                mergeInsertFieldsString = mergeInsertFieldsString.Remove(mergeInsertFieldsString.Length - 1, 1);
+
+            if (mergeInsertValuesString.EndsWith(",") == true)
+                mergeInsertValuesString = mergeInsertValuesString.Remove(mergeInsertValuesString.Length - 1, 1);
+
+            if (mergeUpdateSetString.EndsWith(",") == true)
+                mergeUpdateSetString = mergeUpdateSetString.Remove(mergeUpdateSetString.Length - 1, 1);
+
+            for (int index = 0; index < keyFields.Length; index++)
+            {
+                if (String.IsNullOrWhiteSpace(keyFields[index]) == false)
+                {
+                    mergeSelectString += this.DbmsParameterChar + "key" + keyFields[index] + " key" + keyFields[index] + ",";
+                    mergeJoinString += "T." + keyFields[index] + " = " + "U.key" + keyFields[index] + " and ";
+                }
+            }
+
+            if (mergeSelectString.EndsWith(",") == true)
+                mergeSelectString = mergeSelectString.Remove(mergeSelectString.Length - 1, 1);
+
+            if (mergeJoinString.EndsWith(" and ") == true)
+                mergeJoinString = mergeJoinString.Remove(mergeJoinString.Length - 5, 5);
+
+            return String.Format("merge into (select M.rowid rId, M.* from {0} M) D using(select T.rowid rId from (select {1} from dual) U left join {2} T on ({3})) S on (D.rId = S.rId) when not matched then insert ({4}) values ({5}) when matched then update set {6}",
+                tableName, mergeSelectString, tableName, mergeJoinString, mergeInsertFieldsString, mergeInsertValuesString, mergeUpdateSetString);
         }
 
         /// <summary>

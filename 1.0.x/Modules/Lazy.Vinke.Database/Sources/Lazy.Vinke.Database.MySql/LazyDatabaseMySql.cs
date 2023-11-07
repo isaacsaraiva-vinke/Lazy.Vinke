@@ -1037,6 +1037,69 @@ namespace Lazy.Vinke.Database.MySql
         }
 
         /// <summary>
+        /// Update or insert values array on table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="keyValues">The key values array</param>
+        /// <param name="keyDbTypes">The key types array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The number of affected records</returns>
+        public override Int32 Upsert(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields, Object[] keyValues, LazyDbType[] keyDbTypes, String[] keyFields)
+        {
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (values == null || values.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesNullOrZeroLength);
+
+            if (dbTypes == null || dbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTypesNullOrZeroLength);
+
+            if (fields == null || fields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
+
+            if (values.Length != dbTypes.Length || values.Length != fields.Length)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (keyValues == null || keyValues.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyValuesNullOrZeroLength);
+
+            if (keyDbTypes == null || keyDbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyTypesNullOrZeroLength);
+
+            if (keyFields == null || keyFields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyFieldsNullOrZeroLength);
+
+            if (keyValues.Length != keyDbTypes.Length || keyValues.Length != keyFields.Length)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyValuesTypesFieldsNotMatch);
+
+            if (keyFields.All(key => fields.Contains(key)) == false)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyFieldsNotPresentInFields);
+
+            #endregion Validations
+
+            /* MySql does not have a merge statement do perform an update followed by an insert */
+
+            Int32 recordsAffected = Update(tableName, values, dbTypes, fields, keyValues, keyDbTypes, keyFields);
+
+            if (recordsAffected == 0)
+                recordsAffected = Insert(tableName, values, dbTypes, fields);
+
+            return recordsAffected;
+        }
+
+        /// <summary>
         /// Delete values array from table
         /// </summary>
         /// <param name="tableName">The table name</param>
