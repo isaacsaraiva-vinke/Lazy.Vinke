@@ -188,6 +188,7 @@ namespace Lazy.Vinke.Database.Oracle
             this.sqlCommand.CommandText = sql;
             this.sqlCommand.CommandType = CommandType.Text;
             this.sqlCommand.Transaction = this.sqlTransaction;
+            this.sqlCommand.BindByName = this.BindByName;
 
             return this.sqlCommand.ExecuteNonQuery();
         }
@@ -224,6 +225,7 @@ namespace Lazy.Vinke.Database.Oracle
             this.sqlCommand.CommandText = sql;
             this.sqlCommand.CommandType = CommandType.Text;
             this.sqlCommand.Transaction = this.sqlTransaction;
+            this.sqlCommand.BindByName = this.BindByName;
 
             return this.sqlCommand.ExecuteNonQuery();
         }
@@ -255,6 +257,7 @@ namespace Lazy.Vinke.Database.Oracle
             this.sqlCommand.CommandText = name;
             this.sqlCommand.CommandType = CommandType.StoredProcedure;
             this.sqlCommand.Transaction = this.sqlTransaction;
+            this.sqlCommand.BindByName = this.BindByName;
 
             this.sqlCommand.ExecuteNonQuery();
         }
@@ -287,6 +290,7 @@ namespace Lazy.Vinke.Database.Oracle
             this.sqlCommand.CommandText = name;
             this.sqlCommand.CommandType = CommandType.StoredProcedure;
             this.sqlCommand.Transaction = this.sqlTransaction;
+            this.sqlCommand.BindByName = this.BindByName;
 
             this.sqlCommand.ExecuteNonQuery();
         }
@@ -334,6 +338,7 @@ namespace Lazy.Vinke.Database.Oracle
             this.sqlCommand.CommandText = sql;
             this.sqlCommand.CommandType = CommandType.Text;
             this.sqlCommand.Transaction = this.sqlTransaction;
+            this.sqlCommand.BindByName = this.BindByName;
 
             DataTable dataTable = new DataTable();
             this.sqlDataAdapter.SelectCommand = this.sqlCommand;
@@ -377,6 +382,7 @@ namespace Lazy.Vinke.Database.Oracle
             this.sqlCommand.CommandText = sql;
             this.sqlCommand.CommandType = CommandType.Text;
             this.sqlCommand.Transaction = this.sqlTransaction;
+            this.sqlCommand.BindByName = this.BindByName;
 
             DataTable dataTable = new DataTable();
             this.sqlDataAdapter.SelectCommand = this.sqlCommand;
@@ -431,6 +437,7 @@ namespace Lazy.Vinke.Database.Oracle
             this.sqlCommand.CommandText = sql;
             this.sqlCommand.CommandType = CommandType.Text;
             this.sqlCommand.Transaction = this.sqlTransaction;
+            this.sqlCommand.BindByName = this.BindByName;
 
             DataTable dataTable = new DataTable();
             this.sqlDataAdapter.SelectCommand = this.sqlCommand;
@@ -471,6 +478,7 @@ namespace Lazy.Vinke.Database.Oracle
             this.sqlCommand.CommandText = sql;
             this.sqlCommand.CommandType = CommandType.Text;
             this.sqlCommand.Transaction = this.sqlTransaction;
+            this.sqlCommand.BindByName = this.BindByName;
 
             DataTable dataTable = new DataTable();
             this.sqlDataAdapter.SelectCommand = this.sqlCommand;
@@ -524,6 +532,7 @@ namespace Lazy.Vinke.Database.Oracle
             this.sqlCommand.CommandText = sql;
             this.sqlCommand.CommandType = CommandType.Text;
             this.sqlCommand.Transaction = this.sqlTransaction;
+            this.sqlCommand.BindByName = this.BindByName;
 
             DataTable dataTable = new DataTable(tableName);
             this.sqlDataAdapter.SelectCommand = this.sqlCommand;
@@ -568,6 +577,7 @@ namespace Lazy.Vinke.Database.Oracle
             this.sqlCommand.CommandText = sql;
             this.sqlCommand.CommandType = CommandType.Text;
             this.sqlCommand.Transaction = this.sqlTransaction;
+            this.sqlCommand.BindByName = this.BindByName;
 
             DataTable dataTable = new DataTable(tableName);
             this.sqlDataAdapter.SelectCommand = this.sqlCommand;
@@ -624,6 +634,7 @@ namespace Lazy.Vinke.Database.Oracle
             this.sqlCommand.CommandText = sql;
             this.sqlCommand.CommandType = CommandType.Text;
             this.sqlCommand.Transaction = this.sqlTransaction;
+            this.sqlCommand.BindByName = this.BindByName;
 
             DataTable dataTable = new DataTable(tableName);
             this.sqlDataAdapter.SelectCommand = this.sqlCommand;
@@ -665,6 +676,7 @@ namespace Lazy.Vinke.Database.Oracle
             this.sqlCommand.CommandText = sql;
             this.sqlCommand.CommandType = CommandType.Text;
             this.sqlCommand.Transaction = this.sqlTransaction;
+            this.sqlCommand.BindByName = this.BindByName;
 
             DataTable dataTable = new DataTable(tableName);
             this.sqlDataAdapter.SelectCommand = this.sqlCommand;
@@ -724,6 +736,7 @@ namespace Lazy.Vinke.Database.Oracle
             this.sqlCommand.CommandText = sql;
             this.sqlCommand.CommandType = CommandType.Text;
             this.sqlCommand.Transaction = this.sqlTransaction;
+            this.sqlCommand.BindByName = this.BindByName;
 
             DataTable dataTable = new DataTable(tableName);
             this.sqlDataAdapter.SelectCommand = this.sqlCommand;
@@ -782,6 +795,7 @@ namespace Lazy.Vinke.Database.Oracle
             this.sqlCommand.CommandText = sql;
             this.sqlCommand.CommandType = CommandType.Text;
             this.sqlCommand.Transaction = this.sqlTransaction;
+            this.sqlCommand.BindByName = this.BindByName;
 
             DataTable dataTable = new DataTable(tableName);
             this.sqlDataAdapter.SelectCommand = this.sqlCommand;
@@ -921,6 +935,50 @@ namespace Lazy.Vinke.Database.Oracle
             #endregion Validations
 
             String sql = InsertStatementFrom(tableName, fields);
+
+            return Execute(sql, values, dbTypes, fields);
+        }
+
+        /// <summary>
+        /// Insert or update values array on table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The number of affected records</returns>
+        public override Int32 Indate(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] keyFields)
+        {
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (values == null || values.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesNullOrZeroLength);
+
+            if (dbTypes == null || dbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTypesNullOrZeroLength);
+
+            if (fields == null || fields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
+
+            if (values.Length != dbTypes.Length || values.Length != fields.Length)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (keyFields == null || keyFields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyFieldsNullOrZeroLength);
+
+            #endregion Validations
+
+            String sql = IndateStatementFrom(tableName, fields, keyFields);
 
             return Execute(sql, values, dbTypes, fields);
         }
@@ -1228,6 +1286,59 @@ namespace Lazy.Vinke.Database.Oracle
         }
 
         /// <summary>
+        /// Generate sql indate statement
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The sql indate statement</returns>
+        private String IndateStatementFrom(String tableName, String[] fields, String[] keyFields)
+        {
+            String mergeInsertFieldsString = String.Empty;
+            String mergeInsertValuesString = String.Empty;
+            String mergeUpdateSetString = String.Empty;
+            String mergeSelectString = String.Empty;
+            String mergeJoinString = String.Empty;
+
+            for (int index = 0; index < fields.Length; index++)
+            {
+                if (String.IsNullOrWhiteSpace(fields[index]) == false)
+                {
+                    mergeInsertFieldsString += fields[index] + ",";
+                    mergeInsertValuesString += this.DbmsParameterChar + fields[index] + ",";
+                    mergeUpdateSetString += "D." + fields[index] + " = " + this.DbmsParameterChar + fields[index] + ",";
+                }
+            }
+
+            if (mergeInsertFieldsString.EndsWith(",") == true)
+                mergeInsertFieldsString = mergeInsertFieldsString.Remove(mergeInsertFieldsString.Length - 1, 1);
+
+            if (mergeInsertValuesString.EndsWith(",") == true)
+                mergeInsertValuesString = mergeInsertValuesString.Remove(mergeInsertValuesString.Length - 1, 1);
+
+            if (mergeUpdateSetString.EndsWith(",") == true)
+                mergeUpdateSetString = mergeUpdateSetString.Remove(mergeUpdateSetString.Length - 1, 1);
+
+            for (int index = 0; index < keyFields.Length; index++)
+            {
+                if (String.IsNullOrWhiteSpace(keyFields[index]) == false)
+                {
+                    mergeSelectString += this.DbmsParameterChar + keyFields[index] + " " + keyFields[index] + ",";
+                    mergeJoinString += "T." + keyFields[index] + " = " + "U." + keyFields[index] + " and ";
+                }
+            }
+
+            if (mergeSelectString.EndsWith(",") == true)
+                mergeSelectString = mergeSelectString.Remove(mergeSelectString.Length - 1, 1);
+
+            if (mergeJoinString.EndsWith(" and ") == true)
+                mergeJoinString = mergeJoinString.Remove(mergeJoinString.Length - 5, 5);
+
+            return String.Format("merge into (select T.rowid rId, T.* from {0} T) D using(select T.rowid rId, U.* from (select {1} from dual) U left join {2} T on ({3})) S on (D.rId = S.rId) when not matched then insert ({4}) values ({5}) when matched then update set {6}",
+                tableName, mergeSelectString, tableName, mergeJoinString, mergeInsertFieldsString, mergeInsertValuesString, mergeUpdateSetString);
+        }
+
+        /// <summary>
         /// Generate sql update statement
         /// </summary>
         /// <param name="tableName">The table name</param>
@@ -1283,6 +1394,8 @@ namespace Lazy.Vinke.Database.Oracle
         #endregion Methods
 
         #region Properties
+
+        public Boolean BindByName { get; set; } = true;
 
         public override Char DbmsParameterChar { get; protected set; } = ':';
 

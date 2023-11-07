@@ -928,6 +928,50 @@ namespace Lazy.Vinke.Database.Postgre
         }
 
         /// <summary>
+        /// Insert or update values array on table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The number of affected records</returns>
+        public override Int32 Indate(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] keyFields)
+        {
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (values == null || values.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesNullOrZeroLength);
+
+            if (dbTypes == null || dbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTypesNullOrZeroLength);
+
+            if (fields == null || fields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
+
+            if (values.Length != dbTypes.Length || values.Length != fields.Length)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (keyFields == null || keyFields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyFieldsNullOrZeroLength);
+
+            #endregion Validations
+
+            String sql = IndateStatementFrom(tableName, fields, keyFields);
+
+            return Execute(sql, values, dbTypes, fields);
+        }
+
+        /// <summary>
         /// Update values array on table
         /// </summary>
         /// <param name="tableName">The table name</param>
@@ -1227,6 +1271,59 @@ namespace Lazy.Vinke.Database.Postgre
                 parameterString = parameterString.Remove(parameterString.Length - 1, 1);
 
             return String.Format("insert into {0} ({1}) values ({2})", tableName, fieldString, parameterString);
+        }
+
+        /// <summary>
+        /// Generate sql indate statement
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The sql indate statement</returns>
+        private String IndateStatementFrom(String tableName, String[] fields, String[] keyFields)
+        {
+            String mergeInsertFieldsString = String.Empty;
+            String mergeInsertValuesString = String.Empty;
+            String mergeUpdateSetString = String.Empty;
+            String mergeSelectString = String.Empty;
+            String mergeJoinString = String.Empty;
+
+            for (int index = 0; index < fields.Length; index++)
+            {
+                if (String.IsNullOrWhiteSpace(fields[index]) == false)
+                {
+                    mergeInsertFieldsString += fields[index] + ",";
+                    mergeInsertValuesString += this.DbmsParameterChar + fields[index] + ",";
+                    mergeUpdateSetString += fields[index] + " = " + this.DbmsParameterChar + fields[index] + ",";
+                }
+            }
+
+            if (mergeInsertFieldsString.EndsWith(",") == true)
+                mergeInsertFieldsString = mergeInsertFieldsString.Remove(mergeInsertFieldsString.Length - 1, 1);
+
+            if (mergeInsertValuesString.EndsWith(",") == true)
+                mergeInsertValuesString = mergeInsertValuesString.Remove(mergeInsertValuesString.Length - 1, 1);
+
+            if (mergeUpdateSetString.EndsWith(",") == true)
+                mergeUpdateSetString = mergeUpdateSetString.Remove(mergeUpdateSetString.Length - 1, 1);
+
+            for (int index = 0; index < keyFields.Length; index++)
+            {
+                if (String.IsNullOrWhiteSpace(keyFields[index]) == false)
+                {
+                    mergeSelectString += this.DbmsParameterChar + keyFields[index] + " " + keyFields[index] + ",";
+                    mergeJoinString += "D." + keyFields[index] + " = " + "S." + keyFields[index] + " and ";
+                }
+            }
+
+            if (mergeSelectString.EndsWith(",") == true)
+                mergeSelectString = mergeSelectString.Remove(mergeSelectString.Length - 1, 1);
+
+            if (mergeJoinString.EndsWith(" and ") == true)
+                mergeJoinString = mergeJoinString.Remove(mergeJoinString.Length - 5, 5);
+
+            return String.Format("merge into {0} D using(select {1}) S on ({2}) when not matched then insert ({3}) values ({4}) when matched then update set {5};",
+                tableName, mergeSelectString, mergeJoinString, mergeInsertFieldsString, mergeInsertValuesString, mergeUpdateSetString);
         }
 
         /// <summary>

@@ -420,6 +420,53 @@ namespace Lazy.Vinke.Database
         public abstract Int32 Insert(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields);
 
         /// <summary>
+        /// Insert or update data row on table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="dataRow">The data row</param>
+        /// <param name="dataRowState">The data row state to be considered</param>
+        /// <returns>The number of affected records</returns>
+        public virtual Int32 Indate(String tableName, DataRow dataRow, DataRowState dataRowState = (DataRowState.Added | DataRowState.Modified))
+        {
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (dataRow == null)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionDataRowNull);
+
+            if (dataRow.Table.Columns == null || dataRow.Table.Columns.Count == 0)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionDataRowColumnsMissing);
+
+            if (dataRow.Table.PrimaryKey == null || dataRow.Table.PrimaryKey.Length == 0)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionDataRowPrimaryKeyColumnsMissing);
+
+            #endregion Validations
+
+            (Object[] values, LazyDbType[] dbTypes, String[] fields, String[] keyFields) = IndateFrom(dataRow, dataRowState);
+
+            return Indate(tableName, values, dbTypes, fields, keyFields);
+        }
+
+        /// <summary>
+        /// Insert or update values array on table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The number of affected records</returns>
+        public abstract Int32 Indate(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] keyFields);
+
+        /// <summary>
         /// Update data row on table
         /// </summary>
         /// <param name="tableName">The table name</param>
@@ -716,6 +763,43 @@ namespace Lazy.Vinke.Database
             }
 
             return (values, dbTypes, fields);
+        }
+
+        /// <summary>
+        /// Generate arrays collection from data row
+        /// </summary>
+        /// <param name="dataRow">The data row</param>
+        /// <param name="dataRowState">The data row state</param>
+        /// <returns>The arrays collection</returns>
+        private (Object[], LazyDbType[], String[], String[]) IndateFrom(DataRow dataRow, DataRowState dataRowState)
+        {
+            Object[] values = null;
+            LazyDbType[] dbTypes = null;
+            String[] fields = null;
+
+            String[] keyFields = null;
+
+            if (dataRowState.HasFlag(dataRow.RowState) == true)
+            {
+                values = new Object[dataRow.Table.Columns.Count];
+                dbTypes = new LazyDbType[dataRow.Table.Columns.Count];
+                fields = new String[dataRow.Table.Columns.Count];
+
+                for (int index = 0; index < dataRow.Table.Columns.Count; index++)
+                {
+                    String columnName = dataRow.Table.Columns[index].ColumnName;
+                    values[index] = (dataRowState == DataRowState.Deleted) ? dataRow[columnName, DataRowVersion.Original] : dataRow[columnName];
+                    dbTypes[index] = LazyDatabaseType.FromSystemType(dataRow.Table.Columns[columnName].DataType);
+                    fields[index] = columnName;
+                }
+
+                keyFields = new String[dataRow.Table.PrimaryKey.Length];
+
+                for (int index = 0; index < dataRow.Table.PrimaryKey.Length; index++)
+                    keyFields[index] = dataRow.Table.PrimaryKey[index].ColumnName;
+            }
+
+            return (values, dbTypes, fields, keyFields);
         }
 
         /// <summary>
