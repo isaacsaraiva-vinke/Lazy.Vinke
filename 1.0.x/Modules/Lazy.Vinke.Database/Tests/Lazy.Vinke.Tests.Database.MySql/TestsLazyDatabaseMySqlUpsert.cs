@@ -34,9 +34,21 @@ namespace Lazy.Vinke.Tests.Database.MySql
         }
 
         [TestMethod]
-        public override void Upsert_DataRow_Added_Success()
+        public override void Upsert_Validations_DataRow_Exception()
         {
-            base.Upsert_DataRow_Added_Success();
+            base.Upsert_Validations_DataRow_Exception();
+        }
+
+        [TestMethod]
+        public override void Upsert_Validations_Arrays_Exception()
+        {
+            base.Upsert_Validations_Arrays_Exception();
+        }
+
+        [TestMethod]
+        public override void Upsert_DataRow_Modified_Success()
+        {
+            base.Upsert_DataRow_Modified_Success();
         }
 
         [TestCleanup]
