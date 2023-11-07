@@ -141,6 +141,9 @@
   <data name="LazyDatabaseExceptionFieldsNullOrZeroLength" xml:space="preserve">
     <value>The fields array cannot be null or zero length!</value>
   </data>
+  <data name="LazyDatabaseExceptionKeyFieldsNotPresentInFields" xml:space="preserve">
+    <value>The elements in the key fields array must be present in the fields array!</value>
+  </data>
   <data name="LazyDatabaseExceptionKeyFieldsNullOrZeroLength" xml:space="preserve">
     <value>The key fields array cannot be null or zero length!</value>
   </data>

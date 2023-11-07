@@ -976,6 +976,9 @@ namespace Lazy.Vinke.Database.Oracle
             if (keyFields == null || keyFields.Length < 1)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyFieldsNullOrZeroLength);
 
+            if (keyFields.All(key => fields.Contains(key)) == false)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyFieldsNotPresentInFields);
+
             #endregion Validations
 
             String sql = IndateStatementFrom(tableName, fields, keyFields);

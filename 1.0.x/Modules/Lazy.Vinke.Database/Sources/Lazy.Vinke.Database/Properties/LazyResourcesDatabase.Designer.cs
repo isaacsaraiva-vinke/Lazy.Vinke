@@ -133,6 +133,15 @@ namespace Lazy.Vinke.Database.Properties {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The elements in the key fields array must be present in the fields array!.
+        /// </summary>
+        public static string LazyDatabaseExceptionKeyFieldsNotPresentInFields {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionKeyFieldsNotPresentInFields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a The key fields array cannot be null or zero length!.
         /// </summary>
         public static string LazyDatabaseExceptionKeyFieldsNullOrZeroLength {
