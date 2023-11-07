@@ -128,6 +128,15 @@ create table TestsUpdate
     constraint Pk_TestsUpdate primary key (Id)
 );
 
+-- drop table TestsUpsert
+create table TestsUpsert
+(
+	TestCode varchar(64),
+    Id integer,
+    Item varchar(256),
+    constraint Pk_TestsUpsert primary key (TestCode,Id)
+);
+
 -- drop table TestsUpdateOnlyKeys
 create table TestsUpdateOnlyKeys
 (
