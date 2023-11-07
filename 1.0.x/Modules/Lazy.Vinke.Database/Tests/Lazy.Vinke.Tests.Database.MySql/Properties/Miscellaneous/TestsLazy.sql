@@ -93,6 +93,15 @@ create table TestsInsert
     constraint Pk_TestsInsert primary key (Id)
 );
 
+-- drop table TestsIndate
+create table TestsIndate
+(
+	TestCode varchar(64),
+    Id integer,
+    Item varchar(256),
+    constraint Pk_TestsIndate primary key (TestCode,Id)
+);
+
 -- drop table TestsUpdate
 create table TestsUpdate
 (

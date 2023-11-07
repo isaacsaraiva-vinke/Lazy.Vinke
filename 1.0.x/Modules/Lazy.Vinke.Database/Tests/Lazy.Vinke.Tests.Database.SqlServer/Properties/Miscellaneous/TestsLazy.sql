@@ -67,15 +67,6 @@ create table TestsQueryTable
     constraint Pk_TestsQueryTable primary key (Code)
 );
 
--- drop table TestsDelete
-create table TestsDelete
-(
-	Id integer,
-    Name varchar(32),
-    Description varchar(256),
-    constraint Pk_TestsDelete primary key (Id)
-);
-
 -- drop table TestsQueryPage
 create table TestsQueryPage
 (
@@ -116,6 +107,15 @@ create table TestsInsert
     constraint Pk_TestsInsert primary key (Id)
 );
 
+-- drop table TestsIndate
+create table TestsIndate
+(
+	TestCode varchar(64),
+    Id integer,
+    Item varchar(256),
+    constraint Pk_TestsIndate primary key (TestCode,Id)
+);
+
 -- drop table TestsUpdate
 create table TestsUpdate
 (
@@ -134,6 +134,15 @@ create table TestsUpdateOnlyKeys
 	IdMaster integer,
     IdChild integer,
     constraint Pk_TestsUpdateOnlyKeys primary key (IdMaster,IdChild)
+);
+
+-- drop table TestsDelete
+create table TestsDelete
+(
+	Id integer,
+    Name varchar(32),
+    Description varchar(256),
+    constraint Pk_TestsDelete primary key (Id)
 );
 
 -- drop table TestsQueryValue
