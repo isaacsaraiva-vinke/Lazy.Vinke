@@ -426,7 +426,7 @@ namespace Lazy.Vinke.Database
         /// <param name="dataRow">The data row</param>
         /// <param name="dataRowState">The data row state to be considered</param>
         /// <returns>The number of affected records</returns>
-        public virtual Int32 Indate(String tableName, DataRow dataRow, DataRowState dataRowState = (DataRowState.Added | DataRowState.Modified))
+        public virtual Int32 Indate(String tableName, DataRow dataRow, DataRowState dataRowState = DataRowState.Added)
         {
             #region Validations
 
