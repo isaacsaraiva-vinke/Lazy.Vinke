@@ -1,2 +1,2 @@
 # Lazy.Vinke.Data
-Shared Data Collection
+Generic Shared Data Collection
