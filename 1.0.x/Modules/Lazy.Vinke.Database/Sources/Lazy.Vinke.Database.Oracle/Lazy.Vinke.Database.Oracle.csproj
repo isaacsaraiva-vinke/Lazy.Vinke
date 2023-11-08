@@ -40,6 +40,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Lazy.Vinke.Data" Version="1.0.0" />
 		<PackageReference Include="Lazy.Vinke.Database" Version="1.0.0" />
 		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.120" />
 	</ItemGroup>

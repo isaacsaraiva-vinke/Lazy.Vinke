@@ -178,6 +178,42 @@ namespace Lazy.Vinke.Database.Properties {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The page data cannot be null!.
+        /// </summary>
+        public static string LazyDatabaseExceptionPageDataNull {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionPageDataNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The page data &quot;order by&quot; cannot be null or empty!.
+        /// </summary>
+        public static string LazyDatabaseExceptionPageDataOrderByNullOrEmpty {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionPageDataOrderByNullOrEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The page data &quot;page number&quot; must be higher than zero!.
+        /// </summary>
+        public static string LazyDatabaseExceptionPageDataPageNumLowerThanOne {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionPageDataPageNumLowerThanOne", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The page data &quot;page size&quot; must be higher than zero!.
+        /// </summary>
+        public static string LazyDatabaseExceptionPageDataPageSizeLowerThanOne {
+            get {
+                return ResourceManager.GetString("LazyDatabaseExceptionPageDataPageSizeLowerThanOne", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a The query page data cannot be null!.
         /// </summary>
         public static string LazyDatabaseExceptionQueryPageDataNull {

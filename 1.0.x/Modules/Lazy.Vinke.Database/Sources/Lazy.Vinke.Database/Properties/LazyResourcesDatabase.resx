@@ -156,6 +156,18 @@
   <data name="LazyDatabaseExceptionKeyValuesTypesFieldsNotMatch" xml:space="preserve">
     <value>The key values array, the key types array and the key fields array must have the same number of elements!</value>
   </data>
+  <data name="LazyDatabaseExceptionPageDataNull" xml:space="preserve">
+    <value>The page data cannot be null!</value>
+  </data>
+  <data name="LazyDatabaseExceptionPageDataOrderByNullOrEmpty" xml:space="preserve">
+    <value>The page data "order by" cannot be null or empty!</value>
+  </data>
+  <data name="LazyDatabaseExceptionPageDataPageNumLowerThanOne" xml:space="preserve">
+    <value>The page data "page number" must be higher than zero!</value>
+  </data>
+  <data name="LazyDatabaseExceptionPageDataPageSizeLowerThanOne" xml:space="preserve">
+    <value>The page data "page size" must be higher than zero!</value>
+  </data>
   <data name="LazyDatabaseExceptionQueryPageDataNull" xml:space="preserve">
     <value>The query page data cannot be null!</value>
   </data>

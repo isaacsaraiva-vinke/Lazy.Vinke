@@ -13,6 +13,7 @@ using System.Collections.Generic;
 
 namespace Lazy.Vinke.Database
 {
+    [Obsolete("LazyQueryPageResult was deprecated! Use LazyPageResult at Lazy.Vinke.Data instead!", false)]
     public class LazyQueryPageResult
     {
         #region Variables

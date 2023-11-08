@@ -39,6 +39,10 @@
 		</EmbeddedResource>
 	</ItemGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Lazy.Vinke.Data" Version="1.0.0" />
+	</ItemGroup>
+
 	<PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">
 		<PostBuildEvent Condition="'$(Configuration)' == 'Debug' and '$(TargetFramework)' == 'net6.0'">
 			xcopy /y $(SolutionDir)Lazy.Vinke.Database\bin\Debug\net6.0\Lazy.Vinke.Database.dll %SystemDrive%%HomePath%\.nuget\Packages\lazy.vinke.database\1.0.0\lib\net6.0\

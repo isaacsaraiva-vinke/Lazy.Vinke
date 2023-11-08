@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
 
+using Lazy.Vinke.Data;
 using Lazy.Vinke.Database;
 using Lazy.Vinke.Database.Properties;
 
@@ -694,6 +695,7 @@ namespace Lazy.Vinke.Database.Oracle
         /// <param name="values">The sql query parameters values</param>
         /// <param name="dbTypes">The sql query parameters types</param>
         /// <returns>The records found</returns>
+        [Obsolete("QueryPage with LazyQueryPageResult and LazyQueryPageData was deprecated! Use QueryPage with LazyPageResult and LazyPageData instead!", false)]
         public virtual LazyQueryPageResult QueryPage(String sql, String tableName, LazyQueryPageData queryPageData, Object[] values, OracleDbType[] dbTypes)
         {
             return QueryPage(sql, tableName, queryPageData, values, dbTypes, LazyDatabaseStatement.Parameter.Extract(sql, this.SqlParameterChar));
@@ -709,6 +711,7 @@ namespace Lazy.Vinke.Database.Oracle
         /// <param name="dbTypes">The sql query parameters types</param>
         /// <param name="parameters">The sql query parameters names</param>
         /// <returns>The records found</returns>
+        [Obsolete("QueryPage with LazyQueryPageResult and LazyQueryPageData was deprecated! Use QueryPage with LazyPageResult and LazyPageData instead!", false)]
         public virtual LazyQueryPageResult QueryPage(String sql, String tableName, LazyQueryPageData queryPageData, Object[] values, OracleDbType[] dbTypes, String[] parameters)
         {
             ValidateParameters(sql, tableName, queryPageData, values, dbTypes, parameters);
@@ -767,6 +770,7 @@ namespace Lazy.Vinke.Database.Oracle
         /// <param name="dbTypes">The sql query parameters types</param>
         /// <param name="parameters">The sql query parameters names</param>
         /// <returns>The records found</returns>
+        [Obsolete("QueryPage with LazyQueryPageResult and LazyQueryPageData was deprecated! Use QueryPage with LazyPageResult and LazyPageData instead!", false)]
         public override LazyQueryPageResult QueryPage(String sql, String tableName, LazyQueryPageData queryPageData, Object[] values, LazyDbType[] dbTypes, String[] parameters)
         {
             ValidateParameters(sql, tableName, queryPageData, values, dbTypes, parameters);
@@ -817,6 +821,137 @@ namespace Lazy.Vinke.Database.Oracle
         }
 
         /// <summary>
+        /// Query paged records from table
+        /// </summary>
+        /// <param name="sql">The sql query</param>
+        /// <param name="tableName">The record table name</param>
+        /// <param name="pageData">The query page data</param>
+        /// <param name="values">The sql query parameters values</param>
+        /// <param name="dbTypes">The sql query parameters types</param>
+        /// <returns>The records found</returns>
+        public virtual LazyPageResult QueryPage(String sql, String tableName, LazyPageData pageData, Object[] values, OracleDbType[] dbTypes)
+        {
+            return QueryPage(sql, tableName, pageData, values, dbTypes, LazyDatabaseStatement.Parameter.Extract(sql, this.SqlParameterChar));
+        }
+
+        /// <summary>
+        /// Query paged records from table
+        /// </summary>
+        /// <param name="sql">The sql query</param>
+        /// <param name="tableName">The record table name</param>
+        /// <param name="pageData">The query page data</param>
+        /// <param name="values">The sql query parameters values</param>
+        /// <param name="dbTypes">The sql query parameters types</param>
+        /// <param name="parameters">The sql query parameters names</param>
+        /// <returns>The records found</returns>
+        public virtual LazyPageResult QueryPage(String sql, String tableName, LazyPageData pageData, Object[] values, OracleDbType[] dbTypes, String[] parameters)
+        {
+            ValidateParameters(sql, tableName, pageData, values, dbTypes, parameters);
+
+            this.sqlCommand.Parameters.Clear();
+
+            if (values != null)
+            {
+                for (int index = 0; index < values.Length; index++)
+                {
+                    OracleParameter sqlParameter = new OracleParameter(parameters[index], dbTypes[index]);
+                    sqlParameter.Value = values[index] != null ? values[index] : DBNull.Value;
+
+                    this.sqlCommand.Parameters.Add(sqlParameter);
+                }
+            }
+
+            if (this.SqlParameterChar != this.DbmsParameterChar)
+                sql = LazyDatabaseStatement.Transform.Replace(sql, this.SqlParameterChar, this.DbmsParameterChar);
+
+            Int32 offset = (pageData.PageNum - 1) * pageData.PageSize;
+
+            sql = String.Format("select count(*) over(), T.* from ({0}) T order by {1} offset {2} row fetch next {3} row only", sql, pageData.OrderBy, offset, pageData.PageSize);
+
+            this.sqlCommand.CommandText = sql;
+            this.sqlCommand.CommandType = CommandType.Text;
+            this.sqlCommand.Transaction = this.sqlTransaction;
+            this.sqlCommand.BindByName = this.BindByName;
+
+            DataTable dataTable = new DataTable(tableName);
+            this.sqlDataAdapter.SelectCommand = this.sqlCommand;
+            this.sqlDataAdapter.Fill(dataTable);
+
+            LazyPageResult pageResult = new LazyPageResult();
+            pageResult.PageNum = pageData.PageNum;
+            pageResult.PageSize = pageData.PageSize;
+            pageResult.PageItems = dataTable.Rows.Count;
+            pageResult.CurrentCount = dataTable.Rows.Count > 0 ? offset + dataTable.Rows.Count : 0;
+            pageResult.TotalCount = dataTable.Rows.Count > 0 ? Convert.ToInt32(dataTable.Rows[0][0]) : 0;
+            pageResult.PageCount = Convert.ToInt32(Math.Ceiling(((Decimal)pageResult.TotalCount) / ((Decimal)pageResult.PageSize)));
+            pageResult.HasNextPage = pageResult.CurrentCount < pageResult.TotalCount;
+            pageResult.DataTable = dataTable;
+
+            dataTable.Columns.RemoveAt(0);
+
+            return pageResult;
+        }
+
+        /// <summary>
+        /// Query paged records from table
+        /// </summary>
+        /// <param name="sql">The sql query</param>
+        /// <param name="tableName">The record table name</param>
+        /// <param name="pageData">The query page data</param>
+        /// <param name="values">The sql query parameters values</param>
+        /// <param name="dbTypes">The sql query parameters types</param>
+        /// <param name="parameters">The sql query parameters names</param>
+        /// <returns>The records found</returns>
+        public override LazyPageResult QueryPage(String sql, String tableName, LazyPageData pageData, Object[] values, LazyDbType[] dbTypes, String[] parameters)
+        {
+            ValidateParameters(sql, tableName, pageData, values, dbTypes, parameters);
+
+            this.sqlCommand.Parameters.Clear();
+
+            if (values != null)
+            {
+                for (int index = 0; index < values.Length; index++)
+                {
+                    OracleDbType dbType = (OracleDbType)ConvertLazyDbTypeToDbmsType(dbTypes[index]);
+                    OracleParameter sqlParameter = new OracleParameter(parameters[index], dbType);
+                    sqlParameter.Value = (values[index] != null && dbTypes[index] != LazyDbType.DBNull) ? values[index] : DBNull.Value;
+
+                    this.sqlCommand.Parameters.Add(sqlParameter);
+                }
+            }
+
+            if (this.SqlParameterChar != this.DbmsParameterChar)
+                sql = LazyDatabaseStatement.Transform.Replace(sql, this.SqlParameterChar, this.DbmsParameterChar);
+
+            Int32 offset = (pageData.PageNum - 1) * pageData.PageSize;
+
+            sql = String.Format("select count(*) over(), T.* from ({0}) T order by {1} offset {2} row fetch next {3} row only", sql, pageData.OrderBy, offset, pageData.PageSize);
+
+            this.sqlCommand.CommandText = sql;
+            this.sqlCommand.CommandType = CommandType.Text;
+            this.sqlCommand.Transaction = this.sqlTransaction;
+            this.sqlCommand.BindByName = this.BindByName;
+
+            DataTable dataTable = new DataTable(tableName);
+            this.sqlDataAdapter.SelectCommand = this.sqlCommand;
+            this.sqlDataAdapter.Fill(dataTable);
+
+            LazyPageResult pageResult = new LazyPageResult();
+            pageResult.PageNum = pageData.PageNum;
+            pageResult.PageSize = pageData.PageSize;
+            pageResult.PageItems = dataTable.Rows.Count;
+            pageResult.CurrentCount = dataTable.Rows.Count > 0 ? offset + dataTable.Rows.Count : 0;
+            pageResult.TotalCount = dataTable.Rows.Count > 0 ? Convert.ToInt32(dataTable.Rows[0][0]) : 0;
+            pageResult.PageCount = Convert.ToInt32(Math.Ceiling(((Decimal)pageResult.TotalCount) / ((Decimal)pageResult.PageSize)));
+            pageResult.HasNextPage = pageResult.CurrentCount < pageResult.TotalCount;
+            pageResult.DataTable = dataTable;
+
+            dataTable.Columns.RemoveAt(0);
+
+            return pageResult;
+        }
+
+        /// <summary>
         /// Select records from table filtering by array collection
         /// </summary>
         /// <param name="tableName">The table name</param>
@@ -861,13 +996,13 @@ namespace Lazy.Vinke.Database.Oracle
         /// Select paged records from table filtering by array collection
         /// </summary>
         /// <param name="tableName">The table name</param>
-        /// <param name="queryPageData">The query page data</param>
+        /// <param name="pageData">The query page data</param>
         /// <param name="values">The values array</param>
         /// <param name="dbTypes">The types array</param>
         /// <param name="fields">The fields array</param>
         /// <param name="returnFields">The return fields array</param>
         /// <returns>The paged records found</returns>
-        public override LazyQueryPageResult Select(String tableName, LazyQueryPageData queryPageData, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] returnFields = null)
+        public override LazyPageResult Select(String tableName, LazyPageData pageData, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] returnFields = null)
         {
             #region Validations
 
@@ -896,7 +1031,7 @@ namespace Lazy.Vinke.Database.Oracle
 
             String sql = SelectQueryFrom(tableName, fields, returnFields);
 
-            return QueryPage(sql, tableName, queryPageData, values, dbTypes, fields);
+            return QueryPage(sql, tableName, pageData, values, dbTypes, fields);
         }
 
         /// <summary>
@@ -1220,6 +1355,7 @@ namespace Lazy.Vinke.Database.Oracle
         /// <param name="values">The sql statement parameters values</param>
         /// <param name="dbTypes">The sql statement parameters types</param>
         /// <param name="parameters">The sql statement parameters names</param>
+        [Obsolete("ValidateParameters with LazyQueryPageData was deprecated! Use ValidateParameters with LazyPageData instead!", false)]
         protected virtual void ValidateParameters(String sql, String tableName, LazyQueryPageData queryPageData, Object[] values, OracleDbType[] dbTypes, String[] parameters)
         {
             if (this.ConnectionState == ConnectionState.Closed)
@@ -1242,6 +1378,51 @@ namespace Lazy.Vinke.Database.Oracle
 
             if (String.IsNullOrWhiteSpace(queryPageData.OrderBy) == true)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionQueryPageDataOrderByNullOrEmpty);
+
+            if (values == null && (dbTypes != null || parameters != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (dbTypes == null && (values != null || parameters != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (parameters == null && (values != null || dbTypes != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (values != null && dbTypes != null && parameters != null && (values.Length != dbTypes.Length || values.Length != parameters.Length))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+        }
+
+        /// <summary>
+        /// Validate parameters
+        /// </summary>
+        /// <param name="sql">The sql statement</param>
+        /// <param name="tableName">The record table name</param>
+        /// <param name="pageData">The query page data</param>
+        /// <param name="values">The sql statement parameters values</param>
+        /// <param name="dbTypes">The sql statement parameters types</param>
+        /// <param name="parameters">The sql statement parameters names</param>
+        protected virtual void ValidateParameters(String sql, String tableName, LazyPageData pageData, Object[] values, OracleDbType[] dbTypes, String[] parameters)
+        {
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrWhiteSpace(sql) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionStatementNullOrEmpty);
+
+            if (tableName == null)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNull);
+
+            if (pageData == null)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionPageDataNull);
+
+            if (pageData.PageNum < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionPageDataPageNumLowerThanOne);
+
+            if (pageData.PageSize < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionPageDataPageSizeLowerThanOne);
+
+            if (String.IsNullOrWhiteSpace(pageData.OrderBy) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionPageDataOrderByNullOrEmpty);
 
             if (values == null && (dbTypes != null || parameters != null))
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);

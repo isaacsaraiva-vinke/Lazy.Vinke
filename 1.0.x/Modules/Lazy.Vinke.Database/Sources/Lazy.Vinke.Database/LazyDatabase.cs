@@ -11,6 +11,7 @@ using System.IO;
 using System.Data;
 using System.Collections.Generic;
 
+using Lazy.Vinke.Data;
 using Lazy.Vinke.Database.Properties;
 
 namespace Lazy.Vinke.Database
@@ -259,6 +260,7 @@ namespace Lazy.Vinke.Database
         /// <param name="queryPageData">The query page data</param>
         /// <param name="values">The sql query parameters values</param>
         /// <returns>The paged records found</returns>
+        [Obsolete("QueryPage with LazyQueryPageResult and LazyQueryPageData was deprecated! Use QueryPage with LazyPageResult and LazyPageData instead!", false)]
         public virtual LazyQueryPageResult QueryPage(String sql, String tableName, LazyQueryPageData queryPageData, Object[] values)
         {
             return QueryPage(sql, tableName, queryPageData, values, ConvertSystemTypeToLazyDbType(values));
@@ -273,6 +275,7 @@ namespace Lazy.Vinke.Database
         /// <param name="values">The sql query parameters values</param>
         /// <param name="dbTypes">The sql query parameters types</param>
         /// <returns>The paged records found</returns>
+        [Obsolete("QueryPage with LazyQueryPageResult and LazyQueryPageData was deprecated! Use QueryPage with LazyPageResult and LazyPageData instead!", false)]
         public virtual LazyQueryPageResult QueryPage(String sql, String tableName, LazyQueryPageData queryPageData, Object[] values, LazyDbType[] dbTypes)
         {
             return QueryPage(sql, tableName, queryPageData, values, dbTypes, LazyDatabaseStatement.Parameter.Extract(sql, this.SqlParameterChar));
@@ -288,7 +291,47 @@ namespace Lazy.Vinke.Database
         /// <param name="dbTypes">The sql query parameters types</param>
         /// <param name="parameters">The sql query parameters names</param>
         /// <returns>The paged records found</returns>
+        [Obsolete("QueryPage with LazyQueryPageResult and LazyQueryPageData was deprecated! Use QueryPage with LazyPageResult and LazyPageData instead!", false)]
         public abstract LazyQueryPageResult QueryPage(String sql, String tableName, LazyQueryPageData queryPageData, Object[] values, LazyDbType[] dbTypes, String[] parameters);
+
+        /// <summary>
+        /// Query paged records from table
+        /// </summary>
+        /// <param name="sql">The sql query</param>
+        /// <param name="tableName">The record table name</param>
+        /// <param name="pageData">The query page data</param>
+        /// <param name="values">The sql query parameters values</param>
+        /// <returns>The paged records found</returns>
+        public virtual LazyPageResult QueryPage(String sql, String tableName, LazyPageData pageData, Object[] values)
+        {
+            return QueryPage(sql, tableName, pageData, values, ConvertSystemTypeToLazyDbType(values));
+        }
+
+        /// <summary>
+        /// Query paged records from table
+        /// </summary>
+        /// <param name="sql">The sql query</param>
+        /// <param name="tableName">The record table name</param>
+        /// <param name="pageData">The query page data</param>
+        /// <param name="values">The sql query parameters values</param>
+        /// <param name="dbTypes">The sql query parameters types</param>
+        /// <returns>The paged records found</returns>
+        public virtual LazyPageResult QueryPage(String sql, String tableName, LazyPageData pageData, Object[] values, LazyDbType[] dbTypes)
+        {
+            return QueryPage(sql, tableName, pageData, values, dbTypes, LazyDatabaseStatement.Parameter.Extract(sql, this.SqlParameterChar));
+        }
+
+        /// <summary>
+        /// Query paged records from table
+        /// </summary>
+        /// <param name="sql">The sql query</param>
+        /// <param name="tableName">The record table name</param>
+        /// <param name="pageData">The query page data</param>
+        /// <param name="values">The sql query parameters values</param>
+        /// <param name="dbTypes">The sql query parameters types</param>
+        /// <param name="parameters">The sql query parameters names</param>
+        /// <returns>The paged records found</returns>
+        public abstract LazyPageResult QueryPage(String sql, String tableName, LazyPageData pageData, Object[] values, LazyDbType[] dbTypes, String[] parameters);
 
         /// <summary>
         /// Select records from table filtering by data row primary key columns
@@ -325,12 +368,12 @@ namespace Lazy.Vinke.Database
         /// Select paged records from table filtering by data row primary key columns
         /// </summary>
         /// <param name="tableName">The table name</param>
-        /// <param name="queryPageData">The query page data</param>
+        /// <param name="pageData">The query page data</param>
         /// <param name="dataRow">The data row to be used on the filter</param>
         /// <param name="dataRowState">The data row state to be considered</param>
         /// <param name="returnFields">The return fields array</param>
         /// <returns>The paged records found</returns>
-        public virtual LazyQueryPageResult Select(String tableName, LazyQueryPageData queryPageData, DataRow dataRow, DataRowState dataRowState = DataRowState.Unchanged, String[] returnFields = null)
+        public virtual LazyPageResult Select(String tableName, LazyPageData pageData, DataRow dataRow, DataRowState dataRowState = DataRowState.Unchanged, String[] returnFields = null)
         {
             #region Validations
 
@@ -350,7 +393,7 @@ namespace Lazy.Vinke.Database
 
             (Object[] values, LazyDbType[] dbTypes, String[] fields) = SelectFrom(dataRow, dataRowState);
 
-            return Select(tableName, queryPageData, values, dbTypes, fields, returnFields);
+            return Select(tableName, pageData, values, dbTypes, fields, returnFields);
         }
 
         /// <summary>
@@ -368,13 +411,13 @@ namespace Lazy.Vinke.Database
         /// Select paged records from table filtering by array collection
         /// </summary>
         /// <param name="tableName">The table name</param>
-        /// <param name="queryPageData">The query page data</param>
+        /// <param name="pageData">The query page data</param>
         /// <param name="values">The values array</param>
         /// <param name="dbTypes">The types array</param>
         /// <param name="fields">The fields array</param>
         /// <param name="returnFields">The return fields array</param>
         /// <returns>The paged records found</returns>
-        public abstract LazyQueryPageResult Select(String tableName, LazyQueryPageData queryPageData, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] returnFields = null);
+        public abstract LazyPageResult Select(String tableName, LazyPageData pageData, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] returnFields = null);
 
         /// <summary>
         /// Insert data row on table
@@ -679,6 +722,7 @@ namespace Lazy.Vinke.Database
         /// <param name="values">The sql statement parameters values</param>
         /// <param name="dbTypes">The sql statement parameters types</param>
         /// <param name="parameters">The sql statement parameters names</param>
+        [Obsolete("ValidateParameters with LazyQueryPageData was deprecated! Use ValidateParameters with LazyPageData instead!", false)]
         protected virtual void ValidateParameters(String sql, String tableName, LazyQueryPageData queryPageData, Object[] values, LazyDbType[] dbTypes, String[] parameters)
         {
             if (this.ConnectionState == ConnectionState.Closed)
@@ -701,6 +745,51 @@ namespace Lazy.Vinke.Database
 
             if (String.IsNullOrWhiteSpace(queryPageData.OrderBy) == true)
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionQueryPageDataOrderByNullOrEmpty);
+
+            if (values == null && (dbTypes != null || parameters != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (dbTypes == null && (values != null || parameters != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (parameters == null && (values != null || dbTypes != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+
+            if (values != null && dbTypes != null && parameters != null && (values.Length != dbTypes.Length || values.Length != parameters.Length))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
+        }
+
+        /// <summary>
+        /// Validate parameters
+        /// </summary>
+        /// <param name="sql">The sql statement</param>
+        /// <param name="tableName">The record table name</param>
+        /// <param name="pageData">The query page data</param>
+        /// <param name="values">The sql statement parameters values</param>
+        /// <param name="dbTypes">The sql statement parameters types</param>
+        /// <param name="parameters">The sql statement parameters names</param>
+        protected virtual void ValidateParameters(String sql, String tableName, LazyPageData pageData, Object[] values, LazyDbType[] dbTypes, String[] parameters)
+        {
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrWhiteSpace(sql) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionStatementNullOrEmpty);
+
+            if (tableName == null)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNull);
+
+            if (pageData == null)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionPageDataNull);
+
+            if (pageData.PageNum < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionPageDataPageNumLowerThanOne);
+
+            if (pageData.PageSize < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionPageDataPageSizeLowerThanOne);
+
+            if (String.IsNullOrWhiteSpace(pageData.OrderBy) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionPageDataOrderByNullOrEmpty);
 
             if (values == null && (dbTypes != null || parameters != null))
                 throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesParametersNotMatch);
