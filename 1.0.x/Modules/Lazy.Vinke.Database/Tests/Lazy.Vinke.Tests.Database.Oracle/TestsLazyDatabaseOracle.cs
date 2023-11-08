@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
 
+using Lazy.Vinke.Data;
 using Lazy.Vinke.Database;
 using Lazy.Vinke.Database.Properties;
 using Lazy.Vinke.Database.Oracle;

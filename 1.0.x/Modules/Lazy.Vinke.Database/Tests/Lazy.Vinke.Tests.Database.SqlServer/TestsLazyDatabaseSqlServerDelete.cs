@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using Microsoft.Data.SqlTypes;
 
+using Lazy.Vinke.Data;
 using Lazy.Vinke.Database;
 using Lazy.Vinke.Database.Properties;
 using Lazy.Vinke.Database.SqlServer;

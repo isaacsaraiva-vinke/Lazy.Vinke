@@ -11,6 +11,7 @@ using System.IO;
 using System.Data;
 using System.Collections.Generic;
 
+using Lazy.Vinke.Data;
 using Lazy.Vinke.Database;
 
 namespace Lazy.Vinke.Tests.Database

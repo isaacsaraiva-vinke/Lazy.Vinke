@@ -12,6 +12,7 @@ using System.Data;
 using System.Reflection;
 using System.Collections.Generic;
 
+using Lazy.Vinke.Data;
 using Lazy.Vinke.Database;
 using Lazy.Vinke.Database.Properties;
 

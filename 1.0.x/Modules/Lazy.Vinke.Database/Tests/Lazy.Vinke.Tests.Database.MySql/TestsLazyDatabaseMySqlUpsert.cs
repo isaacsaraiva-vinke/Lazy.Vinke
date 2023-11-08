@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using MySql.Data.Types;
 
+using Lazy.Vinke.Data;
 using Lazy.Vinke.Database;
 using Lazy.Vinke.Database.Properties;
 using Lazy.Vinke.Database.MySql;
