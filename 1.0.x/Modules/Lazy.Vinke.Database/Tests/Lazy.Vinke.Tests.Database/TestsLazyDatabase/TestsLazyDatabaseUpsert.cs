@@ -78,7 +78,7 @@ namespace Lazy.Vinke.Tests.Database
             Assert.AreEqual(exceptionDataRowNoPrimaryKey.Message, LazyResourcesDatabase.LazyDatabaseExceptionDataRowPrimaryKeyColumnsMissing);
         }
 
-        public virtual void Upsert_Validations_Arrays_Exception()
+        public virtual void Upsert_Validations_LazyDbTypeArrays_Exception()
         {
             // Arrange
             String tableName = "TestsUpsert";
