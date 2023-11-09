@@ -109,6 +109,54 @@ namespace Lazy.Vinke.Tests.Database.SqlServer
         }
 
         [TestMethod]
+        public virtual void Indate_Arrays_Single_Success()
+        {
+            // Arrange
+            Int32 rowsAffected = 0;
+            String tableName = "TestsIndate";
+            String testCode = "Indate_Arrays_Single_Success";
+            String sqlDelete = "delete from " + tableName + " where TestCode = '" + testCode + "'";
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+
+            String[] fields = new String[] { "TestCode", "Id", "Item" };
+            SqlDbType[] dbTypes = new SqlDbType[] { SqlDbType.VarChar, SqlDbType.Int, SqlDbType.VarChar };
+            List<Object[]> valuesList = new List<Object[]>() {
+                new Object[] { testCode, 1, "Lazy" },
+                new Object[] { testCode, 2, "Vinke" },
+                new Object[] { testCode, 3, "Tests" },
+                new Object[] { testCode, 4, "Database" }
+            };
+
+            LazyDatabaseSqlServer databaseSqlServer = (LazyDatabaseSqlServer)this.Database;
+
+            databaseSqlServer.Insert(tableName, valuesList[0], dbTypes, fields);
+            databaseSqlServer.Insert(tableName, valuesList[1], dbTypes, fields);
+            databaseSqlServer.Insert(tableName, valuesList[2], dbTypes, fields);
+            databaseSqlServer.Insert(tableName, valuesList[3], dbTypes, fields);
+
+            valuesList = new List<Object[]>() {
+                new Object[] { testCode, 3, "Isaac" },
+                new Object[] { testCode, 4, "Bezerra" },
+                new Object[] { testCode, 5, "Saraiva" }
+            };
+
+            String[] keyFields = new String[] { "TestCode", "Id" };
+
+            // Act
+            rowsAffected += databaseSqlServer.Indate(tableName, valuesList[0], dbTypes, fields, keyFields);
+            rowsAffected += databaseSqlServer.Indate(tableName, valuesList[1], dbTypes, fields, keyFields);
+            rowsAffected += databaseSqlServer.Indate(tableName, valuesList[2], dbTypes, fields, keyFields);
+
+            // Assert
+            Assert.AreEqual(rowsAffected, 3);
+
+            // Clean
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+        }
+
+        [TestMethod]
         public override void Indate_Validations_DataRow_Exception()
         {
             base.Indate_Validations_DataRow_Exception();

@@ -91,6 +91,39 @@ namespace Lazy.Vinke.Tests.Database.SqlServer
         }
 
         [TestMethod]
+        public virtual void Insert_Arrays_Single_Success()
+        {
+            // Arrange
+            Int32 rowsAffected = 0;
+            String tableName = "TestsInsert";
+            String sqlDelete = "delete from " + tableName + " where Id in (4000,5000,6000)";
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+
+            String[] fields = new String[] { "Id", "ColumnVarChar", "ColumnDecimal", "ColumnDateTime", "ColumnByte", "ColumnChar" };
+            SqlDbType[] dbTypes = new SqlDbType[] { SqlDbType.Int, SqlDbType.VarChar, SqlDbType.Decimal, SqlDbType.DateTime, SqlDbType.SmallInt, SqlDbType.Char };
+            List<Object[]> valuesList = new List<Object[]>() {
+                new Object[] { 4000, "Item 4000", 4000.1m, new DateTime(2023, 11, 09, 18, 00, 30), 2, '1' },
+                new Object[] { 5000, "Item 5000", 5000.1m, new DateTime(2023, 11, 09, 18, 00, 30), 4, '0' },
+                new Object[] { 6000, "Item 6000", 6000.1m, new DateTime(2023, 11, 09, 18, 00, 30), 8, '1' }
+            };
+
+            LazyDatabaseSqlServer databaseSqlServer = (LazyDatabaseSqlServer)this.Database;
+
+            // Act
+            rowsAffected += databaseSqlServer.Insert(tableName, valuesList[0], dbTypes, fields);
+            rowsAffected += databaseSqlServer.Insert(tableName, valuesList[1], dbTypes, fields);
+            rowsAffected += databaseSqlServer.Insert(tableName, valuesList[2], dbTypes, fields);
+
+            // Assert
+            Assert.AreEqual(rowsAffected, 3);
+
+            // Clean
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+        }
+
+        [TestMethod]
         public override void Insert_Validations_DataRow_Exception()
         {
             base.Insert_Validations_DataRow_Exception();

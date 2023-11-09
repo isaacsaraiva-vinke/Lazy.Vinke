@@ -117,6 +117,52 @@ namespace Lazy.Vinke.Tests.Database.Postgre
         }
 
         [TestMethod]
+        public virtual void Update_Arrays_ValuesAndKeys_Success()
+        {
+            // Arrange
+            Int32 rowsAffected = 0;
+            String tableName = "TestsUpdate";
+            String sqlDelete = "delete from " + tableName + " where Id between 4000 and 6000";
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+
+            String[] fields = new String[] { "Id", "ColumnVarChar", "ColumnDecimal", "ColumnDateTime", "ColumnByte", "ColumnChar" };
+            NpgsqlDbType[] dbTypes = new NpgsqlDbType[] { NpgsqlDbType.Integer, NpgsqlDbType.Varchar, NpgsqlDbType.Numeric, NpgsqlDbType.Timestamp, NpgsqlDbType.Smallint, NpgsqlDbType.Char };
+            List<Object[]> valuesList = new List<Object[]>() {
+                new Object[] { 4000, "Item 4000", 4000.0m, new DateTime(2023, 11, 09, 17, 25, 30), 2, '1' },
+                new Object[] { 5000, "Item 5000", 5000.0m, new DateTime(2023, 11, 09, 17, 25, 30), 4, '0' }
+            };
+
+            LazyDatabasePostgre databasePostgre = (LazyDatabasePostgre)this.Database;
+
+            databasePostgre.Insert(tableName, valuesList[0], dbTypes, fields);
+            databasePostgre.Insert(tableName, valuesList[1], dbTypes, fields);
+
+            valuesList = new List<Object[]>() {
+                new Object[] { 4004, "Item 4004", 4004.4m, new DateTime(2023, 11, 09, 17, 55, 30), 16, '0' },
+                new Object[] { 5005, "Item 5005", 5005.5m, new DateTime(2023, 11, 09, 17, 55, 30), 32, '1' }
+            };
+
+            String[] keyFields = new String[] { "Id" };
+            NpgsqlDbType[] keyDbTypes = new NpgsqlDbType[] { NpgsqlDbType.Integer };
+            List<Object[]> keyValuesList = new List<Object[]>() {
+                new Object[] { 4000 },
+                new Object[] { 5000 }
+            };
+
+            // Act
+            rowsAffected += databasePostgre.Update(tableName, valuesList[0], dbTypes, fields, keyValuesList[0], keyDbTypes, keyFields);
+            rowsAffected += databasePostgre.Update(tableName, valuesList[1], dbTypes, fields, keyValuesList[1], keyDbTypes, keyFields);
+
+            // Assert
+            Assert.AreEqual(rowsAffected, 2);
+
+            // Clean
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+        }
+
+        [TestMethod]
         public override void Update_Validations_DataRow_Exception()
         {
             base.Update_Validations_DataRow_Exception();
