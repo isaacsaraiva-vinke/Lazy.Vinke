@@ -54,10 +54,12 @@ namespace Lazy.Vinke.Tests.Database.SqlServer
             SqlDbType[] dbTypesLess = new SqlDbType[] { SqlDbType.Int };
             String[] parametersLess = new String[] { "Id" };
 
+            LazyPageData pageDataNull = null;
+
             Exception exceptionConnection = null;
             Exception exceptionSqlNull = null;
             Exception exceptionTableNameNull = null;
-            //Exception exceptionPageDataNull = null;
+            Exception exceptionPageDataNull = null;
             Exception exceptionPageDataPageNumZero = null;
             Exception exceptionPageDataPageSizeZero = null;
             Exception exceptionPageDataOrderByEmpty = null;
@@ -79,7 +81,7 @@ namespace Lazy.Vinke.Tests.Database.SqlServer
 
             try { databaseSqlServer.QueryPage(null, tableName, pageData, values, dbTypes, parameters); } catch (Exception exp) { exceptionSqlNull = exp; }
             try { databaseSqlServer.QueryPage(sql, null, pageData, values, dbTypes, parameters); } catch (Exception exp) { exceptionTableNameNull = exp; }
-            //try { databaseSqlServer.QueryPage(sql, tableName, null, values, dbTypes, parameters); } catch (Exception exp) { exceptionPageDataNull = exp; }
+            try { databaseSqlServer.QueryPage(sql, tableName, pageDataNull, values, dbTypes, parameters); } catch (Exception exp) { exceptionPageDataNull = exp; }
             try { databaseSqlServer.QueryPage(sql, tableName, pageDataPageNumZero, values, dbTypes, parameters); } catch (Exception exp) { exceptionPageDataPageNumZero = exp; }
             try { databaseSqlServer.QueryPage(sql, tableName, pageDataPageSizeZero, values, dbTypes, parameters); } catch (Exception exp) { exceptionPageDataPageSizeZero = exp; }
             try { databaseSqlServer.QueryPage(sql, tableName, pageDataOrderByEmpty, values, dbTypes, parameters); } catch (Exception exp) { exceptionPageDataOrderByEmpty = exp; }
@@ -95,7 +97,7 @@ namespace Lazy.Vinke.Tests.Database.SqlServer
             Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
             Assert.AreEqual(exceptionSqlNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionStatementNullOrEmpty);
             Assert.AreEqual(exceptionTableNameNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameNull);
-            //Assert.AreEqual(exceptionPageDataNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionPageDataNull);
+            Assert.AreEqual(exceptionPageDataNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionPageDataNull);
             Assert.AreEqual(exceptionPageDataPageNumZero.Message, LazyResourcesDatabase.LazyDatabaseExceptionPageDataPageNumLowerThanOne);
             Assert.AreEqual(exceptionPageDataPageSizeZero.Message, LazyResourcesDatabase.LazyDatabaseExceptionPageDataPageSizeLowerThanOne);
             Assert.AreEqual(exceptionPageDataOrderByEmpty.Message, LazyResourcesDatabase.LazyDatabaseExceptionPageDataOrderByNullOrEmpty);
@@ -319,10 +321,12 @@ namespace Lazy.Vinke.Tests.Database.SqlServer
             SqlDbType[] dbTypesLess = new SqlDbType[] { SqlDbType.Int };
             String[] parametersLess = new String[] { "Id" };
 
+            LazyQueryPageData queryPageDataNull = null;
+
             Exception exceptionConnection = null;
             Exception exceptionSqlNull = null;
             Exception exceptionTableNameNull = null;
-            //Exception exceptionQueryPageDataNull = null;
+            Exception exceptionQueryPageDataNull = null;
             Exception exceptionQueryPageDataPageNumZero = null;
             Exception exceptionQueryPageDataPageSizeZero = null;
             Exception exceptionQueryPageDataOrderByEmpty = null;
@@ -344,7 +348,7 @@ namespace Lazy.Vinke.Tests.Database.SqlServer
 
             try { databaseSqlServer.QueryPage(null, tableName, queryPageData, values, dbTypes, parameters); } catch (Exception exp) { exceptionSqlNull = exp; }
             try { databaseSqlServer.QueryPage(sql, null, queryPageData, values, dbTypes, parameters); } catch (Exception exp) { exceptionTableNameNull = exp; }
-            //try { databaseSqlServer.QueryPage(sql, tableName, null, values, dbTypes, parameters); } catch (Exception exp) { exceptionQueryPageDataNull = exp; }
+            try { databaseSqlServer.QueryPage(sql, tableName, queryPageDataNull, values, dbTypes, parameters); } catch (Exception exp) { exceptionQueryPageDataNull = exp; }
             try { databaseSqlServer.QueryPage(sql, tableName, queryPageDataPageNumZero, values, dbTypes, parameters); } catch (Exception exp) { exceptionQueryPageDataPageNumZero = exp; }
             try { databaseSqlServer.QueryPage(sql, tableName, queryPageDataPageSizeZero, values, dbTypes, parameters); } catch (Exception exp) { exceptionQueryPageDataPageSizeZero = exp; }
             try { databaseSqlServer.QueryPage(sql, tableName, queryPageDataOrderByEmpty, values, dbTypes, parameters); } catch (Exception exp) { exceptionQueryPageDataOrderByEmpty = exp; }
@@ -360,7 +364,7 @@ namespace Lazy.Vinke.Tests.Database.SqlServer
             Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
             Assert.AreEqual(exceptionSqlNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionStatementNullOrEmpty);
             Assert.AreEqual(exceptionTableNameNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameNull);
-            //Assert.AreEqual(exceptionQueryPageDataNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionQueryPageDataNull);
+            Assert.AreEqual(exceptionQueryPageDataNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionQueryPageDataNull);
             Assert.AreEqual(exceptionQueryPageDataPageNumZero.Message, LazyResourcesDatabase.LazyDatabaseExceptionQueryPageDataPageNumLowerThanOne);
             Assert.AreEqual(exceptionQueryPageDataPageSizeZero.Message, LazyResourcesDatabase.LazyDatabaseExceptionQueryPageDataPageSizeLowerThanOne);
             Assert.AreEqual(exceptionQueryPageDataOrderByEmpty.Message, LazyResourcesDatabase.LazyDatabaseExceptionQueryPageDataOrderByNullOrEmpty);
