@@ -35,15 +35,71 @@ namespace Lazy.Vinke.Tests.Database.Oracle
         }
 
         [TestMethod]
+        public virtual void Insert_Validations_DbmsDbTypeArrays_Exception()
+        {
+            // Arrange
+            String tableName = "TestsInsert";
+            String subQuery = "(select * from TestsInsert)";
+
+            Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
+            OracleDbType[] dbTypes = new OracleDbType[] { OracleDbType.Int32, OracleDbType.Varchar2 };
+            String[] fields = new String[] { "Id", "Name" };
+
+            Object[] valuesLess = new Object[] { 1 };
+            OracleDbType[] dbTypesLess = new OracleDbType[] { OracleDbType.Decimal };
+            String[] fieldsLess = new String[] { "Amount" };
+
+            Exception exceptionConnection = null;
+            Exception exceptionTableNameNull = null;
+            Exception exceptionSubQueryAsTableName = null;
+            Exception exceptionValuesNullButOthers = null;
+            Exception exceptionDbTypesNullButOthers = null;
+            Exception exceptionFieldsNullButOthers = null;
+            Exception exceptionValuesLessButOthers = null;
+            Exception exceptionDbTypesLessButOthers = null;
+            Exception exceptionFieldsLessButOthers = null;
+
+            LazyDatabaseOracle databaseOracle = (LazyDatabaseOracle)this.Database;
+
+            // Act
+            databaseOracle.CloseConnection();
+
+            try { databaseOracle.Insert(tableName, values, dbTypes, fields); } catch (Exception exp) { exceptionConnection = exp; }
+
+            databaseOracle.OpenConnection();
+
+            try { databaseOracle.Insert(null, values, dbTypes, fields); } catch (Exception exp) { exceptionTableNameNull = exp; }
+            try { databaseOracle.Insert(subQuery, values, dbTypes, fields); } catch (Exception exp) { exceptionSubQueryAsTableName = exp; }
+            try { databaseOracle.Insert(tableName, null, dbTypes, fields); } catch (Exception exp) { exceptionValuesNullButOthers = exp; }
+            try { databaseOracle.Insert(tableName, values, null, fields); } catch (Exception exp) { exceptionDbTypesNullButOthers = exp; }
+            try { databaseOracle.Insert(tableName, values, dbTypes, null); } catch (Exception exp) { exceptionFieldsNullButOthers = exp; }
+
+            try { databaseOracle.Insert(tableName, valuesLess, dbTypes, fields); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
+            try { databaseOracle.Insert(tableName, values, dbTypesLess, fields); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
+            try { databaseOracle.Insert(tableName, values, dbTypes, fieldsLess); } catch (Exception exp) { exceptionFieldsLessButOthers = exp; }
+
+            // Assert
+            Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+            Assert.AreEqual(exceptionTableNameNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+            Assert.AreEqual(exceptionSubQueryAsTableName.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+            Assert.AreEqual(exceptionValuesNullButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesNullOrZeroLength);
+            Assert.AreEqual(exceptionDbTypesNullButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionTypesNullOrZeroLength);
+            Assert.AreEqual(exceptionFieldsNullButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
+            Assert.AreEqual(exceptionValuesLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+            Assert.AreEqual(exceptionDbTypesLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+            Assert.AreEqual(exceptionFieldsLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+        }
+
+        [TestMethod]
         public override void Insert_Validations_DataRow_Exception()
         {
             base.Insert_Validations_DataRow_Exception();
         }
 
         [TestMethod]
-        public override void Insert_Validations_Arrays_Exception()
+        public override void Insert_Validations_LazyDbTypeArrays_Exception()
         {
-            base.Insert_Validations_Arrays_Exception();
+            base.Insert_Validations_LazyDbTypeArrays_Exception();
         }
 
         [TestMethod]

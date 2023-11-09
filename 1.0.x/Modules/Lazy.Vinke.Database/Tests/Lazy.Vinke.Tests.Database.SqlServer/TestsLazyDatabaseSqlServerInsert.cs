@@ -35,15 +35,71 @@ namespace Lazy.Vinke.Tests.Database.SqlServer
         }
 
         [TestMethod]
+        public virtual void Insert_Validations_DbmsDbTypeArrays_Exception()
+        {
+            // Arrange
+            String tableName = "TestsInsert";
+            String subQuery = "(select * from TestsInsert)";
+
+            Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
+            SqlDbType[] dbTypes = new SqlDbType[] { SqlDbType.Int, SqlDbType.VarChar };
+            String[] fields = new String[] { "Id", "Name" };
+
+            Object[] valuesLess = new Object[] { 1 };
+            SqlDbType[] dbTypesLess = new SqlDbType[] { SqlDbType.Decimal };
+            String[] fieldsLess = new String[] { "Amount" };
+
+            Exception exceptionConnection = null;
+            Exception exceptionTableNameNull = null;
+            Exception exceptionSubQueryAsTableName = null;
+            Exception exceptionValuesNullButOthers = null;
+            Exception exceptionDbTypesNullButOthers = null;
+            Exception exceptionFieldsNullButOthers = null;
+            Exception exceptionValuesLessButOthers = null;
+            Exception exceptionDbTypesLessButOthers = null;
+            Exception exceptionFieldsLessButOthers = null;
+
+            LazyDatabaseSqlServer databaseSqlServer = (LazyDatabaseSqlServer)this.Database;
+
+            // Act
+            databaseSqlServer.CloseConnection();
+
+            try { databaseSqlServer.Insert(tableName, values, dbTypes, fields); } catch (Exception exp) { exceptionConnection = exp; }
+
+            databaseSqlServer.OpenConnection();
+
+            try { databaseSqlServer.Insert(null, values, dbTypes, fields); } catch (Exception exp) { exceptionTableNameNull = exp; }
+            try { databaseSqlServer.Insert(subQuery, values, dbTypes, fields); } catch (Exception exp) { exceptionSubQueryAsTableName = exp; }
+            try { databaseSqlServer.Insert(tableName, null, dbTypes, fields); } catch (Exception exp) { exceptionValuesNullButOthers = exp; }
+            try { databaseSqlServer.Insert(tableName, values, null, fields); } catch (Exception exp) { exceptionDbTypesNullButOthers = exp; }
+            try { databaseSqlServer.Insert(tableName, values, dbTypes, null); } catch (Exception exp) { exceptionFieldsNullButOthers = exp; }
+
+            try { databaseSqlServer.Insert(tableName, valuesLess, dbTypes, fields); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
+            try { databaseSqlServer.Insert(tableName, values, dbTypesLess, fields); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
+            try { databaseSqlServer.Insert(tableName, values, dbTypes, fieldsLess); } catch (Exception exp) { exceptionFieldsLessButOthers = exp; }
+
+            // Assert
+            Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+            Assert.AreEqual(exceptionTableNameNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+            Assert.AreEqual(exceptionSubQueryAsTableName.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+            Assert.AreEqual(exceptionValuesNullButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesNullOrZeroLength);
+            Assert.AreEqual(exceptionDbTypesNullButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionTypesNullOrZeroLength);
+            Assert.AreEqual(exceptionFieldsNullButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
+            Assert.AreEqual(exceptionValuesLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+            Assert.AreEqual(exceptionDbTypesLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+            Assert.AreEqual(exceptionFieldsLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+        }
+
+        [TestMethod]
         public override void Insert_Validations_DataRow_Exception()
         {
             base.Insert_Validations_DataRow_Exception();
         }
 
         [TestMethod]
-        public override void Insert_Validations_Arrays_Exception()
+        public override void Insert_Validations_LazyDbTypeArrays_Exception()
         {
-            base.Insert_Validations_Arrays_Exception();
+            base.Insert_Validations_LazyDbTypeArrays_Exception();
         }
 
         [TestMethod]

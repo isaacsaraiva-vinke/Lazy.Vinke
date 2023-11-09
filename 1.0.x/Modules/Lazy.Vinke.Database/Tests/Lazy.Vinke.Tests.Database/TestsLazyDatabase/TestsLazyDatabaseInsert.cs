@@ -69,7 +69,7 @@ namespace Lazy.Vinke.Tests.Database
             Assert.AreEqual(exceptionDataRowNoColumns.Message, LazyResourcesDatabase.LazyDatabaseExceptionDataRowColumnsMissing);
         }
 
-        public virtual void Insert_Validations_Arrays_Exception()
+        public virtual void Insert_Validations_LazyDbTypeArrays_Exception()
         {
             // Arrange
             String tableName = "TestsInsert";

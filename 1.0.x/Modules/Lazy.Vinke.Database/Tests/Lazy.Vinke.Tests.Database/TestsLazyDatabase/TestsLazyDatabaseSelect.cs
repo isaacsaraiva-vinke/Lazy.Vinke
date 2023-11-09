@@ -62,7 +62,7 @@ namespace Lazy.Vinke.Tests.Database
             Assert.AreEqual(exceptionDataRowNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionDataRowNull);
         }
 
-        public virtual void Select_Validations_QueryTableArray_Exception()
+        public virtual void Select_Validations_QueryTableLazyDbTypeArrays_Exception()
         {
             // Arrange
             String tableName = "TestsSelectQueryTable";
@@ -150,7 +150,7 @@ namespace Lazy.Vinke.Tests.Database
             Assert.AreEqual(exceptionDataRowNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionDataRowNull);
         }
 
-        public virtual void Select_Validations_QueryPageArray_Exception()
+        public virtual void Select_Validations_QueryPageLazyDbTypeArrays_Exception()
         {
             // Arrange
             String tableName = "TestsSelectQueryPage";

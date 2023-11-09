@@ -35,15 +35,144 @@ namespace Lazy.Vinke.Tests.Database.MySql
         }
 
         [TestMethod]
+        public virtual void Select_Validations_QueryTableDbmsDbTypeArrays_Exception()
+        {
+            // Arrange
+            String tableName = "TestsSelectQueryTable";
+            String subQuery = "(select * from TestsSelectQueryTable)";
+
+            Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
+            MySqlDbType[] dbTypes = new MySqlDbType[] { MySqlDbType.Int32, MySqlDbType.VarChar };
+            String[] fields = new String[] { "Id", "Name" };
+
+            Object[] valuesLess = new Object[] { 1 };
+            MySqlDbType[] dbTypesLess = new MySqlDbType[] { MySqlDbType.Decimal };
+            String[] fieldsLess = new String[] { "Amount" };
+
+            Exception exceptionConnection = null;
+            Exception exceptionTableNameNull = null;
+            Exception exceptionSubQueryAsTableName = null;
+            Exception exceptionValuesButOthers = null;
+            Exception exceptionDbTypesButOthers = null;
+            Exception exceptionDbFieldsButOthers = null;
+            Exception exceptionValuesLessButOthers = null;
+            Exception exceptionDbTypesLessButOthers = null;
+            Exception exceptionDbFieldsLessButOthers = null;
+
+            LazyDatabaseMySql databaseMySql = (LazyDatabaseMySql)this.Database;
+
+            // Act
+            databaseMySql.CloseConnection();
+
+            try { databaseMySql.Select(tableName, values, dbTypes, fields); } catch (Exception exp) { exceptionConnection = exp; }
+
+            databaseMySql.OpenConnection();
+
+            try { databaseMySql.Select(null, values, dbTypes, fields); } catch (Exception exp) { exceptionTableNameNull = exp; }
+            try { databaseMySql.Select(subQuery, values, dbTypes, fields); } catch (Exception exp) { exceptionSubQueryAsTableName = exp; }
+            try { databaseMySql.Select(tableName, values, null, null); } catch (Exception exp) { exceptionValuesButOthers = exp; }
+            try { databaseMySql.Select(tableName, null, dbTypes, null); } catch (Exception exp) { exceptionDbTypesButOthers = exp; }
+            try { databaseMySql.Select(tableName, null, null, fields); } catch (Exception exp) { exceptionDbFieldsButOthers = exp; }
+
+            try { databaseMySql.Select(tableName, valuesLess, dbTypes, fields); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
+            try { databaseMySql.Select(tableName, values, dbTypesLess, fields); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
+            try { databaseMySql.Select(tableName, values, dbTypes, fieldsLess); } catch (Exception exp) { exceptionDbFieldsLessButOthers = exp; }
+
+            // Assert
+            Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+            Assert.AreEqual(exceptionTableNameNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+            Assert.AreEqual(exceptionSubQueryAsTableName.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+            Assert.AreEqual(exceptionValuesButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+            Assert.AreEqual(exceptionDbTypesButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+            Assert.AreEqual(exceptionDbFieldsButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+            Assert.AreEqual(exceptionValuesLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+            Assert.AreEqual(exceptionDbTypesLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+            Assert.AreEqual(exceptionDbFieldsLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+        }
+
+        [TestMethod]
+        public virtual void Select_Validations_QueryPageDbmsDbTypeArrays_Exception()
+        {
+            // Arrange
+            String tableName = "TestsSelectQueryPage";
+            String subQuery = "(select * from TestsSelectQueryPage)";
+
+            LazyPageData pageData = new LazyPageData();
+            LazyPageData pageDataPageNumZero = new LazyPageData() { PageNum = 0 };
+            LazyPageData pageDataPageSizeZero = new LazyPageData() { PageSize = 0 };
+            LazyPageData pageDataOrderByEmpty = new LazyPageData() { OrderBy = "" };
+
+            Object[] values = new Object[] { 1, "Lazy.Vinke.Database" };
+            MySqlDbType[] dbTypes = new MySqlDbType[] { MySqlDbType.Int32, MySqlDbType.VarChar };
+            String[] fields = new String[] { "Id", "Name" };
+
+            Object[] valuesLess = new Object[] { 1 };
+            MySqlDbType[] dbTypesLess = new MySqlDbType[] { MySqlDbType.Int32 };
+            String[] fieldsLess = new String[] { "Id" };
+
+            Exception exceptionConnection = null;
+            Exception exceptionTableNameNull = null;
+            Exception exceptionSubQueryAsTableName = null;
+            Exception exceptionPageDataNull = null;
+            Exception exceptionPageDataPageNumZero = null;
+            Exception exceptionPageDataPageSizeZero = null;
+            Exception exceptionPageDataOrderByEmpty = null;
+            Exception exceptionValuesButOthers = null;
+            Exception exceptionDbTypesButOthers = null;
+            Exception exceptionDbFieldsButOthers = null;
+            Exception exceptionValuesLessButOthers = null;
+            Exception exceptionDbTypesLessButOthers = null;
+            Exception exceptionDbFieldsLessButOthers = null;
+
+            LazyDatabaseMySql databaseMySql = (LazyDatabaseMySql)this.Database;
+
+            // Act
+            databaseMySql.CloseConnection();
+
+            try { databaseMySql.Select(tableName, pageData, values, dbTypes, fields); } catch (Exception exp) { exceptionConnection = exp; }
+
+            databaseMySql.OpenConnection();
+
+            try { databaseMySql.Select(null, pageData, values, dbTypes, fields); } catch (Exception exp) { exceptionTableNameNull = exp; }
+            try { databaseMySql.Select(subQuery, pageData, values, dbTypes, fields); } catch (Exception exp) { exceptionSubQueryAsTableName = exp; }
+            try { databaseMySql.Select(tableName, null, values, dbTypes, fields); } catch (Exception exp) { exceptionPageDataNull = exp; }
+            try { databaseMySql.Select(tableName, pageDataPageNumZero, values, dbTypes, fields); } catch (Exception exp) { exceptionPageDataPageNumZero = exp; }
+            try { databaseMySql.Select(tableName, pageDataPageSizeZero, values, dbTypes, fields); } catch (Exception exp) { exceptionPageDataPageSizeZero = exp; }
+            try { databaseMySql.Select(tableName, pageDataOrderByEmpty, values, dbTypes, fields); } catch (Exception exp) { exceptionPageDataOrderByEmpty = exp; }
+            try { databaseMySql.Select(tableName, pageData, values, null, null); } catch (Exception exp) { exceptionValuesButOthers = exp; }
+            try { databaseMySql.Select(tableName, pageData, null, dbTypes, null); } catch (Exception exp) { exceptionDbTypesButOthers = exp; }
+            try { databaseMySql.Select(tableName, pageData, null, null, fields); } catch (Exception exp) { exceptionDbFieldsButOthers = exp; }
+
+            try { databaseMySql.Select(tableName, pageData, valuesLess, dbTypes, fields); } catch (Exception exp) { exceptionValuesLessButOthers = exp; }
+            try { databaseMySql.Select(tableName, pageData, values, dbTypesLess, fields); } catch (Exception exp) { exceptionDbTypesLessButOthers = exp; }
+            try { databaseMySql.Select(tableName, pageData, values, dbTypes, fieldsLess); } catch (Exception exp) { exceptionDbFieldsLessButOthers = exp; }
+
+            // Assert
+            Assert.AreEqual(exceptionConnection.Message, LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+            Assert.AreEqual(exceptionTableNameNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+            Assert.AreEqual(exceptionSubQueryAsTableName.Message, LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+            Assert.AreEqual(exceptionPageDataNull.Message, LazyResourcesDatabase.LazyDatabaseExceptionPageDataNull);
+            Assert.AreEqual(exceptionPageDataPageNumZero.Message, LazyResourcesDatabase.LazyDatabaseExceptionPageDataPageNumLowerThanOne);
+            Assert.AreEqual(exceptionPageDataPageSizeZero.Message, LazyResourcesDatabase.LazyDatabaseExceptionPageDataPageSizeLowerThanOne);
+            Assert.AreEqual(exceptionPageDataOrderByEmpty.Message, LazyResourcesDatabase.LazyDatabaseExceptionPageDataOrderByNullOrEmpty);
+            Assert.AreEqual(exceptionValuesButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+            Assert.AreEqual(exceptionDbTypesButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+            Assert.AreEqual(exceptionDbFieldsButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+            Assert.AreEqual(exceptionValuesLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+            Assert.AreEqual(exceptionDbTypesLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+            Assert.AreEqual(exceptionDbFieldsLessButOthers.Message, LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+        }
+
+        [TestMethod]
         public override void Select_Validations_QueryTableDataRow_Exception()
         {
             base.Select_Validations_QueryTableDataRow_Exception();
         }
 
         [TestMethod]
-        public override void Select_Validations_QueryTableArray_Exception()
+        public override void Select_Validations_QueryTableLazyDbTypeArrays_Exception()
         {
-            base.Select_Validations_QueryTableArray_Exception();
+            base.Select_Validations_QueryTableLazyDbTypeArrays_Exception();
         }
 
         [TestMethod]
@@ -53,9 +182,9 @@ namespace Lazy.Vinke.Tests.Database.MySql
         }
 
         [TestMethod]
-        public override void Select_Validations_QueryPageArray_Exception()
+        public override void Select_Validations_QueryPageLazyDbTypeArrays_Exception()
         {
-            base.Select_Validations_QueryPageArray_Exception();
+            base.Select_Validations_QueryPageLazyDbTypeArrays_Exception();
         }
 
         [TestMethod]
