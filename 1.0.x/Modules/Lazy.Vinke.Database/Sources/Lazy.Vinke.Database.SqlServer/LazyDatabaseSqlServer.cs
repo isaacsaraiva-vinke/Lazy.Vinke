@@ -944,6 +944,47 @@ namespace Lazy.Vinke.Database.SqlServer
         /// <param name="fields">The fields array</param>
         /// <param name="returnFields">The return fields array</param>
         /// <returns>The records found</returns>
+        public virtual DataTable Select(String tableName, Object[] values, SqlDbType[] dbTypes, String[] fields, String[] returnFields = null)
+        {
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (values == null && (dbTypes != null || fields != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (dbTypes == null && (values != null || fields != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (fields == null && (values != null || dbTypes != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (values != null && dbTypes != null && fields != null && (values.Length != dbTypes.Length || values.Length != fields.Length))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            #endregion Validations
+
+            String sql = SelectQueryFrom(tableName, fields, returnFields);
+
+            return QueryTable(sql, tableName, values, dbTypes, fields);
+        }
+
+        /// <summary>
+        /// Select records from table filtering by array collection
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="returnFields">The return fields array</param>
+        /// <returns>The records found</returns>
         public override DataTable Select(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields, String[] returnFields = null)
         {
             #region Validations
@@ -974,6 +1015,48 @@ namespace Lazy.Vinke.Database.SqlServer
             String sql = SelectQueryFrom(tableName, fields, returnFields);
 
             return QueryTable(sql, tableName, values, dbTypes, fields);
+        }
+
+        /// <summary>
+        /// Select paged records from table filtering by array collection
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="pageData">The query page data</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="returnFields">The return fields array</param>
+        /// <returns>The paged records found</returns>
+        public virtual LazyPageResult Select(String tableName, LazyPageData pageData, Object[] values, SqlDbType[] dbTypes, String[] fields, String[] returnFields = null)
+        {
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (values == null && (dbTypes != null || fields != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (dbTypes == null && (values != null || fields != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (fields == null && (values != null || dbTypes != null))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (values != null && dbTypes != null && fields != null && (values.Length != dbTypes.Length || values.Length != fields.Length))
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            #endregion Validations
+
+            String sql = SelectQueryFrom(tableName, fields, returnFields);
+
+            return QueryPage(sql, tableName, pageData, values, dbTypes, fields);
         }
 
         /// <summary>
@@ -1026,6 +1109,46 @@ namespace Lazy.Vinke.Database.SqlServer
         /// <param name="dbTypes">The types array</param>
         /// <param name="fields">The fields array</param>
         /// <returns>The number of affected records</returns>
+        public virtual Int32 Insert(String tableName, Object[] values, SqlDbType[] dbTypes, String[] fields)
+        {
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (values == null || values.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesNullOrZeroLength);
+
+            if (dbTypes == null || dbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTypesNullOrZeroLength);
+
+            if (fields == null || fields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
+
+            if (values.Length != dbTypes.Length || values.Length != fields.Length)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            #endregion Validations
+
+            String sql = InsertStatementFrom(tableName, fields);
+
+            return Execute(sql, values, dbTypes, fields);
+        }
+
+        /// <summary>
+        /// Insert values array on table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <returns>The number of affected records</returns>
         public override Int32 Insert(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields)
         {
             #region Validations
@@ -1054,6 +1177,53 @@ namespace Lazy.Vinke.Database.SqlServer
             #endregion Validations
 
             String sql = InsertStatementFrom(tableName, fields);
+
+            return Execute(sql, values, dbTypes, fields);
+        }
+
+        /// <summary>
+        /// Insert or update values array on table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The number of affected records</returns>
+        public virtual Int32 Indate(String tableName, Object[] values, SqlDbType[] dbTypes, String[] fields, String[] keyFields)
+        {
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (values == null || values.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesNullOrZeroLength);
+
+            if (dbTypes == null || dbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTypesNullOrZeroLength);
+
+            if (fields == null || fields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
+
+            if (values.Length != dbTypes.Length || values.Length != fields.Length)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (keyFields == null || keyFields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyFieldsNullOrZeroLength);
+
+            if (keyFields.All(key => fields.Contains(key)) == false)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyFieldsNotPresentInFields);
+
+            #endregion Validations
+
+            String sql = IndateStatementFrom(tableName, fields, keyFields);
 
             return Execute(sql, values, dbTypes, fields);
         }
@@ -1103,6 +1273,67 @@ namespace Lazy.Vinke.Database.SqlServer
             String sql = IndateStatementFrom(tableName, fields, keyFields);
 
             return Execute(sql, values, dbTypes, fields);
+        }
+
+        /// <summary>
+        /// Update values array on table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="keyValues">The key values array</param>
+        /// <param name="keyDbTypes">The key types array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The number of affected records</returns>
+        public virtual Int32 Update(String tableName, Object[] values, SqlDbType[] dbTypes, String[] fields, Object[] keyValues, SqlDbType[] keyDbTypes, String[] keyFields)
+        {
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (values == null || values.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesNullOrZeroLength);
+
+            if (dbTypes == null || dbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTypesNullOrZeroLength);
+
+            if (fields == null || fields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
+
+            if (values.Length != dbTypes.Length || values.Length != fields.Length)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (keyValues == null || keyValues.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyValuesNullOrZeroLength);
+
+            if (keyDbTypes == null || keyDbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyTypesNullOrZeroLength);
+
+            if (keyFields == null || keyFields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyFieldsNullOrZeroLength);
+
+            if (keyValues.Length != keyDbTypes.Length || keyValues.Length != keyFields.Length)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyValuesTypesFieldsNotMatch);
+
+            #endregion Validations
+
+            String sql = UpdateStatementFrom(tableName, fields, keyFields);
+
+            keyFields = keyFields.Select(x => { return "key" + x; }).ToArray();
+
+            Object[] mergedValues = values.Concat(keyValues).ToArray();
+            SqlDbType[] mergedDbTypes = dbTypes.Concat(keyDbTypes).ToArray();
+            String[] mergedFields = fields.Concat(keyFields).ToArray();
+
+            return Execute(sql, mergedValues, mergedDbTypes, mergedFields);
         }
 
         /// <summary>
@@ -1177,6 +1408,70 @@ namespace Lazy.Vinke.Database.SqlServer
         /// <param name="keyDbTypes">The key types array</param>
         /// <param name="keyFields">The key fields array</param>
         /// <returns>The number of affected records</returns>
+        public virtual Int32 Upsert(String tableName, Object[] values, SqlDbType[] dbTypes, String[] fields, Object[] keyValues, SqlDbType[] keyDbTypes, String[] keyFields)
+        {
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (values == null || values.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesNullOrZeroLength);
+
+            if (dbTypes == null || dbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTypesNullOrZeroLength);
+
+            if (fields == null || fields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionFieldsNullOrZeroLength);
+
+            if (values.Length != dbTypes.Length || values.Length != fields.Length)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionValuesTypesFieldsNotMatch);
+
+            if (keyValues == null || keyValues.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyValuesNullOrZeroLength);
+
+            if (keyDbTypes == null || keyDbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyTypesNullOrZeroLength);
+
+            if (keyFields == null || keyFields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyFieldsNullOrZeroLength);
+
+            if (keyValues.Length != keyDbTypes.Length || keyValues.Length != keyFields.Length)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyValuesTypesFieldsNotMatch);
+
+            if (keyFields.All(key => fields.Contains(key)) == false)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyFieldsNotPresentInFields);
+
+            #endregion Validations
+
+            String sql = UpsertStatementFrom(tableName, fields, keyFields);
+
+            keyFields = keyFields.Select(x => { return "key" + x; }).ToArray();
+
+            Object[] mergedValues = values.Concat(keyValues).ToArray();
+            SqlDbType[] mergedDbTypes = dbTypes.Concat(keyDbTypes).ToArray();
+            String[] mergedFields = fields.Concat(keyFields).ToArray();
+
+            return Execute(sql, mergedValues, mergedDbTypes, mergedFields);
+        }
+
+        /// <summary>
+        /// Update or insert values array on table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="values">The values array</param>
+        /// <param name="dbTypes">The types array</param>
+        /// <param name="fields">The fields array</param>
+        /// <param name="keyValues">The key values array</param>
+        /// <param name="keyDbTypes">The key types array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The number of affected records</returns>
         public override Int32 Upsert(String tableName, Object[] values, LazyDbType[] dbTypes, String[] fields, Object[] keyValues, LazyDbType[] keyDbTypes, String[] keyFields)
         {
             #region Validations
@@ -1228,6 +1523,46 @@ namespace Lazy.Vinke.Database.SqlServer
             String[] mergedFields = fields.Concat(keyFields).ToArray();
 
             return Execute(sql, mergedValues, mergedDbTypes, mergedFields);
+        }
+
+        /// <summary>
+        /// Delete values array from table
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="keyValues">The key values array</param>
+        /// <param name="keyDbTypes">The key types array</param>
+        /// <param name="keyFields">The key fields array</param>
+        /// <returns>The number of affected records</returns>
+        public virtual Int32 Delete(String tableName, Object[] keyValues, SqlDbType[] keyDbTypes, String[] keyFields)
+        {
+            #region Validations
+
+            if (this.ConnectionState == ConnectionState.Closed)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionConnectionNotOpen);
+
+            if (String.IsNullOrEmpty(tableName) == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameNullOrEmpty);
+
+            if (tableName.Contains(" ") == true)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionTableNameContainsWhiteSpace);
+
+            if (keyValues == null || keyValues.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyValuesNullOrZeroLength);
+
+            if (keyDbTypes == null || keyDbTypes.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyTypesNullOrZeroLength);
+
+            if (keyFields == null || keyFields.Length < 1)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyFieldsNullOrZeroLength);
+
+            if (keyValues.Length != keyDbTypes.Length || keyValues.Length != keyFields.Length)
+                throw new Exception(LazyResourcesDatabase.LazyDatabaseExceptionKeyValuesTypesFieldsNotMatch);
+
+            #endregion Validations
+
+            String sql = DeleteStatementFrom(tableName, keyFields);
+
+            return Execute(sql, keyValues, keyDbTypes, keyFields);
         }
 
         /// <summary>
