@@ -131,6 +131,60 @@ namespace Lazy.Vinke.Tests.Database.MySql
         }
 
         [TestMethod]
+        public virtual void Upsert_Arrays_Single_Success()
+        {
+            // Arrange
+            Int32 rowsAffected = 0;
+            String tableName = "TestsUpsert";
+            String testCode = "Upsert_Arrays_Single_Success";
+            String sqlDelete = "delete from " + tableName + " where TestCode = '" + testCode + "'";
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+
+            String[] fields = new String[] { "TestCode", "Id", "Item" };
+            MySqlDbType[] dbTypes = new MySqlDbType[] { MySqlDbType.VarString, MySqlDbType.Int32, MySqlDbType.VarString };
+            List<Object[]> valuesList = new List<Object[]>() {
+                new Object[] { testCode, 1, "Lazy" },
+                new Object[] { testCode, 2, "Vinke" },
+                new Object[] { testCode, 3, "Tests" },
+                new Object[] { testCode, 4, "Database" }
+            };
+
+            LazyDatabaseMySql databaseMySql = (LazyDatabaseMySql)this.Database;
+
+            databaseMySql.Insert(tableName, valuesList[0], dbTypes, fields);
+            databaseMySql.Insert(tableName, valuesList[1], dbTypes, fields);
+            databaseMySql.Insert(tableName, valuesList[2], dbTypes, fields);
+            databaseMySql.Insert(tableName, valuesList[3], dbTypes, fields);
+
+            valuesList = new List<Object[]>() {
+                new Object[] { testCode, 7, "Isaac" },
+                new Object[] { testCode, 8, "Bezerra" },
+                new Object[] { testCode, 9, "Saraiva" }
+            };
+
+            String[] keyFields = new String[] { "TestCode", "Id" };
+            MySqlDbType[] keyDbTypes = new MySqlDbType[] { MySqlDbType.VarString, MySqlDbType.Int32 };
+            List<Object[]> keyValuesList = new List<Object[]>() {
+                new Object[] { testCode, 3 },
+                new Object[] { testCode, 4 },
+                new Object[] { testCode, 5 }
+            };
+
+            // Act
+            rowsAffected += databaseMySql.Upsert(tableName, valuesList[0], dbTypes, fields, keyValuesList[0], keyDbTypes, keyFields);
+            rowsAffected += databaseMySql.Upsert(tableName, valuesList[1], dbTypes, fields, keyValuesList[1], keyDbTypes, keyFields);
+            rowsAffected += databaseMySql.Upsert(tableName, valuesList[2], dbTypes, fields, keyValuesList[2], keyDbTypes, keyFields);
+
+            // Assert
+            Assert.AreEqual(rowsAffected, 3);
+
+            // Clean
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+        }
+
+        [TestMethod]
         public override void Upsert_Validations_DataRow_Exception()
         {
             base.Upsert_Validations_DataRow_Exception();

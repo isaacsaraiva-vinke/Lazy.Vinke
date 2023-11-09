@@ -131,6 +131,60 @@ namespace Lazy.Vinke.Tests.Database.Oracle
         }
 
         [TestMethod]
+        public virtual void Upsert_Arrays_Single_Success()
+        {
+            // Arrange
+            Int32 rowsAffected = 0;
+            String tableName = "TestsUpsert";
+            String testCode = "Upsert_Arrays_Single_Success";
+            String sqlDelete = "delete from " + tableName + " where TestCode = '" + testCode + "'";
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+
+            String[] fields = new String[] { "TestCode", "Id", "Item" };
+            OracleDbType[] dbTypes = new OracleDbType[] { OracleDbType.Varchar2, OracleDbType.Int32, OracleDbType.Varchar2 };
+            List<Object[]> valuesList = new List<Object[]>() {
+                new Object[] { testCode, 1, "Lazy" },
+                new Object[] { testCode, 2, "Vinke" },
+                new Object[] { testCode, 3, "Tests" },
+                new Object[] { testCode, 4, "Database" }
+            };
+
+            LazyDatabaseOracle databaseOracle = (LazyDatabaseOracle)this.Database;
+
+            databaseOracle.Insert(tableName, valuesList[0], dbTypes, fields);
+            databaseOracle.Insert(tableName, valuesList[1], dbTypes, fields);
+            databaseOracle.Insert(tableName, valuesList[2], dbTypes, fields);
+            databaseOracle.Insert(tableName, valuesList[3], dbTypes, fields);
+
+            valuesList = new List<Object[]>() {
+                new Object[] { testCode, 7, "Isaac" },
+                new Object[] { testCode, 8, "Bezerra" },
+                new Object[] { testCode, 9, "Saraiva" }
+            };
+
+            String[] keyFields = new String[] { "TestCode", "Id" };
+            OracleDbType[] keyDbTypes = new OracleDbType[] { OracleDbType.Varchar2, OracleDbType.Int32 };
+            List<Object[]> keyValuesList = new List<Object[]>() {
+                new Object[] { testCode, 3 },
+                new Object[] { testCode, 4 },
+                new Object[] { testCode, 5 }
+            };
+
+            // Act
+            rowsAffected += databaseOracle.Upsert(tableName, valuesList[0], dbTypes, fields, keyValuesList[0], keyDbTypes, keyFields);
+            rowsAffected += databaseOracle.Upsert(tableName, valuesList[1], dbTypes, fields, keyValuesList[1], keyDbTypes, keyFields);
+            rowsAffected += databaseOracle.Upsert(tableName, valuesList[2], dbTypes, fields, keyValuesList[2], keyDbTypes, keyFields);
+
+            // Assert
+            Assert.AreEqual(rowsAffected, 3);
+
+            // Clean
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+        }
+
+        [TestMethod]
         public override void Upsert_Validations_DataRow_Exception()
         {
             base.Upsert_Validations_DataRow_Exception();
