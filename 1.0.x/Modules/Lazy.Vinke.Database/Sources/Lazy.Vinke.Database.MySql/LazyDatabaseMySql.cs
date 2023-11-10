@@ -1275,10 +1275,10 @@ namespace Lazy.Vinke.Database.MySql
 
             String sql = IndateStatementFrom(tableName, fields, keyFields);
 
-            Int32 rowsAffected = Execute(sql, values, dbTypes, fields);
+            Int32 recordsAffected = Execute(sql, values, dbTypes, fields);
 
             /* When an update happens MySql understand that was executed an delete operation folowed by an insert operation returning two records affected */
-            return rowsAffected % 2 == 0 ? (rowsAffected / 2) : (rowsAffected / 2) + 1;
+            return recordsAffected > 1 ? 1 : recordsAffected;
         }
 
         /// <summary>
@@ -1456,7 +1456,7 @@ namespace Lazy.Vinke.Database.MySql
 
             #endregion Validations
 
-            /* MySql does not have a merge statement do perform an update followed by an insert */
+            /* MySql does not have a merge statement to perform an update followed by an insert */
 
             Int32 recordsAffected = Update(tableName, values, dbTypes, fields, keyValues, keyDbTypes, keyFields);
 
