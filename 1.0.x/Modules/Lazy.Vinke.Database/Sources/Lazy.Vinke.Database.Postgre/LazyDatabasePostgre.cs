@@ -1797,12 +1797,14 @@ namespace Lazy.Vinke.Database.Postgre
             String parameterString = String.Empty;
             String returnFieldString = String.Empty;
 
+            String doubleQuotes = this.UseDoubleQuotes == true ? "\"" : String.Empty;
+
             if (fields != null)
             {
                 for (int index = 0; index < fields.Length; index++)
                 {
                     if (String.IsNullOrWhiteSpace(fields[index]) == false)
-                        parameterString += fields[index] + " = " + this.DbmsParameterChar + fields[index] + " and ";
+                        parameterString += String.Format("{0}" + fields[index] + "{0} = " + this.DbmsParameterChar + fields[index] + " and ", doubleQuotes);
                 }
                 if (parameterString.EndsWith(" and ") == true)
                     parameterString = " where " + parameterString.Remove(parameterString.Length - 5, 5);
@@ -1813,7 +1815,7 @@ namespace Lazy.Vinke.Database.Postgre
                 for (int index = 0; index < returnFields.Length; index++)
                 {
                     if (String.IsNullOrWhiteSpace(returnFields[index]) == false)
-                        returnFieldString += returnFields[index] + ",";
+                        returnFieldString += String.Format("{0}" + returnFields[index] + "{0},", doubleQuotes);
                 }
                 if (returnFieldString.EndsWith(",") == true)
                     returnFieldString = returnFieldString.Remove(returnFieldString.Length - 1, 1);
@@ -1822,7 +1824,8 @@ namespace Lazy.Vinke.Database.Postgre
             if (returnFieldString == String.Empty)
                 returnFieldString = "*";
 
-            return String.Format("select {0} from {1}{2}", returnFieldString, tableName, parameterString);
+            /* Parameter {0} will always be DoubleQuotes (") */
+            return String.Format("select {1} from {0}{2}{0}{3}", doubleQuotes, returnFieldString, tableName, parameterString);
         }
 
         /// <summary>
@@ -1836,11 +1839,13 @@ namespace Lazy.Vinke.Database.Postgre
             String fieldString = String.Empty;
             String parameterString = String.Empty;
 
+            String doubleQuotes = this.UseDoubleQuotes == true ? "\"" : String.Empty;
+
             for (int index = 0; index < fields.Length; index++)
             {
                 if (String.IsNullOrWhiteSpace(fields[index]) == false)
                 {
-                    fieldString += fields[index] + ",";
+                    fieldString += String.Format("{0}" + fields[index] + "{0},", doubleQuotes);
                     parameterString += this.DbmsParameterChar + fields[index] + ",";
                 }
             }
@@ -1851,7 +1856,8 @@ namespace Lazy.Vinke.Database.Postgre
             if (parameterString.EndsWith(",") == true)
                 parameterString = parameterString.Remove(parameterString.Length - 1, 1);
 
-            return String.Format("insert into {0} ({1}) values ({2})", tableName, fieldString, parameterString);
+            /* Parameter {0} will always be DoubleQuotes (") */
+            return String.Format("insert into {0}{1}{0} ({2}) values ({3})", doubleQuotes, tableName, fieldString, parameterString);
         }
 
         /// <summary>
@@ -1869,13 +1875,15 @@ namespace Lazy.Vinke.Database.Postgre
             String mergeSelectString = String.Empty;
             String mergeJoinString = String.Empty;
 
+            String doubleQuotes = this.UseDoubleQuotes == true ? "\"" : String.Empty;
+
             for (int index = 0; index < fields.Length; index++)
             {
                 if (String.IsNullOrWhiteSpace(fields[index]) == false)
                 {
-                    mergeInsertFieldsString += fields[index] + ",";
+                    mergeInsertFieldsString += String.Format("{0}" + fields[index] + "{0},", doubleQuotes);
                     mergeInsertValuesString += this.DbmsParameterChar + fields[index] + ",";
-                    mergeUpdateSetString += fields[index] + " = " + this.DbmsParameterChar + fields[index] + ",";
+                    mergeUpdateSetString += String.Format("{0}" + fields[index] + "{0} = " + this.DbmsParameterChar + fields[index] + ",", doubleQuotes);
                 }
             }
 
@@ -1893,7 +1901,7 @@ namespace Lazy.Vinke.Database.Postgre
                 if (String.IsNullOrWhiteSpace(keyFields[index]) == false)
                 {
                     mergeSelectString += this.DbmsParameterChar + keyFields[index] + " " + keyFields[index] + ",";
-                    mergeJoinString += "D." + keyFields[index] + " = " + "S." + keyFields[index] + " and ";
+                    mergeJoinString += String.Format("D.{0}" + keyFields[index] + "{0} = " + "S." + keyFields[index] + " and ", doubleQuotes);
                 }
             }
 
@@ -1903,8 +1911,9 @@ namespace Lazy.Vinke.Database.Postgre
             if (mergeJoinString.EndsWith(" and ") == true)
                 mergeJoinString = mergeJoinString.Remove(mergeJoinString.Length - 5, 5);
 
-            return String.Format("merge into {0} D using(select {1}) S on ({2}) when not matched then insert ({3}) values ({4}) when matched then update set {5};",
-                tableName, mergeSelectString, mergeJoinString, mergeInsertFieldsString, mergeInsertValuesString, mergeUpdateSetString);
+            /* Parameter {0} will always be DoubleQuotes (") */
+            return String.Format("merge into {0}{1}{0} D using(select {2}) S on ({3}) when not matched then insert ({4}) values ({5}) when matched then update set {6};",
+                doubleQuotes, tableName, mergeSelectString, mergeJoinString, mergeInsertFieldsString, mergeInsertValuesString, mergeUpdateSetString);
         }
 
         /// <summary>
@@ -1919,10 +1928,12 @@ namespace Lazy.Vinke.Database.Postgre
             String fieldString = String.Empty;
             String keyFieldString = String.Empty;
 
+            String doubleQuotes = this.UseDoubleQuotes == true ? "\"" : String.Empty;
+
             for (int index = 0; index < fields.Length; index++)
             {
                 if (String.IsNullOrWhiteSpace(fields[index]) == false)
-                    fieldString += fields[index] + " = " + this.DbmsParameterChar + fields[index] + ",";
+                    fieldString += String.Format("{0}" + fields[index] + "{0} = " + this.DbmsParameterChar + fields[index] + ",", doubleQuotes);
             }
             if (fieldString.EndsWith(",") == true)
                 fieldString = fieldString.Remove(fieldString.Length - 1, 1);
@@ -1930,12 +1941,13 @@ namespace Lazy.Vinke.Database.Postgre
             for (int index = 0; index < keyFields.Length; index++)
             {
                 if (String.IsNullOrWhiteSpace(keyFields[index]) == false)
-                    keyFieldString += keyFields[index] + " = " + this.DbmsParameterChar + "key" + keyFields[index] + " and ";
+                    keyFieldString += String.Format("{0}" + keyFields[index] + "{0} = " + this.DbmsParameterChar + "key" + keyFields[index] + " and ", doubleQuotes);
             }
             if (keyFieldString.EndsWith(" and ") == true)
                 keyFieldString = keyFieldString.Remove(keyFieldString.Length - 5, 5);
 
-            return String.Format("update {0} set {1} where {2}", tableName, fieldString, keyFieldString);
+            /* Parameter {0} will always be DoubleQuotes (") */
+            return String.Format("update {0}{1}{0} set {2} where {3}", doubleQuotes, tableName, fieldString, keyFieldString);
         }
 
         /// <summary>
@@ -1953,13 +1965,15 @@ namespace Lazy.Vinke.Database.Postgre
             String mergeSelectString = String.Empty;
             String mergeJoinString = String.Empty;
 
+            String doubleQuotes = this.UseDoubleQuotes == true ? "\"" : String.Empty;
+
             for (int index = 0; index < fields.Length; index++)
             {
                 if (String.IsNullOrWhiteSpace(fields[index]) == false)
                 {
-                    mergeInsertFieldsString += fields[index] + ",";
+                    mergeInsertFieldsString += String.Format("{0}" + fields[index] + "{0},", doubleQuotes);
                     mergeInsertValuesString += this.DbmsParameterChar + fields[index] + ",";
-                    mergeUpdateSetString += fields[index] + " = " + this.DbmsParameterChar + fields[index] + ",";
+                    mergeUpdateSetString += String.Format("{0}" + fields[index] + "{0} = " + this.DbmsParameterChar + fields[index] + ",", doubleQuotes);
                 }
             }
 
@@ -1977,7 +1991,7 @@ namespace Lazy.Vinke.Database.Postgre
                 if (String.IsNullOrWhiteSpace(keyFields[index]) == false)
                 {
                     mergeSelectString += this.DbmsParameterChar + "key" + keyFields[index] + " key" + keyFields[index] + ",";
-                    mergeJoinString += "D." + keyFields[index] + " = " + "S.key" + keyFields[index] + " and ";
+                    mergeJoinString += String.Format("D.{0}" + keyFields[index] + "{0} = " + "S.key" + keyFields[index] + " and ", doubleQuotes);
                 }
             }
 
@@ -1987,8 +2001,9 @@ namespace Lazy.Vinke.Database.Postgre
             if (mergeJoinString.EndsWith(" and ") == true)
                 mergeJoinString = mergeJoinString.Remove(mergeJoinString.Length - 5, 5);
 
-            return String.Format("merge into {0} D using(select {1}) S on ({2}) when not matched then insert ({3}) values ({4}) when matched then update set {5};",
-                tableName, mergeSelectString, mergeJoinString, mergeInsertFieldsString, mergeInsertValuesString, mergeUpdateSetString);
+            /* Parameter {0} will always be DoubleQuotes (") */
+            return String.Format("merge into {0}{1}{0} D using(select {2}) S on ({3}) when not matched then insert ({4}) values ({5}) when matched then update set {6};",
+                doubleQuotes, tableName, mergeSelectString, mergeJoinString, mergeInsertFieldsString, mergeInsertValuesString, mergeUpdateSetString);
         }
 
         /// <summary>
@@ -2002,15 +2017,18 @@ namespace Lazy.Vinke.Database.Postgre
         {
             String keyFieldString = String.Empty;
 
+            String doubleQuotes = this.UseDoubleQuotes == true ? "\"" : String.Empty;
+
             for (int index = 0; index < keyFields.Length; index++)
             {
                 if (String.IsNullOrWhiteSpace(keyFields[index]) == false)
-                    keyFieldString += keyFields[index] + " = " + this.DbmsParameterChar + keyFields[index] + " and ";
+                    keyFieldString += String.Format("{0}" + keyFields[index] + "{0} = " + this.DbmsParameterChar + keyFields[index] + " and ", doubleQuotes);
             }
             if (keyFieldString.EndsWith(" and ") == true)
                 keyFieldString = keyFieldString.Remove(keyFieldString.Length - 5, 5);
 
-            return String.Format("delete from {0} where {1}", tableName, keyFieldString);
+            /* Parameter {0} will always be DoubleQuotes (") */
+            return String.Format("delete from {0}{1}{0} where {2}", doubleQuotes, tableName, keyFieldString);
         }
 
         #endregion Methods
@@ -2018,6 +2036,8 @@ namespace Lazy.Vinke.Database.Postgre
         #region Properties
 
         public Boolean ForceLowerCase { get; set; } = true;
+
+        public Boolean UseDoubleQuotes { get; set; } = false;
 
         public override Char DbmsParameterChar { get; protected set; } = '@';
 
