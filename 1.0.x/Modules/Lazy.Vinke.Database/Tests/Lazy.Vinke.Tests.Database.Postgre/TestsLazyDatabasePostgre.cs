@@ -202,6 +202,91 @@ namespace Lazy.Vinke.Tests.Database.Postgre
             Assert.AreEqual(dbTypeVarUByte, NpgsqlDbType.Bytea);
         }
 
+        [TestMethod]
+        public void Quotes_All_Single_Success()
+        {
+            // Arrange
+            String tableName = "TestsQuotes";
+            String tableNameQuotes = "\"TestsQuotes\"";
+            String columnsName = "\"Id\", \"Name\", \"Description\"";
+            String columnsParameter = "@Id, @Name, @Description";
+            String columnsParameterKey = "@Id";
+            String columnsKey = "\"Id\"";
+            String sqlInsert = "insert into " + tableNameQuotes + " (" + columnsName + ") values (" + columnsParameter + ")";
+            String sqlSelect = "select " + columnsName + " from " + tableNameQuotes + " where " + columnsKey + " = " + columnsParameterKey;
+            String sqlDelete = "delete from " + tableNameQuotes + " where " + columnsKey + " in (100,200,300,400)";
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+
+            DataTable dataTable = new DataTable(tableName);
+            dataTable.Columns.Add("Id", typeof(Int32));
+            dataTable.Columns.Add("Name", typeof(String));
+            dataTable.Columns.Add("Description", typeof(String));
+            dataTable.PrimaryKey = new DataColumn[] { dataTable.Columns["Id"] };
+            dataTable.AcceptChanges();
+
+            this.Database.GetType().GetProperty("UseDoubleQuotes").SetValue(this.Database, true);
+            LazyDatabasePostgre databasePostgre = (LazyDatabasePostgre)this.Database;
+            databasePostgre.UseDoubleQuotes = true;
+
+            // Act
+            databasePostgre.Execute(sqlInsert, new Object[] { 100, "TestsQuotes 100", "Lazy Vinke Tests Database 100" });
+            DataRow dataRow100 = databasePostgre.QueryRecord(sqlSelect, tableName, new Object[] { 100 });
+
+            dataTable.Rows.Add(200, "TestsQuotes 200", "Lazy Vinke Tests Database 200");
+            databasePostgre.Insert(tableName, dataTable.Rows[0]);
+
+            dataTable.Rows.Add(300, "TestsQuotes 300", "Lazy Vinke Tests Database 300");
+            databasePostgre.Indate(tableName, dataTable.Rows[0]);
+            databasePostgre.Indate(tableName, dataTable.Rows[1]);
+
+            dataTable.AcceptChanges();
+            dataTable.Rows[0]["Name"] = "Update TestsQuotes 200";
+            dataTable.Rows[0]["Description"] = "Update Lazy Vinke Tests Database 200";
+            dataTable.Rows[1]["Name"] = "Update TestsQuotes 300";
+            dataTable.Rows[1]["Description"] = "Update Lazy Vinke Tests Database 300";
+            databasePostgre.Update(tableName, dataTable.Rows[0]);
+            databasePostgre.Update(tableName, dataTable.Rows[1]);
+
+            dataTable.AcceptChanges();
+            dataTable.Rows[1]["Name"] = "Upsert TestsQuotes 300";
+            dataTable.Rows[1]["Description"] = "Upsert Lazy Vinke Tests Database 300";
+            dataTable.Rows.Add(400, "Upsert TestsQuotes 400", "Upsert Lazy Vinke Tests Database 400");
+            dataTable.Rows[2].AcceptChanges();
+            dataTable.Rows[2].SetModified();
+            databasePostgre.Upsert(tableName, dataTable.Rows[1]);
+            databasePostgre.Upsert(tableName, dataTable.Rows[2]);
+
+            dataTable.AcceptChanges();
+
+            DataRow dataRow200 = databasePostgre.Select(tableName, dataTable.Rows[0]).Rows[0];
+            DataRow dataRow300 = databasePostgre.Select(tableName, dataTable.Rows[1]).Rows[0];
+            DataRow dataRow400 = databasePostgre.Select(tableName, dataTable.Rows[2]).Rows[0];
+
+            dataTable.AcceptChanges();
+            dataTable.Rows[0].Delete();
+            dataTable.Rows[1].Delete();
+            dataTable.Rows[2].Delete();
+            databasePostgre.Delete(tableName, dataTable.Rows[0]);
+            databasePostgre.Delete(tableName, dataTable.Rows[1]);
+            databasePostgre.Delete(tableName, dataTable.Rows[2]);
+
+            // Assert
+            Assert.AreEqual(Convert.ToInt32(dataRow200["Id"]), 200);
+            Assert.AreEqual(Convert.ToString(dataRow200["Name"]), "Update TestsQuotes 200");
+            Assert.AreEqual(Convert.ToString(dataRow200["Description"]), "Update Lazy Vinke Tests Database 200");
+            Assert.AreEqual(Convert.ToInt32(dataRow300["Id"]), 300);
+            Assert.AreEqual(Convert.ToString(dataRow300["Name"]), "Upsert TestsQuotes 300");
+            Assert.AreEqual(Convert.ToString(dataRow300["Description"]), "Upsert Lazy Vinke Tests Database 300");
+            Assert.AreEqual(Convert.ToInt32(dataRow400["Id"]), 400);
+            Assert.AreEqual(Convert.ToString(dataRow400["Name"]), "Upsert TestsQuotes 400");
+            Assert.AreEqual(Convert.ToString(dataRow400["Description"]), "Upsert Lazy Vinke Tests Database 400");
+
+            // Clean
+            try { this.Database.Execute(sqlDelete, null); }
+            catch { /* Just to be sure that the table will be empty */ }
+        }
+
         [TestCleanup]
         public override void TestCleanup_CloseConnection_Single_Success()
         {

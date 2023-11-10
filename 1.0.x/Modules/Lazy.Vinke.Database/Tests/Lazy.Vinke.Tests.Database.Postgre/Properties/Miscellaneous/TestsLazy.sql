@@ -206,6 +206,15 @@ begin atomic
     insert into TestsExecuteProcedure values (Id, Name, Description);
 end;
 
+-- drop table "TestsQuotes"
+create table "TestsQuotes"
+(
+	"Id" integer,
+    "Name" varchar(32),
+    "Description" varchar(256),
+    constraint "Pk_TestsQuotes" primary key ("Id")
+);
+
 
 
 
