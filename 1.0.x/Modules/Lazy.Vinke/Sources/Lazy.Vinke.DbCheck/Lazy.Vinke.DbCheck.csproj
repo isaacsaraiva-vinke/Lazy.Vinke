@@ -33,6 +33,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Lazy.Vinke" Version="1.0.0" />
+		<PackageReference Include="Lazy.Vinke.Data" Version="1.0.0" />
 		<PackageReference Include="Lazy.Vinke.Database" Version="1.0.1" />
 	</ItemGroup>
 

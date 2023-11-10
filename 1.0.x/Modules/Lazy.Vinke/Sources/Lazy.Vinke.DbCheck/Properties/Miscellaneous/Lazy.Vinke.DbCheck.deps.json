@@ -6,10 +6,11 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
-      "Lazy.Vinke.DbCheck/1.0.0": {
+      "Lazy.Vinke.DbCheck/1.0.1": {
         "dependencies": {
           "Lazy.Vinke": "1.0.0",
-          "Lazy.Vinke.Database": "1.0.0"
+          "Lazy.Vinke.Data": "1.0.0",
+          "Lazy.Vinke.Database": "1.0.1"
         },
         "runtime": {
           "Lazy.Vinke.DbCheck.dll": {}
@@ -23,18 +24,29 @@
           }
         }
       },
-      "Lazy.Vinke.Database/1.0.0": {
+      "Lazy.Vinke.Data/1.0.0": {
         "runtime": {
-          "lib/net6.0/Lazy.Vinke.Database.dll": {
+          "lib/net6.0/Lazy.Vinke.Data.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Lazy.Vinke.Database/1.0.1": {
+        "dependencies": {
+          "Lazy.Vinke.Data": "1.0.0"
+        },
+        "runtime": {
+          "lib/net6.0/Lazy.Vinke.Database.dll": {
+            "assemblyVersion": "1.0.1.0",
+            "fileVersion": "1.0.1.0"
           }
         }
       }
     }
   },
   "libraries": {
-    "Lazy.Vinke.DbCheck/1.0.0": {
+    "Lazy.Vinke.DbCheck/1.0.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -42,16 +54,23 @@
     "Lazy.Vinke/1.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-r8yEFPMYqAXCYFyH5RzBtCBaeDUq3L2Yy/zFg4GDjKeQ/NbhfVjtav69bLs56ioxVuRT1rjI2DPuQnw83GoZiA==",
+      "sha512": "sha512-sfLNBwKFgVa7t9shDi3ePqge/DJ88bDaN/o6XSQ4Dgd3BjHTMYQalGcz13KMUpBbpsmk2ZXVOrcYvTxhYl1B+Q==",
       "path": "lazy.vinke/1.0.0",
       "hashPath": "lazy.vinke.1.0.0.nupkg.sha512"
     },
-    "Lazy.Vinke.Database/1.0.0": {
+    "Lazy.Vinke.Data/1.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-YDZ3NK4l9uH5a5lO1ewWHCgZikvH+QFh0PWdYGKpwOd/qhIewNhxy+rjaYpqS5lq2zEu5LKWaeTPRMUI/gk3ww==",
-      "path": "lazy.vinke.database/1.0.0",
-      "hashPath": "lazy.vinke.database.1.0.0.nupkg.sha512"
+      "sha512": "sha512-2uvPGgk3WVwrU5wBs2VHzrQhTM15eq1iJZEZ1bhilXpXNoD9SOBl/kchkChRfDXFEY8pLhIOeiePnHPnMCWZ8Q==",
+      "path": "lazy.vinke.data/1.0.0",
+      "hashPath": "lazy.vinke.data.1.0.0.nupkg.sha512"
+    },
+    "Lazy.Vinke.Database/1.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-e5lyV2/xTvQNWFs666p6m1A5MkJz8lo6dly4QACGGHBTASh2mf4HfES0sVzPYmXPz+bwkvAaamkJomHF9WBkeA==",
+      "path": "lazy.vinke.database/1.0.1",
+      "hashPath": "lazy.vinke.database.1.0.1.nupkg.sha512"
     }
   }
 }
