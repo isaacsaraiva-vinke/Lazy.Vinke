@@ -17,6 +17,11 @@ chmod +x ./Lazy.Vinke.Builder.Debug.sh
 ./Lazy.Vinke.Builder.Debug.sh
 cd ../../../
 
+cd ./Modules/Lazy.Vinke.Data/Sources/
+chmod +x ./Lazy.Vinke.Data.Builder.Debug.sh
+./Lazy.Vinke.Data.Builder.Debug.sh
+cd ../../../
+
 cd ./Modules/Lazy.Vinke.Json/Sources/
 chmod +x ./Lazy.Vinke.Json.Builder.Debug.sh
 ./Lazy.Vinke.Json.Builder.Debug.sh
