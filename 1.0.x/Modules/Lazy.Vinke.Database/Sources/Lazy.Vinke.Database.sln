@@ -10,7 +10,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lazy.Vinke.Database.MySql",
 		{30D8757E-B075-485E-9DFB-F7C600207BF1} = {30D8757E-B075-485E-9DFB-F7C600207BF1}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lazy.Vinke.Database.Oracle", "Lazy.Vinke.Database.Oracle\Lazy.Vinke.Database.Oracle.csproj", "{4B7A19D2-CFA0-4492-9064-FBC6D3300C59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lazy.Vinke.Database.Oracle", "Lazy.Vinke.Database.Oracle\Lazy.Vinke.Database.Oracle.csproj", "{4B7A19D2-CFA0-4492-9064-FBC6D3300C59}"
 	ProjectSection(ProjectDependencies) = postProject
 		{30D8757E-B075-485E-9DFB-F7C600207BF1} = {30D8757E-B075-485E-9DFB-F7C600207BF1}
 	EndProjectSection

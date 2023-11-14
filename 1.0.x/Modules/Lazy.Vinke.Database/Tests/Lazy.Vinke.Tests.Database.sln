@@ -10,7 +10,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lazy.Vinke.Tests.Database.M
 		{D4B6337D-51F7-4D2D-BD0D-D595B4455CAE} = {D4B6337D-51F7-4D2D-BD0D-D595B4455CAE}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lazy.Vinke.Tests.Database.Oracle", "Lazy.Vinke.Tests.Database.Oracle\Lazy.Vinke.Tests.Database.Oracle.csproj", "{AF96DAA9-0970-4474-A164-124B0A0BECEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lazy.Vinke.Tests.Database.Oracle", "Lazy.Vinke.Tests.Database.Oracle\Lazy.Vinke.Tests.Database.Oracle.csproj", "{AF96DAA9-0970-4474-A164-124B0A0BECEA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D4B6337D-51F7-4D2D-BD0D-D595B4455CAE} = {D4B6337D-51F7-4D2D-BD0D-D595B4455CAE}
 	EndProjectSection
